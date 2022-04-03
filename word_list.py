@@ -8,10 +8,13 @@ def cli():
 
 @cli.command("remove")
 @click.argument("word")
-def remove(word):
+@click.pass_context
+def remove(ctx, word):
     with open("blacklist.txt", mode="a") as blacklist:
         blacklist.writelines(word + "\n")
     click.echo("Done add to remove")
+    ctx.invoke(create)
+    ctx.invoke(statistics)
 
 
 @cli.command("statistics")
