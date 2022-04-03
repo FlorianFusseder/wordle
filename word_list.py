@@ -53,5 +53,12 @@ def create():
     click.echo("Done create")
 
 
+@cli.command("all")
+@click.pass_context
+def all(ctx):
+    ctx.invoke(create)
+    ctx.invoke(statistics)
+
+
 if __name__ == '__main__':
     cli()
