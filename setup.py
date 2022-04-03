@@ -11,5 +11,6 @@ setup(
         [console_scripts]
         wordle=wordle:find
         wt=word_list:cli
+        bot=bot:cli
     ''',
 )
