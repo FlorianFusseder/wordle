@@ -132,11 +132,13 @@ def sort_word(word):
 @click.option('--exclude', '-x')
 @click.option('--verbose', '-v', is_flag=True)
 def find(word, contains, exclude, verbose):
+    find_words(word, contains, exclude, verbose)
+
+
+def find_words(word, contains, exclude, verbose):
     with open("5long.txt", "r") as file:
         all_words = file.read()
-
     regex_builder: WordleRegex = WordleRegex(word, contains, exclude, verbose)
-
     regex = regex_builder.create()
     matches = re.findall(regex, all_words, re.IGNORECASE | re.MULTILINE)
     click.echo(f"Found {len(matches)} words that match the passed structure...")

@@ -1,12 +1,13 @@
 import subprocess
 import time
 
-from PIL import ImageOps
-from PIL.Image import Image
+import click
+from typing import List
+from copy import deepcopy
 
 import gui_helper as gui
-
-import click
+import word_list as wh
+import wordle
 
 
 @click.group()
@@ -71,22 +72,138 @@ def phone_start():
     phone()
 
 
+def wait(s: int, el: str):
+    click.echo(f"Wait {s} for {el}...")
+    time.sleep(s)
+
+
 @cli.command()
+@click.argument("start_word", help="Your starting word")
 @click.option("-o", "--open", is_flag=True, default=False)
 @click.pass_context
-def start(ctx, open):
+def start(ctx, start_word, open):
     if open:
+        click.echo("Opening phone...")
         phone()
-    time.sleep(2)
+        wait(2, "phone")
+
     gui.click_on("app")
-    time.sleep(5)
+    wait(5, "app to start")
     gui.click_on("play")
 
-    gui.type("stier")
+    current_solution = start_word
 
+    put_solution(current_solution)
+
+    wordle_container = WordleContainer()
+    while not wordle_container.is_solved:
+        current_text, current_colors = get_current_game_state()
+        wordle_container.update(current_text, current_colors)
+        words = wordle_container.find()
+        next_solution = words[0]
+        put_solution(next_solution)
+        _, next_colors = get_current_game_state()
+
+        if is_solved(next_colors):
+            print(f"Solution was {next_solution}")
+            wordle_container.set_solved(next_solution)
+            break
+        elif not was_legit_input(next_colors, current_colors):
+            wh.remove_word(next_solution)
+            [gui.click_on("delete") for _ in range(5)]
+
+    print("Ended!")
+
+
+def is_solved(colors: List[List[gui.WordleColor]]) -> bool:
+    for color in colors:
+        if all(solution == gui.WordleColor.OK for solution in color):
+            return True
+
+
+def was_legit_input(new_colors, old_colors):
+    def solution_number(colors):
+        count = 0
+        for row in range(len(colors)):
+            row_ = colors[row][0]
+            if row_ != gui.WordleColor.EMPTY:
+                count = count + 1
+        return count
+
+    last_row_number = solution_number(old_colors)
+    new_row_number = solution_number(new_colors)
+    return last_row_number == new_row_number - 1
+
+
+def put_solution(next_word):
+    gui.type(next_word)
     gui.click_on("submit")
-    time.sleep(4)
-    gui.screenshot()
+    wait(4, "app solution")
+
+
+def get_current_game_state():
+    screenshot_img = gui.screenshot()
+    colors = gui.get_colors(screenshot_img)
+    img = gui.preprocess_img(screenshot_img)
+    text = gui.read(img).lower()
+    return text, colors
+
+
+class WordleState:
+
+    def __init__(self) -> None:
+        self.word_glob = "." * 5
+        self.char_contained_list = []
+        self.char_not_contained = ""
+        self.word_list = []
+
+    def add_solved(self, c, i):
+        self.word_glob = self.word_list[:i] + c + self.word_list[i + 1:]
+
+    def add_contained(self, c, i):
+        contained_word = "." * 5
+        self.char_contained_list.append(contained_word[:i] + c + contained_word[i + 1:])
+
+    def add_not_contained(self, c):
+        self.char_not_contained = self.char_not_contained + c
+
+
+class WordleContainer:
+
+    def __init__(self) -> None:
+        self.state = WordleState()
+        self.solution = None
+        self.states = []
+
+    def update(self, text, colors):
+        self.state = deepcopy(self.state)
+        self.states.append(self.state)
+
+        for i in range(0, 5):
+            c = text[i]
+            color_code = colors[0][i]
+
+            if color_code == gui.WordleColor.OK:
+                self.state.add_solved(c, i)
+            elif color_code == gui.WordleColor.CONTAINED:
+                self.state.add_contained(c, i)
+            elif color_code == gui.WordleColor.NOT_CONTAINED:
+                self.state.add_not_contained(c)
+            elif color_code == gui.WordleColor.EMPTY:
+                break
+
+    def find(self) -> List[str]:
+        words = wordle.find_words(self.state.word_glob, self.state.char_not_contained, self.state.char_not_contained,
+                                  False)
+        if not len(words):
+            raise Exception("No Words could be found!")
+        return words
+
+    def set_solved(self, solution):
+        self.solution = solution
+
+    def is_solved(self) -> bool:
+        return self.solution
 
 
 def phone():
