@@ -1,6 +1,9 @@
 import subprocess
 import time
 
+from PIL import ImageOps
+from PIL.Image import Image
+
 import gui_helper as gui
 
 import click
@@ -35,13 +38,33 @@ def type(ctx, word):
 
 @cli.command()
 @click.option('-p', '--path', required=False, type=click.Path(exists=True))
-def screenshot(path):
+@click.option('-g', '--greyscale', required=False, is_flag=True, default=False)
+def screenshot(path, greyscale):
     if not path:
-        gui.screenshot()
+        gui_screenshot = gui.screenshot()
     else:
-        screenshot = gui.screenshot(True, path)
-        print(screenshot)
+        gui_screenshot = gui.screenshot(True, path)
 
+    if greyscale:
+        screenshot_path = gui_screenshot.path
+        gui.greyscale(gui_screenshot)
+
+
+@cli.command()
+@click.option('-p', '--path', type=click.Path(exists=True))
+def greyscale(path):
+    gui.greyscale(path)
+
+
+@cli.command()
+@click.option('-p', '--path', type=click.Path(exists=True))
+def get_colors(path):
+    gui.get_colors(path)
+
+
+@cli.command()
+def phone_start():
+    phone()
 
 
 @cli.command()
@@ -49,10 +72,7 @@ def screenshot(path):
 @click.pass_context
 def start(ctx, open):
     if open:
-        command = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
-                   "--window-y", "0"]
-        subprocess.Popen(command, shell=False,
-                         stdin=None, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
+        phone()
     time.sleep(2)
     gui.click_on("app")
     time.sleep(5)
@@ -61,6 +81,15 @@ def start(ctx, open):
     gui.type("stier")
 
     gui.click_on("submit")
+    time.sleep(4)
+    gui.screenshot()
+
+
+def phone():
+    command = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
+               "--window-y", "0"]
+    subprocess.Popen(command, shell=False,
+                     stdin=None, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
 
 
 if __name__ == '__main__':
