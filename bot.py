@@ -41,19 +41,23 @@ def type(ctx, word):
 @click.option('-g', '--greyscale', required=False, is_flag=True, default=False)
 def screenshot(path, greyscale):
     if not path:
-        gui_screenshot = gui.screenshot()
+        gui.screenshot()
     else:
-        gui_screenshot = gui.screenshot(True, path)
-
-    if greyscale:
-        screenshot_path = gui_screenshot.path
-        gui.greyscale(gui_screenshot)
+        gui.screenshot(True, path)
 
 
 @cli.command()
 @click.option('-p', '--path', type=click.Path(exists=True))
-def greyscale(path):
-    gui.greyscale(path)
+def preprocess_img(path):
+    gui.preprocess_img(path)
+
+
+@cli.command()
+@click.argument("path", type=click.Path(exists=True), required=True)
+@click.option('-psm', "--psm", default=6)
+def read(path, psm):
+    text = gui.read(path, psm)
+    click.echo(text)
 
 
 @cli.command()

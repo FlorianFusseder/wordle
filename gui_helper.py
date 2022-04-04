@@ -2,6 +2,7 @@ import datetime
 from enum import Enum, unique, auto
 
 import pyautogui as gui
+from pytesseract import image_to_string
 from PIL import Image, ImageOps, ImageChops
 
 q_row_y = 770
@@ -97,12 +98,13 @@ def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/flori
     gui.screenshot(path + "/" + date_string + "_" + file_name, region=region)
 
 
-def greyscale(path: str):
+def preprocess_img(path: str):
     gui_screenshot = Image.open(path)
     gray_image = ImageOps.grayscale(gui_screenshot)
-    inv_img = ImageChops.invert(gray_image)
+    gray = ImageChops.invert(gray_image)
+    black_white = gray.point(lambda x: 0 if x < 5 else 255, '1')
     new_path = path.replace(".png", "_edited.png")
-    inv_img.save(new_path)
+    black_white.save(new_path)
 
 
 def get_colors(path: str):
@@ -116,3 +118,8 @@ def get_colors(path: str):
             print(f"{i}|{j}: " + color.name, end=", ")
             if j == 4:
                 print("")
+
+
+def read(path, psm=6):
+    return image_to_string(Image.open(path), lang="deu",
+                           config=f'--psm {psm} -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZÖÄÜ')
