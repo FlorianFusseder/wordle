@@ -98,7 +98,8 @@ def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/flori
         file_name = "unnamed.png"
     date_string = str(datetime.datetime.now()) if with_datetime else ""
     date_string = date_string.replace(" ", "_")
-    gui.screenshot(path + "/" + date_string + "_" + file_name, region=region)
+    path = path + "/" + date_string + "_" + file_name
+    return gui.screenshot(path, region=region), path
 
 
 def preprocess_img(path: str):
@@ -107,13 +108,17 @@ def preprocess_img(path: str):
     gray_image = ImageOps.grayscale(gui_screenshot)
     gray = ImageChops.invert(gray_image)
     black_white = gray.point(lambda x: 0 if x < 5 else 255, '1')
-    new_path = path.replace(".png", "_edited.png")
-    return black_white.save(new_path)
+    new_path = path.replace(".png", "_processed.png")
+    return black_white.save(new_path), new_path
 
 
 def get_colors(path: str):
     print("Get Colors...")
     px = Image.open(path).load()
+
+    color_matrix = [None] * 5
+    for i in range(5):
+        color_matrix[i] = [None] * 5
 
     for i in range(0, 5):
         for j in range(0, 5):
@@ -121,8 +126,11 @@ def get_colors(path: str):
             pixel = px[x, y]
             color = WordleColor.code(pixel)
             print(f"{i}|{j}: " + color.name, end=", ")
+            color_matrix[i][j] = color
             if j == 4:
                 print("")
+
+    return color_matrix
 
 
 def read(path, psm=6):

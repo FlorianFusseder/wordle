@@ -144,6 +144,7 @@ def find_words(word, contains, exclude, verbose):
     click.echo(f"Found {len(matches)} words that match the passed structure...")
     matches.sort(reverse=True, key=sort_word)
     click.echo(f"{matches}")
+    return matches
 
 
 if __name__ == '__main__':
