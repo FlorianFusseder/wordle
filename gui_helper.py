@@ -1,5 +1,5 @@
 import datetime
-from enum import Enum, unique
+from enum import Enum, unique, auto
 
 import pyautogui as gui
 from PIL import Image, ImageOps, ImageChops
@@ -58,19 +58,24 @@ color_pos = [
 
 
 @unique
-class ColorCode(Enum):
-    OK = (13, 188, 40),
-    NOT_CONTAINED = (83, 83, 83),
-    CONTAINED = (250, 217, 57),
-    EMPTY = (146, 148, 150),
+class WordleColor(Enum):
+    OK = auto()
+    NOT_CONTAINED = auto()
+    CONTAINED = auto()
+    EMPTY = auto()
 
-
-color_map = {
-    (13, 188, 40): ColorCode.OK,
-    (250, 217, 57): ColorCode.CONTAINED,
-    (83, 83, 83): ColorCode.NOT_CONTAINED,
-    (146, 148, 150): ColorCode.EMPTY,
-}
+    @classmethod
+    def code(cls, code: tuple):
+        if code == (13, 188, 40):
+            return WordleColor.OK
+        elif code == (250, 217, 57):
+            return WordleColor.CONTAINED
+        elif code == (83, 83, 83):
+            return WordleColor.NOT_CONTAINED
+        elif code == (146, 148, 150):
+            return WordleColor.EMPTY
+        else:
+            raise NotImplementedError("Color tuple " + str(code) + " unknown")
 
 
 def click_on(element: str, duration: int = .5):
@@ -107,7 +112,7 @@ def get_colors(path: str):
         for j in range(0, 5):
             x, y = color_pos[i][j]
             pixel = px[x, y]
-            color = color_map[pixel]
+            color = WordleColor.code(pixel)
             print(f"{i}|{j}: " + color.name, end=", ")
             if j == 4:
                 print("")
