@@ -103,12 +103,12 @@ def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/flori
     return gui.screenshot(path, region=region), path
 
 
-def preprocess_img(path: str):
+def preprocess_img(path: str, threshold: int = 5):
     print("Preprocess Image")
     gui_screenshot = Image.open(path)
     gray_image = ImageOps.grayscale(gui_screenshot)
     gray = ImageChops.invert(gray_image)
-    black_white = gray.point(lambda x: 0 if x < 5 else 255, '1')
+    black_white = gray.point(lambda x: 0 if x < threshold else 255, '1')
     new_path = path.replace(".png", "_processed.png")
     return black_white.save(new_path), new_path
 
