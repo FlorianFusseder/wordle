@@ -11,7 +11,6 @@ def cli():
 @click.pass_context
 def remove(ctx, word):
     remove_word(word)
-    click.echo("Done add to remove")
     ctx.invoke(create)
     ctx.invoke(statistics)
 
@@ -44,7 +43,6 @@ def create_statistics():
     import json
     with open("statistics.json", mode="w") as file:
         file.write(json.dumps(statistics))
-    click.echo("Done")
 
 
 @cli.command("create")
@@ -63,7 +61,7 @@ def create_wordlist():
             words.remove(line)
     with open("5long.txt", mode='w') as file:
         file.writelines(words)
-    click.echo("Done create")
+    click.echo("Done recreating wordlists!")
 
 
 @cli.command("all")
