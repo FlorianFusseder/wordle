@@ -80,17 +80,20 @@ class WordleColor(Enum):
 
 
 def click_on(element: str, duration: int = .5):
+    print(f"Click on {element}...")
     x, y = pos[element]
     gui.moveTo(x, y, duration=duration)
     gui.leftClick(x, y)
 
 
 def type(word: str, duration: int = .5):
+    print(f"Type word {word}...")
     for c in word:
         click_on(c, duration)
 
 
 def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/florian/Pictures/wordles", file_name=None):
+    print("Take screenshot")
     if not file_name:
         file_name = "unnamed.png"
     date_string = str(datetime.datetime.now()) if with_datetime else ""
@@ -99,15 +102,17 @@ def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/flori
 
 
 def preprocess_img(path: str):
+    print("Preprocess Image")
     gui_screenshot = Image.open(path)
     gray_image = ImageOps.grayscale(gui_screenshot)
     gray = ImageChops.invert(gray_image)
     black_white = gray.point(lambda x: 0 if x < 5 else 255, '1')
     new_path = path.replace(".png", "_edited.png")
-    black_white.save(new_path)
+    return black_white.save(new_path)
 
 
 def get_colors(path: str):
+    print("Get Colors...")
     px = Image.open(path).load()
 
     for i in range(0, 5):
@@ -121,5 +126,8 @@ def get_colors(path: str):
 
 
 def read(path, psm=6):
-    return image_to_string(Image.open(path), lang="deu",
+    print(f"Read characters from {path}")
+    text = image_to_string(Image.open(path), lang="deu",
                            config=f'--psm {psm} -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZÖÄÜ')
+    print(f"Found word {text}")
+    return text
