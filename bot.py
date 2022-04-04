@@ -192,10 +192,8 @@ def start(ctx, start_word, open, count):
         wait(5, "app to start")
         gui.click_on("play")
 
-    current_solution = start_word
-    put_solution(current_solution)
-
     for i in range(count):
+        put_solution(start_word)
         print(f"Play game {i + 1}/{count}")
         wordle_container = WordleContainer()
         play(wordle_container)
@@ -268,10 +266,34 @@ def put_solution(next_word):
 
 
 def get_current_game_state():
-    _, path = gui.screenshot()
-    colors = gui.get_colors(path)
-    _, processed_path = gui.preprocess_img(path)
-    text = gui.read(processed_path).lower()
+    again = True
+    threshold = 5
+    while again:
+        print(f"Threshold {threshold}")
+        _, path = gui.screenshot()
+        colors = gui.get_colors(path)
+        _, processed_path = gui.preprocess_img(path, threshold=threshold)
+        text = gui.read(processed_path).lower()
+
+        again = False
+        text_split = text.split()
+        for i, word in enumerate(text_split):
+            if len(word) != 5:
+                again = True
+                break
+            if not all([char in "abcdefghijklmnopqrstuvwxyzöäü" for char in word]):
+                again = True
+
+        if again:
+            if 20 > threshold >= 5:
+                threshold = threshold + 1
+            elif threshold >= 20:
+                threshold = 4
+            elif 5 > threshold > 0:
+                threshold = threshold - 1
+            elif threshold < 1:
+                raise Exception("Could not read words from screenshot")
+
     return text, colors
 
 
