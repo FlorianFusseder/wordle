@@ -105,7 +105,6 @@ Agfas
 Ägide
 agile
 Agios
-Agnat
 Agnes
 Agora
 Agrar
@@ -195,7 +194,6 @@ alpha
 alpin
 Alsen
 Altai
-Altan
 Altar
 altem
 alten
@@ -435,7 +433,6 @@ Aurum
 außen
 außer
 äußre
-Autan
 Autor
 Autos
 Autun
@@ -5610,7 +5607,6 @@ sämig
 Sammy
 Samoa
 Samos
-Samts
 Samys
 Sanaa
 Sanam
@@ -5625,7 +5621,6 @@ sankt
 sänne
 sannt
 Santa
-Santo
 Sanya
 Sanyo
 Saori
@@ -5695,7 +5690,6 @@ schon
 schön
 schor
 Schoß
-Schot
 Schub
 schuf
 SchUG
@@ -5703,7 +5697,6 @@ Schuh
 Schur
 Score
 Scott
-Scout
 Seans
 SEATO
 secco
@@ -5856,7 +5849,6 @@ sitzt
 Skala
 Skalp
 skate
-Skats
 Skier
 Skill
 Skins
@@ -6029,7 +6021,6 @@ starb
 Stare
 stark
 starr
-Stars
 Start
 Stasi
 statt

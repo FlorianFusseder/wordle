@@ -1,5 +1,8 @@
+import datetime
+import json
 import subprocess
 import time
+from collections.abc import Iterable
 from typing import List
 
 import click
@@ -15,7 +18,6 @@ class WordleState:
         self.word_glob = "." * 5
         self.char_contained_list = []
         self.char_not_contained = ""
-        self.word_list = []
 
     def add_solved(self, c, i):
         self.word_glob = self.word_glob[:i] + c + self.word_glob[i + 1:]
@@ -69,6 +71,32 @@ class WordleContainer:
     def set_solved(self, solution):
         self.solution = solution
 
+        with open("game_history.json", mode='r') as file:
+            history = json.load(file)
+
+        with open("game_history.json", mode='w') as file:
+            def class2dict(instance):
+                if isinstance(instance, list):
+                    li = []
+                    for i in instance:
+                        if isinstance(i, str):
+                            return instance
+                        li.append(class2dict(i))
+                    return li
+
+                if not hasattr(instance, "__dict__"):
+                    return instance
+
+                new_subdic = vars(instance)
+                for key, value in new_subdic.items():
+                    new_subdic[key] = class2dict(value)
+                return new_subdic
+
+            class_dict = class2dict(self)
+            class_dict['timestamp'] = str(datetime.datetime.now())
+            history.append(class_dict)
+            file.write(json.dumps(history))
+
     def is_solved(self) -> bool:
         return self.solution is not None
 
@@ -113,8 +141,7 @@ def type(ctx, word):
 
 @cli.command()
 @click.option('-p', '--path', required=False, type=click.Path(exists=True))
-@click.option('-g', '--greyscale', required=False, is_flag=True, default=False)
-def screenshot(path, greyscale):
+def screenshot(path):
     if not path:
         gui.screenshot()
     else:
@@ -154,37 +181,41 @@ def wait(s: int, el: str):
 @cli.command()
 @click.argument("start_word")
 @click.option("-o", "--open", is_flag=True, default=False)
+@click.option("-c", "--count", default=1)
 @click.pass_context
-def start(ctx, start_word, open):
+def start(ctx, start_word, open, count):
     if open:
         click.echo("Opening phone...")
         phone()
         wait(2, "phone")
-
-    gui.click_on("app")
-    wait(5, "app to start")
-    gui.click_on("play")
+        gui.click_on("app")
+        wait(5, "app to start")
+        gui.click_on("play")
 
     current_solution = start_word
-
     put_solution(current_solution)
 
-    wordle_container = WordleContainer()
-    play(wordle_container)
+    for i in range(count):
+        print(f"Play game {i + 1}/{count}")
+        wordle_container = WordleContainer()
+        play(wordle_container)
     print("Ended!")
 
 
 @cli.command()
 @click.option("-o", "--open", is_flag=True, default=False)
+@click.option("-c", "--count", default=1)
 @click.pass_context
-def resume(ctx, open):
+def resume(ctx, open, count):
     if open:
         click.echo("Opening phone...")
         phone()
         wait(2, "phone")
 
-    wordle_container = WordleContainer()
-    play(wordle_container)
+    for i in range(count):
+        print("Play game " + str(i))
+        wordle_container = WordleContainer()
+        play(wordle_container)
     print("Ended!")
 
 
@@ -192,6 +223,15 @@ def play(wordle_container: WordleContainer):
     while not wordle_container.is_solved():
         current_text, current_colors = get_current_game_state()
         wordle_container.update(current_text, current_colors)
+        if is_solved(current_colors):
+            words = current_text.split("\n")
+            i = len(words) - 2
+            print(f"Already solved with {words[i]}")
+            wordle_container.set_solved(words[i])
+            gui.click_on("next_word")
+            wait(5, "next game to start")
+            break
+
         words = wordle_container.find()
         next_solution = words[0]
         put_solution(next_solution)
@@ -200,8 +240,11 @@ def play(wordle_container: WordleContainer):
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
             wordle_container.set_solved(next_solution)
+            gui.click_on("next_word")
+            wait(4, "next game to start")
             break
         elif not was_legit_input(next_colors, current_colors):
+            print(f"Word {next_solution} seems not to be wordle word, removing...")
             wh.remove_word(next_solution)
             [gui.click_on("delete") for _ in range(5)]
 

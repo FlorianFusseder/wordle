@@ -45,7 +45,7 @@ class AnyChar(Char):
 
 class WordleRegex:
     def __init__(self, word, contains, excludes, verbose):
-        click.echo(f"Passed word: {word}")
+        click.echo(f"Passed glob: {word}")
         click.echo(f"Contained: {contains}")
         click.echo(f"Not Contained: {excludes}")
         if verbose:

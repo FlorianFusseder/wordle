@@ -14,6 +14,7 @@ pos = {
     "play": (230, 700),
     "delete": (379, y_row_y),
     "submit": (235, 950),
+    "next_word": (228, 743),
 
     "q": (25, q_row_y),
     "w": (65, q_row_y),
@@ -113,7 +114,6 @@ def preprocess_img(path: str):
 
 
 def get_colors(path: str):
-    print("Get Colors...")
     px = Image.open(path).load()
 
     color_matrix = [None] * 5
@@ -137,5 +137,6 @@ def read(path, psm=6):
     print(f"Read characters from {path}")
     text = image_to_string(Image.open(path), lang="deu",
                            config=f'--psm {psm} -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZÖÄÜ')
-    print(f"Found word {text}")
+    print("Found words:")
+    print(f"{text}")
     return text
