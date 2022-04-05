@@ -140,11 +140,11 @@ def crop_img(in_p, out_p=None):
 def get_colors(path: str):
     px = Image.open(path).load()
 
-    color_matrix = [None] * 5
-    for i in range(5):
+    color_matrix = [None] * 6
+    for i in range(6):
         color_matrix[i] = [None] * 5
 
-    for i in range(0, 5):
+    for i in range(0, 6):
         for j in range(0, 5):
             x, y = color_pos[i][j]
             pixel = px[x, y]

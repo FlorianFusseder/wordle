@@ -138,8 +138,6 @@ akute
 alaaf
 Alain
 Alarm
-Alaun
-Alban
 Albas
 Alben
 Albin
@@ -160,7 +158,6 @@ Alice
 Alien
 Alina
 Aliya
-Alkan
 Alkin
 Alkis
 Alkyd
@@ -177,7 +174,6 @@ allwo
 Allyl
 Allys
 allzu
-Alman
 Almas
 Almen
 Almut
@@ -1325,7 +1321,6 @@ döste
 Dover
 Doyen
 Doyle
-DPolG
 Draht
 Drake
 drall
@@ -1789,7 +1784,6 @@ Feten
 fette
 Fetus
 fetze
-fetzt
 Feuer
 FeuVO
 Fezen
@@ -2203,7 +2197,6 @@ glich
 Glied
 glitt
 Globe
-Glock
 glomm
 glotz
 gluck
@@ -2956,7 +2949,6 @@ Jessy
 Jesus
 Jeton
 jette
-jetzt
 Jever
 JHWHs
 Jiffy
@@ -3297,7 +3289,6 @@ klöne
 Klons
 klont
 klönt
-klopf
 Klops
 Klöße
 Klotz
@@ -3796,7 +3787,6 @@ Liven
 Livia
 livid
 Lizas
-Lloyd
 Lobby
 loben
 Lobes
@@ -4215,7 +4205,6 @@ Mohns
 Möhre
 Mokka
 molar
-Molch
 Molen
 Molex
 Molke
@@ -4783,7 +4772,6 @@ penne
 pennt
 Penny
 peppe
-peppt
 Pepsi
 Percy
 perdu
@@ -4801,7 +4789,6 @@ Petri
 Petry
 petto
 petze
-petzt
 Pfade
 Pfadi
 Pfads
@@ -5490,7 +5477,6 @@ Sacks
 sackt
 säend
 Säens
-Safes
 safte
 Säfte
 Safts
@@ -5502,7 +5488,6 @@ sägst
 sagte
 sägte
 Sahel
-sahen
 sähen
 sähet
 Sahib
@@ -5522,7 +5507,6 @@ salbt
 Saldo
 Salem
 Sälen
-Sales
 Sally
 Salma
 Salon
@@ -6870,7 +6854,6 @@ webOS
 webst
 webte
 wecke
-weckt
 Wedel
 weder
 wedle
@@ -6932,7 +6915,6 @@ Wessi
 Weste
 wette
 wetze
-wetzt
 Weyer
 Whigs
 White

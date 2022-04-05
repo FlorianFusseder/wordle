@@ -170,7 +170,7 @@ def read(path, psm):
 
 
 @cli.command()
-@click.option('-p', '--path', type=click.Path(exists=True))
+@click.argument("path", type=click.Path(exists=True))
 def get_colors(path):
     gui.get_colors(path)
 
@@ -201,6 +201,7 @@ def start(ctx, start_word, open, count):
 
     for i in range(count):
         put_solution(start_word)
+        wait(4, "app solution")
         print(f"Play game {i + 1}/{count}")
         wordle_container = WordleContainer()
         wordle_container.word_list.append(start_word)
@@ -281,7 +282,6 @@ def put_solution(next_word):
     gui.type(w[:1], echo=False)
     gui.type(w[1:], duration=.1, echo=False)
     gui.click_on("submit")
-    wait(4, "app solution")
 
 
 def get_current_game_state(data_path: str):
