@@ -5506,7 +5506,6 @@ salbe
 salbt
 Saldo
 Salem
-Sälen
 Sally
 Salma
 Salon
@@ -5562,7 +5561,6 @@ Satze
 Sätze
 Sauce
 saudi
-sauen
 Säuen
 sauer
 saufe
@@ -5786,7 +5784,6 @@ Snobs
 Soaps
 Socke
 Sodas
-Soden
 Sodom
 Soest
 Sofas
@@ -5795,7 +5792,6 @@ Sofia
 Sofie
 softe
 sogar
-sogen
 sögen
 Soges
 sogst
@@ -5809,7 +5805,6 @@ solch
 Solde
 Solds
 Solei
-Solen
 Solid
 solle
 sollt

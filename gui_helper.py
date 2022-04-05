@@ -60,6 +60,10 @@ color_pos = [
 ]
 
 
+class ColorStateException(Exception):
+    pass
+
+
 @unique
 class WordleColor(Enum):
     OK = auto()
@@ -78,7 +82,7 @@ class WordleColor(Enum):
         elif code == (146, 148, 150):
             return WordleColor.EMPTY
         else:
-            raise NotImplementedError("Color tuple " + str(code) + " unknown")
+            raise ColorStateException("Color tuple " + str(code) + " unknown")
 
 
 def click_on(element: str, duration: float = .5, echo: bool = True):
