@@ -81,20 +81,23 @@ class WordleColor(Enum):
             raise NotImplementedError("Color tuple " + str(code) + " unknown")
 
 
-def click_on(element: str, duration: float = .5):
-    print(f"Click on {element}...")
+def click_on(element: str, duration: float = .5, echo: bool = True):
+    if echo:
+        print(f"Click on {element}...")
     x, y = pos[element]
     gui.moveTo(x, y, duration=duration)
     gui.leftClick(x, y)
 
 
-def type(word: str, duration: float = .5):
-    print(f"Type word {word}...")
+def type(word: str, duration: float = .5, echo: bool = True):
+    if echo:
+        print(f"Type word {word}...")
     for c in word:
         click_on(c, duration)
 
 
 def move_to(element: str, duration: float = .5):
+    print(f"Move to {element}")
     x, y = pos[element]
     gui.moveTo(x, y, duration=duration)
 
