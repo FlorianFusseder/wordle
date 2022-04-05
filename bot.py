@@ -277,8 +277,9 @@ def was_legit_input(new_colors, old_colors):
 
 def put_solution(next_word):
     w = next_word.lower()
-    gui.type(w[:1])
-    gui.type(w[1:], duration=.1)
+    print(f"Put word: {next_word}")
+    gui.type(w[:1], echo=False)
+    gui.type(w[1:], duration=.1, echo=False)
     gui.click_on("submit")
     wait(4, "app solution")
 
