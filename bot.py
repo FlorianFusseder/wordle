@@ -1,8 +1,8 @@
 import datetime
 import json
+import os
 import subprocess
 import time
-from collections.abc import Iterable
 from typing import List
 
 import click
@@ -68,13 +68,13 @@ class WordleContainer:
             raise Exception("No Words could be found!")
         return words
 
-    def set_solved(self, solution):
+    def set_solved(self, solution, path=None):
         self.solution = solution
+        file_name = "game_data.json"
 
-        with open("game_history.json", mode='r') as file:
-            history = json.load(file)
+        path = path + "/" + file_name if path else file_name
 
-        with open("game_history.json", mode='w') as file:
+        with open(path, mode='w') as file:
             def class2dict(instance):
                 if isinstance(instance, list):
                     li = []
@@ -94,8 +94,7 @@ class WordleContainer:
 
             class_dict = class2dict(self)
             class_dict['timestamp'] = str(datetime.datetime.now())
-            history.append(class_dict)
-            file.write(json.dumps(history))
+            file.write(json.dumps(class_dict))
 
     def is_solved(self) -> bool:
         return self.solution is not None
@@ -225,8 +224,10 @@ def resume(ctx, open, count):
 
 
 def play(wordle_container: WordleContainer):
+    session_path = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
+    os.mkdir(session_path)
     while not wordle_container.is_solved():
-        current_text, current_colors = get_current_game_state()
+        current_text, current_colors = get_current_game_state(session_path)
         wordle_container.update(current_text, current_colors)
         if is_solved(current_colors):
             words = current_text.split("\n")
@@ -240,7 +241,7 @@ def play(wordle_container: WordleContainer):
         words = wordle_container.find()
         next_solution = words[0]
         put_solution(next_solution)
-        _, next_colors = get_current_game_state()
+        _, next_colors = get_current_game_state(session_path)
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
@@ -251,7 +252,7 @@ def play(wordle_container: WordleContainer):
         elif not was_legit_input(next_colors, current_colors):
             print(f"Word {next_solution} seems not to be wordle word, removing...")
             wh.remove_word(next_solution)
-            [gui.click_on("delete") for _ in range(5)]
+            [gui.click_on("delete", duration=0) for _ in range(5)]
 
 
 def is_solved(colors: List[List[gui.WordleColor]]) -> bool:
@@ -272,14 +273,15 @@ def put_solution(next_word):
     wait(4, "app solution")
 
 
-def get_current_game_state():
+def get_current_game_state(data_path: str):
     again = True
     threshold = 5
     while again:
         print(f"Threshold {threshold}")
-        _, path = gui.screenshot()
+        _, path = gui.screenshot(path=data_path)
         colors = gui.get_colors(path)
         processed_path = gui.preprocess_img(path, threshold=threshold)
+        os.remove(path)
         text = gui.read(processed_path).lower()
 
         again = False
