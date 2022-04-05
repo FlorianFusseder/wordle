@@ -281,7 +281,7 @@ def get_current_game_state(data_path: str):
         _, path = gui.screenshot(path=data_path)
         colors = gui.get_colors(path)
         processed_path = gui.preprocess_img(path, threshold=threshold)
-        os.remove(path)
+        # os.remove(path) remove first screenshot
         text = gui.read(processed_path).lower()
 
         again = False
