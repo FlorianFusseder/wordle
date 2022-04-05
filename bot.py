@@ -202,7 +202,6 @@ def start(ctx, start_word, open, count):
 
     for i in range(count):
         put_solution(start_word)
-        wait(5, "app solution")
         print(f"Play game {i + 1}/{count}")
         wordle_container = WordleContainer()
         wordle_container.word_list.append(start_word)
