@@ -1,0 +1,8 @@
+(?=.*a+.*)(?=.*e+.*)(?=.*r+.*)^[^stinaa]r[^stinae][^stinae][^stinar]$
+Passed glob: .r...
+Contained: ('...e.', '....r', 'a....', '..e..')
+Not Contained: stina
+Final regex: (?=.*r+.*)(?=.*a+.*)(?=.*e+.*)^[^stinaa]r[^stinae][^stinae][^stinar]$
+Found 0 words that match the passed structure...
+[]
+wordle .r... -c ...e. -c ....r -c a.... -c ..e.. -x stina

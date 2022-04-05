@@ -141,6 +141,9 @@ def find_words(word, contains, exclude, verbose):
     regex_builder: WordleRegex = WordleRegex(word, contains, exclude, verbose)
     regex = regex_builder.create()
     matches = re.findall(regex, all_words, re.IGNORECASE | re.MULTILINE)
+
+    # fix that no matches arena problem!
+
     click.echo(f"Found {len(matches)} words that match the passed structure...")
     matches.sort(reverse=True, key=sort_word)
     click.echo(f"{matches}")

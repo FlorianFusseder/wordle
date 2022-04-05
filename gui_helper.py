@@ -1,6 +1,7 @@
 import datetime
 from enum import Enum, unique, auto
 
+import numpy as numpy
 import pyautogui as gui
 from pytesseract import image_to_string
 from PIL import Image, ImageOps, ImageChops
@@ -110,7 +111,22 @@ def preprocess_img(path: str, threshold: int = 5):
     gray = ImageChops.invert(gray_image)
     black_white = gray.point(lambda x: 0 if x < threshold else 255, '1')
     new_path = path.replace(".png", "_processed.png")
-    return black_white.save(new_path), new_path
+    black_white.save(new_path)
+    crop_img(new_path)
+    return new_path
+
+
+def crop_img(in_p, out_p=None):
+    img = Image.open(in_p)
+    arr = numpy.array(img)
+    arr = numpy.delete(arr, range(52, 90), 1)
+    arr = numpy.delete(arr, range(90, 130), 1)
+    arr = numpy.delete(arr, range(132, 170), 1)
+    arr = numpy.delete(arr, range(167, 205), 1)
+    img = Image.fromarray(arr)
+    out = out_p if out_p else in_p
+    img.save(out)
+    return img
 
 
 def get_colors(path: str):

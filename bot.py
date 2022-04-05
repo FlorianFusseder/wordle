@@ -155,6 +155,13 @@ def preprocess_img(path):
 
 
 @cli.command()
+@click.argument("in_p", type=click.Path(exists=True))
+@click.argument("out_p", type=click.Path(exists=False))
+def crop_img(in_p, out_p):
+    gui.crop_img(in_p, out_p)
+
+
+@cli.command()
 @click.argument("path", type=click.Path(exists=True), required=True)
 @click.option('-psm', "--psm", default=6)
 def read(path, psm):
@@ -272,7 +279,7 @@ def get_current_game_state():
         print(f"Threshold {threshold}")
         _, path = gui.screenshot()
         colors = gui.get_colors(path)
-        _, processed_path = gui.preprocess_img(path, threshold=threshold)
+        processed_path = gui.preprocess_img(path, threshold=threshold)
         text = gui.read(processed_path).lower()
 
         again = False
