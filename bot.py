@@ -44,8 +44,6 @@ class WordleContainer:
         self.state = WordleState()
 
         number = solution_number(colors)
-        if number == 0:
-            raise Exception("Cannot update if no rows are solved yet...")
 
         for i in range(number):
             for j in range(0, 5):
@@ -106,6 +104,9 @@ def solution_number(colors):
     for row in range(len(colors)):
         row_ = colors[row][0]
         if row_ != gui.WordleColor.EMPTY:
+            is_complete = all([column != gui.WordleColor.EMPTY for column in colors[row]])
+            if not is_complete:
+                raise gui.ColorStateException("Not all Colors seem to be solved just yet")
             count = count + 1
         else:
             break
@@ -241,19 +242,20 @@ def play(wordle_container: WordleContainer):
             print(f"Already solved with {words[i]}")
             wordle_container.set_solved(words[i], session_path)
             gui.click_on("next_word")
-            wait(4, "next game to start")
+            wait_for_game_start(session_path)
             break
 
         words = wordle_container.find()
         next_solution = words[0]
         put_solution(next_solution)
+        wait(1, "animation to start")
         _, next_colors = get_current_game_state(session_path)
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
             wordle_container.set_solved(next_solution, session_path)
             gui.click_on("next_word")
-            wait(4, "next game to start")
+            wait_for_game_start(session_path)
             break
         elif not was_legit_input(next_colors, current_colors):
             print(f"Word {next_solution} seems not to be wordle word, removing...")
@@ -262,6 +264,11 @@ def play(wordle_container: WordleContainer):
         else:
             print(f"Word '{next_solution}' was not solution, starting next iteration...")
             wordle_container.word_list.append(next_solution)
+
+
+def wait_for_game_start(session_path):
+    while not is_game_ready(session_path):
+        wait(.5, "game start")
 
 
 def is_solved(colors: List[List[gui.WordleColor]]) -> bool:
@@ -284,6 +291,18 @@ def put_solution(next_word):
     gui.click_on("submit")
 
 
+def is_game_ready(data_path: str):
+    while True:
+        _, path = gui.screenshot(path=data_path)
+        try:
+            colors = gui.get_colors(path)
+            return all([gui.WordleColor.EMPTY == state for state in colors[0]])
+        except gui.ColorStateException:
+            os.remove(path)
+            wait(.5, "for valid game state")
+            continue
+
+
 def get_current_game_state(data_path: str):
     again = True
     threshold = 5
@@ -292,11 +311,17 @@ def get_current_game_state(data_path: str):
         _, path = gui.screenshot(path=data_path)
         try:
             colors = gui.get_colors(path)
+
+            number = solution_number(colors)
+            if number == 0:
+                raise gui.ColorStateException("Cannot get state if no rows are solved yet...")
+
         except gui.ColorStateException:
             """Solution is not yet done.."""
             os.remove(path)
-            wait(.5, "for valid game state")
+            wait(1, "for valid game state")
             continue
+
         processed_path = gui.preprocess_img(path, threshold=threshold)
         # os.remove(path) remove first screenshot
         text = gui.read(processed_path).lower()
