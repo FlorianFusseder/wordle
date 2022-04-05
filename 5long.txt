@@ -3,7 +3,6 @@ Aales
 aalst
 aalte
 Aarau
-Aaron
 Aasee
 Aases
 Aatal
@@ -357,7 +356,6 @@ artet
 artig
 Artus
 Aruba
-Aruna
 Arven
 Arvid
 Ärzte
@@ -426,7 +424,6 @@ Aupke
 aural
 Aurar
 Aurel
-Auren
 Aurum
 außen
 außer
@@ -517,7 +514,6 @@ Bantu
 Barbe
 Barde
 barem
-baren
 Bären
 barer
 bares
@@ -627,7 +623,6 @@ Benny
 Benzo
 Beppo
 berät
-BerEb
 berge
 Bergs
 bergt
@@ -1604,21 +1599,18 @@ Eriks
 Erker
 erkor
 erlag
-Erlen
 Erlös
 ermaß
 Ernas
 Ernie
 ernst
 ernte
-Erpel
 errät
 Error
 erste
 Ersti
 Erwin
 erwog
-Erzen
 Erzes
 erzog
 Esaus
@@ -1669,7 +1661,6 @@ Eutin
 Evans
 Event
 Evita
-Evren
 Ewald
 ewige
 exakt
@@ -2092,7 +2083,6 @@ Garbo
 Garda
 Garde
 garem
-garen
 gären
 garer
 gares
@@ -3140,7 +3130,6 @@ kappt
 Karat
 Karde
 Karel
-Karen
 karge
 Karin
 Karla
@@ -4052,7 +4041,6 @@ Maras
 Marco
 Marcs
 Marek
-Maren
 Mären
 Marga
 Marge
@@ -4664,7 +4652,6 @@ Opium
 Oppau
 Optik
 orale
-Orang
 Orbis
 Orbit
 Orcas
@@ -5672,7 +5659,6 @@ Schuh
 Schur
 Score
 Scott
-Seans
 SEATO
 secco
 sechs
@@ -5860,7 +5846,6 @@ sögen
 Soges
 sogst
 Sohle
-Sohne
 söhne
 Sohns
 söhnt
@@ -7181,7 +7166,6 @@ Zappa
 zappe
 zappt
 Zaras
-Zaren
 Zarge
 Zarin
 zarte
