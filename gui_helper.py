@@ -81,17 +81,22 @@ class WordleColor(Enum):
             raise NotImplementedError("Color tuple " + str(code) + " unknown")
 
 
-def click_on(element: str, duration: int = .5):
+def click_on(element: str, duration: float = .5):
     print(f"Click on {element}...")
     x, y = pos[element]
     gui.moveTo(x, y, duration=duration)
     gui.leftClick(x, y)
 
 
-def type(word: str, duration: int = .5):
+def type(word: str, duration: float = .5):
     print(f"Type word {word}...")
     for c in word:
         click_on(c, duration)
+
+
+def move_to(element: str, duration: float = .5):
+    x, y = pos[element]
+    gui.moveTo(x, y, duration=duration)
 
 
 def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/florian/Pictures/wordles", file_name=None):
@@ -154,5 +159,5 @@ def read(path, psm=6):
     text = image_to_string(Image.open(path), lang="deu",
                            config=f'--psm {psm} -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZÖÄÜ')
     print("Found words:")
-    print(f"{text}")
+    print(f"[{', '.join(text.split())}]")
     return text

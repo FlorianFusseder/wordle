@@ -77,7 +77,6 @@ Admin
 Adobe
 Adolf
 Adorf
-Adria
 adrig
 Adula
 adult
@@ -116,7 +115,6 @@ ahmst
 ahmte
 ahnde
 ahnen
-ahnst
 ahnte
 Ahorn
 Ähren
@@ -190,7 +188,6 @@ Alpen
 alpha
 alpin
 Alsen
-Altai
 Altar
 altem
 alten
@@ -289,7 +286,6 @@ anzog
 Anzug
 Äonen
 Aorta
-Aosta
 apart
 Apfel
 Äpfel
@@ -338,11 +334,9 @@ armen
 armer
 ärmer
 armes
-Armin
 Armut
 Arndt
 Arnes
-Arnim
 Arnos
 Aroma
 Arosa
@@ -892,7 +886,6 @@ Bruhn
 brüht
 Bruni
 Brünn
-Bruno
 brüsk
 Brust
 brüte
@@ -1422,7 +1415,6 @@ Ebern
 Ebers
 Ebert
 ebnen
-Ebner
 ebnet
 Ebola
 eBook
@@ -1517,7 +1509,6 @@ Elchs
 elend
 Eleve
 Elfen
-Elfer
 elfte
 Elgar
 Elias
@@ -1539,7 +1530,6 @@ Elses
 Elspe
 Elvis
 Emden
-Emder
 Emely
 Emile
 Emils
@@ -1649,7 +1639,6 @@ Etzel
 Euböa
 Eugen
 Eulen
-Euler
 Eupen
 eurem
 euren
@@ -1668,7 +1657,6 @@ Excel
 exFAT
 Exile
 Exils
-Exner
 Expat
 Exter
 extra
@@ -2614,9 +2602,7 @@ hinan
 Hindi
 Hindu
 hinge
-hingt
 hinke
-hinkt
 hinzu
 Hiobs
 hippe
@@ -2985,7 +2971,6 @@ Jochs
 Jodat
 Jodid
 Joels
-Joerg
 Joeys
 jogge
 joggt
@@ -3131,7 +3116,6 @@ Karat
 Karde
 Karel
 karge
-Karin
 Karla
 Karls
 Karma
@@ -3425,7 +3409,6 @@ Krads
 kraft
 krähe
 kräht
-Krain
 Krake
 Krale
 krame
@@ -3637,7 +3620,6 @@ Laune
 Laura
 lause
 Läuse
-laust
 läute
 Lauts
 LAVES
@@ -3789,15 +3771,12 @@ Limit
 Limos
 Linda
 linde
-Lindt
 Linie
 linke
 links
-linkt
 Linon
 linse
 linst
-Linth
 Linum
 Linus
 Linux
@@ -4010,7 +3989,6 @@ Malls
 malme
 Malmö
 malmt
-malst
 Malta
 Malus
 Malva
@@ -4045,7 +4023,6 @@ Maria
 Mariä
 Marie
 Marik
-marin
 Mario
 Marke
 Marko
@@ -4380,7 +4357,6 @@ nahmt
 nähmt
 nähre
 nährt
-nahst
 nähst
 nahte
 nähte
@@ -4873,12 +4849,10 @@ Pimpf
 pimpt
 pinge
 Pings
-pingt
 Pinie
 pinke
 pinne
 pinnt
-Pinot
 Pinte
 Pinus
 Piotr

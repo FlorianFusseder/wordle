@@ -37,6 +37,7 @@ class WordleContainer:
         self.state = WordleState()
         self.solution = None
         self.states = []
+        self.word_list = []
 
     def update(self, text, colors):
         self.states.append(self.state)
@@ -202,6 +203,7 @@ def start(ctx, start_word, open, count):
         put_solution(start_word)
         print(f"Play game {i + 1}/{count}")
         wordle_container = WordleContainer()
+        wordle_container.word_list.append(start_word)
         play(wordle_container)
     print("Ended!")
 
@@ -215,9 +217,12 @@ def resume(ctx, open, count):
         click.echo("Opening phone...")
         phone()
         wait(2, "phone")
+    else:
+        gui.move_to("submit")
 
     for i in range(count):
         print("Play game " + str(i))
+
         wordle_container = WordleContainer()
         play(wordle_container)
     print("Ended!")
@@ -230,12 +235,12 @@ def play(wordle_container: WordleContainer):
         current_text, current_colors = get_current_game_state(session_path)
         wordle_container.update(current_text, current_colors)
         if is_solved(current_colors):
-            words = current_text.split("\n")
-            i = len(words) - 2
+            words = current_text.split()
+            i = len(words) - 1
             print(f"Already solved with {words[i]}")
-            wordle_container.set_solved(words[i])
+            wordle_container.set_solved(words[i], session_path)
             gui.click_on("next_word")
-            wait(5, "next game to start")
+            wait(4, "next game to start")
             break
 
         words = wordle_container.find()
@@ -245,7 +250,7 @@ def play(wordle_container: WordleContainer):
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
-            wordle_container.set_solved(next_solution)
+            wordle_container.set_solved(next_solution, session_path)
             gui.click_on("next_word")
             wait(4, "next game to start")
             break
@@ -253,6 +258,9 @@ def play(wordle_container: WordleContainer):
             print(f"Word {next_solution} seems not to be wordle word, removing...")
             wh.remove_word(next_solution)
             [gui.click_on("delete", duration=0) for _ in range(5)]
+        else:
+            print(f"Word '{next_solution}' was not solution, starting next iteration...")
+            wordle_container.word_list.append(next_solution)
 
 
 def is_solved(colors: List[List[gui.WordleColor]]) -> bool:
@@ -268,7 +276,9 @@ def was_legit_input(new_colors, old_colors):
 
 
 def put_solution(next_word):
-    gui.type(next_word.lower())
+    w = next_word.lower()
+    gui.type(w[:1])
+    gui.type(w[1:], duration=.1)
     gui.click_on("submit")
     wait(4, "app solution")
 
