@@ -1,5 +1,4 @@
 aalen
-Aales
 aalst
 aalte
 Aarau
@@ -1376,7 +1375,6 @@ dürft
 dürre
 Durst
 Dusel
-düsen
 Dutte
 Dutts
 duzen
@@ -1494,7 +1492,6 @@ Elisa
 Elise
 Elite
 Eliza
-Elkes
 Ellen
 Eller
 Ellis
@@ -1519,7 +1516,6 @@ empor
 Emser
 emsig
 enden
-Endes
 endet
 Engel
 engem
@@ -1585,7 +1581,6 @@ Eseln
 Esels
 eSIMs
 Eskes
-Espen
 Essay
 ESSEC
 essen
@@ -3072,7 +3067,6 @@ Karst
 Karte
 Kasan
 Kasel
-käsen
 Käser
 Käses
 käsig
@@ -4182,7 +4176,6 @@ Morph
 morse
 Morus
 Mosel
-Mösen
 Moser
 Moses
 Mosts
@@ -4239,7 +4232,6 @@ Murks
 murre
 murrt
 Musau
-Musen
 musig
 Musik
 Musil
