@@ -24,12 +24,10 @@ Abhub
 abkam
 ablas
 ablud
-abmaß
 Abort
 abrät
 Abruf
 absah
-absaß
 Absud
 abtat
 Abtei
@@ -369,8 +367,6 @@ Assam
 Assel
 Assen
 Asses
-aßest
-äßest
 Asset
 ästen
 Aster
@@ -403,7 +399,6 @@ Attac
 Audio
 Audis
 Audit
-aufaß
 Augen
 äugen
 Auges
@@ -415,9 +410,6 @@ aural
 Aurar
 Aurel
 Aurum
-außen
-außer
-äußre
 Autor
 Autos
 Autun
@@ -586,8 +578,6 @@ Beils
 Beine
 Beins
 Beisl
-beiße
-beißt
 beize
 beizt
 bekam
@@ -601,7 +591,6 @@ Bells
 bellt
 belog
 belud
-bemaß
 Bemme
 bemüh
 Bengt
@@ -625,7 +614,6 @@ Berts
 Beruf
 besah
 Besan
-besaß
 besät
 Besen
 beste
@@ -736,8 +724,6 @@ Blogs
 blöke
 blökt
 blond
-bloße
-Blöße
 Blues
 Bluff
 blühe
@@ -940,11 +926,7 @@ Busch
 Busen
 Bushs
 Busse
-Bußen
-büßen
-Büßer
 Bussi
-büßte
 Büste
 Büsum
 Butan
@@ -1148,7 +1130,6 @@ Darre
 darte
 Darts
 darum
-dasaß
 Datei
 Daten
 Dates
@@ -1585,7 +1566,6 @@ Erker
 erkor
 erlag
 Erlös
-ermaß
 Ernas
 Ernie
 ernst
@@ -1854,7 +1834,6 @@ Fleck
 Fleet
 flehe
 fleht
-Fleiß
 Fleur
 flexe
 flext
@@ -1875,8 +1854,6 @@ Flops
 Flora
 Flori
 floss
-flöße
-flößt
 flöte
 flott
 Flows
@@ -1946,9 +1923,6 @@ Franc
 frank
 Franz
 fräse
-Fraße
-fräße
-fraßt
 fräst
 Fratz
 Freak
@@ -2013,10 +1987,6 @@ furze
 Fürze
 furzt
 Fusel
-fußen
-Füßen
-Fußes
-fußte
 FuStW
 Futon
 Futur
@@ -2103,7 +2073,6 @@ Gebet
 gebot
 Gecko
 Geest
-Gefäß
 gegen
 gehab
 gehen
@@ -2125,7 +2094,6 @@ Gelee
 gelle
 gellt
 gelte
-gemäß
 Gemme
 Gemüt
 genas
@@ -2155,7 +2123,6 @@ Gerte
 Gerti
 Gerts
 Gesas
-Gesäß
 gesät
 GESIS
 Geste
@@ -2171,8 +2138,6 @@ gibst
 Gicht
 giere
 giert
-gieße
-gießt
 gifte
 Gifts
 gilbt
@@ -2280,7 +2245,6 @@ grell
 Greta
 Grete
 Grewe
-Grieß
 griff
 grill
 Grimm
@@ -2295,8 +2259,6 @@ GroKo
 gröle
 Groll
 grölt
-große
-Größe
 Group
 Grube
 grübe
@@ -2307,9 +2269,6 @@ Grund
 grüne
 Grüns
 grünt
-Gruße
-grüße
-grüßt
 Guano
 Guave
 Gucci
@@ -2512,9 +2471,6 @@ Heino
 Heins
 Heinz
 Heise
-heißa
-heiße
-heißt
 heize
 heizt
 helau
@@ -2580,8 +2536,6 @@ Heyne
 hicks
 hiebe
 hielt
-hieße
-hießt
 hieve
 hievt
 Hilda
@@ -3290,7 +3244,6 @@ Klons
 klont
 klönt
 Klops
-Klöße
 Klotz
 Klubs
 Kluft
@@ -3414,7 +3367,6 @@ krass
 kratz
 Kraul
 kraus
-Krauß
 Kraut
 Krebs
 Kredo
@@ -3736,8 +3688,6 @@ liegt
 lieht
 Liese
 Liesl
-ließe
-ließt
 liest
 lifte
 Lifts
@@ -4029,10 +3979,6 @@ Masha
 Maske
 Massa
 Masse
-maßen
-Maßes
-mäßig
-maßte
 mäste
 MaStR
 Masud
@@ -4174,7 +4120,6 @@ Mises
 misse
 misst
 miste
-mitaß
 Mitau
 Mitra
 Mitte
@@ -4301,7 +4246,6 @@ Musik
 Musil
 Müsli
 müsse
-müßig
 musst
 müsst
 muten
@@ -4404,7 +4348,6 @@ neige
 neigt
 Neill
 Neins
-Neiße
 Neiva
 Nelke
 Nelly
@@ -5225,8 +5168,6 @@ Reims
 reimt
 reine
 reise
-reiße
-reißt
 reist
 reite
 reize
@@ -5455,10 +5396,6 @@ rural
 Rürup
 Rushs
 Russe
-rußen
-Rußes
-rußig
-rußte
 rüste
 Ruten
 Ruths
@@ -5548,9 +5485,6 @@ Sargs
 Sarin
 Saris
 Sasse
-saßen
-säßen
-säßet
 Satan
 säten
 sätet
@@ -5603,7 +5537,6 @@ schob
 schon
 schön
 schor
-Schoß
 Schub
 schuf
 SchUG
@@ -5832,7 +5765,6 @@ sorge
 sorgt
 sorry
 Sorte
-Soßen
 Souks
 Sound
 Sousa
@@ -5852,9 +5784,6 @@ Spant
 SPARC
 spare
 spart
-spaße
-Späße
-spaßt
 späte
 Späti
 Spatz
@@ -5870,7 +5799,6 @@ Spezi
 Spice
 spiel
 spien
-spieß
 spiet
 Spike
 Spill
@@ -5947,7 +5875,6 @@ steif
 steig
 steil
 Stein
-Steiß
 Stele
 stell
 Steno
@@ -5966,7 +5893,6 @@ Stick
 stieg
 Stiel
 Stier
-stieß
 Stift
 STIKO
 Stile
@@ -5993,10 +5919,6 @@ Storm
 Störs
 stört
 Story
-stoße
-Stöße
-stoßt
-stößt
 Streb
 streu
 Strip
@@ -6064,11 +5986,6 @@ Susan
 Sushi
 Susie
 Susis
-süßem
-süßen
-süßer
-süßes
-süßte
 Suter
 Sutra
 Suzys
@@ -6231,7 +6148,6 @@ TGBBZ
 Thais
 Theia
 Thein
-Theiß
 Theke
 Thema
 Theos
@@ -6591,7 +6507,6 @@ Unkel
 unken
 unkst
 unkte
-Unmaß
 Unmut
 Unnas
 Unrat
@@ -6874,8 +6789,6 @@ weine
 Weins
 weint
 weise
-weiße
-weißt
 weist
 weite
 welch
@@ -7243,7 +7156,6 @@ zügle
 zukam
 Zulus
 zumal
-zumaß
 Zumba
 zünde
 Zunft
