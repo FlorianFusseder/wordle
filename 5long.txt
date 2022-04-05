@@ -3592,7 +3592,6 @@ längs
 langt
 Lanka
 Lanze
-Laote
 Lappe
 Laras
 lärme
@@ -3639,7 +3638,6 @@ Laura
 lause
 Läuse
 laust
-laute
 läute
 Lauts
 LAVES
@@ -4014,7 +4012,6 @@ Malmö
 malmt
 malst
 Malta
-malte
 Malus
 Malva
 Malve
@@ -4077,7 +4074,6 @@ Match
 mater
 Mathe
 matte
-Matze
 mauem
 mauen
 mauer
