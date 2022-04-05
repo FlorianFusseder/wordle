@@ -180,8 +180,9 @@ def phone_start():
     phone()
 
 
-def wait(s: int, el: str):
-    click.echo(f"Wait {s} sec for {el}...")
+def wait(s: float, el: str):
+    if el:
+        click.echo(f"Wait {s} sec for {el}...")
     time.sleep(s)
 
 
@@ -196,12 +197,12 @@ def start(ctx, start_word, open, count):
         phone()
         wait(2, "phone")
         gui.click_on("app")
-        wait(5, "app to start")
+        wait(4, "app to start")
         gui.click_on("play")
 
     for i in range(count):
         put_solution(start_word)
-        wait(4, "app solution")
+        wait(5, "app solution")
         print(f"Play game {i + 1}/{count}")
         wordle_container = WordleContainer()
         wordle_container.word_list.append(start_word)
@@ -290,7 +291,13 @@ def get_current_game_state(data_path: str):
     while again:
         print(f"Threshold {threshold}")
         _, path = gui.screenshot(path=data_path)
-        colors = gui.get_colors(path)
+        try:
+            colors = gui.get_colors(path)
+        except gui.ColorStateException:
+            """Solution is not yet done.."""
+            os.remove(path)
+            wait(.5, "for valid game state")
+            continue
         processed_path = gui.preprocess_img(path, threshold=threshold)
         # os.remove(path) remove first screenshot
         text = gui.read(processed_path).lower()
