@@ -1,5 +1,6 @@
 import re
 from abc import ABC, abstractmethod
+from typing import Set
 
 import click
 
@@ -33,11 +34,11 @@ class AnyChar(Char):
 
     def __init__(self):
         super().__init__(".")
-        self.exclude_list: [str] = []
+        self.exclude_list: Set[str] = set()
 
     def add_excludes(self, excludes: str):
         for c in excludes:
-            self.exclude_list.append(c)
+            self.exclude_list.add(c)
 
     def get_regex(self) -> str:
         return "[^" + "".join(self.exclude_list) + "]" if self.exclude_list else self.regex
@@ -56,7 +57,7 @@ class WordleRegex:
             assert [len(w) == 5 for w in contains], "One or more of your contains words seems to be not equal to 5"
 
         self.verbose = verbose
-        self.excludes = excludes
+        self.excludes: str = excludes
         self.contains = contains if contains else []
         self.regex_elements: [Char] = []
         self.regex_lookaheads: [str] = set()
@@ -109,6 +110,29 @@ class WordleRegex:
         return regex
 
 
+class ArenaWordleRegex(WordleRegex):
+    """
+    This Class creates a regex that will check an try to solve the ARENA problem
+    where double Characters (like the a) are marked as 'contained' for the first character a (A)RENA but the last
+    a AREN(A) is marked as 'not_contained'. If this happens, we do not use a for exclusion
+    :return:
+    """
+
+    def _add_excludes(self):
+        dont_remove = set()
+        if self.excludes:
+            for c in self.excludes:
+                for contained in self.contains:
+                    if c in contained:
+                        dont_remove.add(c)
+
+            for remove in dont_remove:
+                self.excludes = self.excludes.replace(remove, "")
+
+            for regex_element in self.regex_elements:
+                regex_element.add_excludes(self.excludes)
+
+
 def sort_word(word):
     with open("statistics.json") as file:
         import json
@@ -142,7 +166,11 @@ def find_words(word, contains, exclude, verbose):
     regex = regex_builder.create()
     matches = re.findall(regex, all_words, re.IGNORECASE | re.MULTILINE)
 
-    # fix that no matches arena problem!
+    if not matches:
+        print("Try arena problem solution... PRAY TO THE ALMIGHTY")
+        wordle_regex = ArenaWordleRegex(word, contains, exclude, verbose)
+        regex = wordle_regex.create()
+        matches = re.findall(regex, all_words, re.IGNORECASE | re.MULTILINE)
 
     click.echo(f"Found {len(matches)} words that match the passed structure...")
     matches.sort(reverse=True, key=sort_word)
