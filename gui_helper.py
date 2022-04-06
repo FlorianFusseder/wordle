@@ -1,4 +1,5 @@
 import datetime
+import subprocess
 from abc import ABC, ABCMeta
 from enum import Enum, unique, auto, EnumMeta
 from typing import Tuple
@@ -66,70 +67,78 @@ class ColorStateException(Exception):
     pass
 
 
-class PhoneModel(ABC):
+class Phone(ABC):
 
-    @classmethod
-    def is_empty(cls, rgb) -> bool:
+    def __init__(self, commands) -> None:
+        self.commands = commands
+
+    def is_empty(self, rgb) -> bool:
         pass
 
-    @classmethod
-    def is_ok(cls, rgb) -> bool:
+    def is_ok(self, rgb) -> bool:
         pass
 
-    @classmethod
-    def is_not_contained(cls, rgb) -> bool:
+    def is_not_contained(self, rgb) -> bool:
         pass
 
-    @classmethod
-    def is_contained(cls, rgb) -> bool:
+    def is_contained(self, rgb) -> bool:
         pass
 
+    def start(self):
+        subprocess.Popen(self.commands, shell=False,
+                         stdin=None, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
+
     @classmethod
-    def get_model(cls, model: str = None):
+    def init_device(cls, model: str = None):
+        phone: Phone
         if model == "P30":
-            return P30()
+            phone = P30()
         elif model == 'PSMART2019':
-            return PSMART2019()
+            phone = PSMART2019()
         else:
-            return PSMART2019()
+            phone = PSMART2019()
+        ColorCode.init(phone)
+        return phone
 
 
-class P30(PhoneModel):
+class P30(Phone):
 
-    @classmethod
-    def is_empty(cls, rgb) -> bool:
+    def __init__(self) -> None:
+        commands = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
+                    "--window-y", "0"]
+        super().__init__(commands)
+
+    def is_empty(self, rgb) -> bool:
         return rgb == (146, 148, 150)
 
-    @classmethod
-    def is_ok(cls, rgb) -> bool:
+    def is_ok(self, rgb) -> bool:
         return rgb == (13, 188, 40)
 
-    @classmethod
-    def is_not_contained(cls, rgb) -> bool:
+    def is_not_contained(self, rgb) -> bool:
         return rgb == (83, 83, 83)
 
-    @classmethod
-    def is_contained(cls, rgb) -> bool:
+    def is_contained(self, rgb) -> bool:
         return rgb == (250, 217, 57)
 
 
-class PSMART2019(PhoneModel):
+class PSMART2019(Phone):
 
-    @classmethod
-    def is_empty(cls, rgb) -> bool:
+    def __init__(self) -> None:
+        commands = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
+                    "--window-y", "0", "-m", "1024"]
+        super().__init__(commands)
+
+    def is_empty(self, rgb) -> bool:
         return rgb[0] in range(141, 152) and rgb[1] in range(143, 154) and rgb[2] in range(147, 158)
 
-    @classmethod
-    def is_ok(cls, rgb) -> bool:
+    def is_ok(self, rgb) -> bool:
         return rgb[0] in range(0, 11) and rgb[1] in range(155, 165) and rgb[2] in range(35, 45)
 
-    @classmethod
-    def is_not_contained(cls, rgb) -> bool:
+    def is_not_contained(self, rgb) -> bool:
         return all([val in range(78, 89) for val in rgb])
 
-    @classmethod
-    def is_contained(cls, rgb) -> bool:
-        return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(55, 66)
+    def is_contained(self, rgb) -> bool:
+        return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(50, 66)
 
 
 @unique
@@ -139,12 +148,12 @@ class ColorCode(Enum):
     CONTAINED = auto()
     EMPTY = auto()
 
-    _model: PhoneModel
+    _model: Phone
     color_name_max_length: int
 
     @classmethod
-    def init(cls, model: str):
-        cls._model = PhoneModel.get_model(model)
+    def init(cls, phone: Phone):
+        cls._model = phone
         cls.color_name_max_length = max([len(color.name) for color in ColorCode])
 
     @classmethod
