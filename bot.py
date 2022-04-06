@@ -214,8 +214,6 @@ def start(ctx, start_word, open, count):
         click.echo("Opening phone...")
         start_phone(ctx.obj['phone'])
         wait(2, "phone")
-        gui.click_on("app")
-        wait(4, "app to start")
         gui.click_on("play")
 
     session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")

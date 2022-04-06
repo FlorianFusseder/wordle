@@ -1,4 +1,5 @@
 todo:
+gamedata.json muss gespeichert werden, auch wenns nicht gesolved wird
 t...t -> wenn beide gelb sind kommt zweimal vor oder wenn eines grün und eines gelb müssen ja zwei vorkommen eg /home/florian/Pictures/wordles/2022-04-06_20:23:19.472667/7_10_7_UNSOLVED/
 endscreen photo auf word auflösung warten
 endscreen word mit tesseract rausfinden
