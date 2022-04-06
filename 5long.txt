@@ -272,7 +272,6 @@ Anwar
 anzog
 Anzug
 Äonen
-Aorta
 apart
 Apfel
 Äpfel
@@ -1048,7 +1047,6 @@ Cotta
 Couch
 Count
 Coups
-Court
 Cover
 Covid
 Crack
@@ -1932,7 +1930,6 @@ fühle
 fühlt
 Fuhre
 führe
-fuhrt
 führt
 Fulda
 fülle
@@ -2178,12 +2175,10 @@ Götze
 Gouda
 Gould
 Goyas
-grabe
 Grabs
 grabt
 gräbt
 Grace
-Grade
 Grads
 Graja
 Grals
@@ -2199,7 +2194,6 @@ grast
 Grate
 Gräte
 Grats
-graue
 Graus
 graut
 Greco
@@ -2584,7 +2578,6 @@ hopst
 Horaz
 horch
 Horde
-Horen
 hören
 Hörer
 hörig
@@ -3179,7 +3172,6 @@ klare
 kläre
 klaro
 klart
-klärt
 klaue
 Klaus
 klaut
@@ -3314,7 +3306,6 @@ kraft
 krähe
 kräht
 Krake
-Krale
 krame
 Krams
 kramt
@@ -3727,7 +3718,6 @@ Lolli
 Looks
 Lopez
 Lords
-Loren
 Lores
 losem
 losen
@@ -4230,7 +4220,6 @@ nahes
 nähme
 nähmt
 nähre
-nährt
 nähst
 nahte
 nähte
@@ -4491,7 +4480,6 @@ Opitz
 Opium
 Oppau
 Optik
-orale
 Orbis
 Orbit
 Orcas
@@ -5358,7 +5346,6 @@ sägst
 sagte
 sägte
 Sahel
-sähen
 sähet
 Sahib
 sahne
@@ -5428,7 +5415,6 @@ Satze
 Sätze
 Sauce
 saudi
-Säuen
 sauer
 saufe
 sauft
@@ -5507,7 +5493,6 @@ Seite
 Sekte
 Sekts
 selbe
-Selen
 selig
 Selim
 Selin
@@ -5997,10 +5982,8 @@ Tarek
 Tarif
 tarne
 tarnt
-Tarot
 Tarps
 Tarte
-Tartu
 Taser
 Tasks
 Tasse
