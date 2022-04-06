@@ -117,7 +117,7 @@ class PSMART2019(PhoneModel):
 
     @classmethod
     def is_empty(cls, rgb) -> bool:
-        return rgb == (146, 148, 152)
+        return rgb[0] in range(141, 152) and rgb[1] in range(143, 154) and rgb[2] in range(147, 158)
 
     @classmethod
     def is_ok(cls, rgb) -> bool:
@@ -125,11 +125,11 @@ class PSMART2019(PhoneModel):
 
     @classmethod
     def is_not_contained(cls, rgb) -> bool:
-        return rgb == (83, 83, 83)
+        return all([val in range(78, 89) for val in rgb])
 
     @classmethod
     def is_contained(cls, rgb) -> bool:
-        return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(50, 60)
+        return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(55, 66)
 
 
 @unique
