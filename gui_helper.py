@@ -195,9 +195,9 @@ def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/flori
     print("Take screenshot")
     if not file_name:
         file_name = "unnamed.png"
-    date_string = str(datetime.datetime.now()) if with_datetime else ""
+    date_string = str(datetime.datetime.now()) + "_" if with_datetime else ""
     date_string = date_string.replace(" ", "_")
-    path = path + "/" + date_string + "_" + file_name
+    path = path + "/" + date_string + file_name
     return gui.screenshot(path, region=region), path
 
 
