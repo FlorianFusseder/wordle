@@ -2134,7 +2134,6 @@ Gödel
 Godot
 Goghs
 Gojim
-Golan
 Golda
 Golde
 Golds
@@ -2297,7 +2296,6 @@ hallt
 Halma
 Halme
 Halms
-Halon
 halse
 Hälse
 halte
@@ -2555,7 +2553,6 @@ holze
 holzt
 Homer
 Homos
-Honda
 Honey
 Honig
 Hoods
@@ -4212,7 +4209,6 @@ Najat
 Namen
 Namib
 Namur
-Nancy
 Nandu
 Nanny
 Naomi
@@ -4759,7 +4755,6 @@ Polos
 polst
 Polyp
 Pomps
-Ponal
 pönal
 Ponor
 Ponte
@@ -7004,7 +6999,6 @@ zolle
 Zölle
 Zolls
 zollt
-zonal
 Zonen
 zoome
 Zooms
