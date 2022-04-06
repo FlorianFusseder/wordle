@@ -5,6 +5,7 @@ import random
 import subprocess
 import sys
 import time
+import typing
 from typing import List
 
 import click
@@ -197,7 +198,7 @@ def phone_start(ctx):
     start_phone(ctx.obj['phone'])
 
 
-def wait(s: float, el: str):
+def wait(s: float, el: str = None):
     if el:
         click.echo(f"Wait {s} sec for {el}...")
     time.sleep(s)
@@ -218,7 +219,7 @@ def start(ctx, start_word, open, count):
         gui.click_on("play")
 
     session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
-
+    not_solved = []
     for i in range(count):
         print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
         put_solution(start_word)
@@ -226,8 +227,16 @@ def start(ctx, start_word, open, count):
         wordle_container.word_list.append(start_word)
         solved = play(wordle_container, session_string, "/" + f"{i + 1}_{count}")
         if not solved:
-            break
-    print("Ended!")
+            not_solved.append(i)
+
+    __print_game_solution(not_solved)
+
+
+def __print_game_solution(not_solved):
+    if not_solved:
+        print(f"Game{'s' if len(not_solved) == 1 else ''} {', '.join(not_solved)} could not be solved!")
+    else:
+        print("Could solve all words! Ending...")
 
 
 @cli.command()
@@ -249,7 +258,7 @@ def resume(ctx, open, count, start_word):
         gui.move_to("submit")
 
     session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
-
+    not_solved = []
     for i in range(count):
         print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
         wordle_container = WordleContainer()
@@ -262,16 +271,17 @@ def resume(ctx, open, count, start_word):
 
         solved = play(wordle_container, session_string, "/" + f"{i + 1}_{count}")
         if not solved:
-            break
-    print("Ended!")
+            not_solved.append(i)
+
+    __print_game_solution(not_solved)
 
 
 def play(wordle_container: WordleContainer, session_path, game_identifier):
     ident_path = session_path + game_identifier
     os.makedirs(ident_path)
     tries = 0
-    while not wordle_container.is_solved() and tries <= 5:
-        current_text, current_colors = get_current_game_state(ident_path)
+    while not wordle_container.is_solved() and tries < 6:
+        current_text, current_colors, _ = get_current_game_state(ident_path)
         wordle_container.update(current_text, current_colors)
         if is_solved(current_colors):
             words = current_text.split()
@@ -286,7 +296,7 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
         next_solution = words[0]
         put_solution(next_solution)
         wait(1, "animation to start")
-        _, next_colors = get_current_game_state(ident_path)
+        _, next_colors, tries = get_current_game_state(ident_path)
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
@@ -301,21 +311,30 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
             wh.remove_word(next_solution)
             print("Delete word...")
             [gui.click_on("delete", duration=0, echo=False) for _ in range(5)]
+            _, _, tries = get_current_game_state(ident_path)
         else:
-            tries += 1
-            print(f"Word '{next_solution}' was not solution, starting iteration {tries + 1}/6...")
+            if tries < 6:
+                print(f"Word '{next_solution}' was not solution, starting iteration {tries + 1}/6...")
             wordle_container.word_list.append(next_solution)
 
-    if tries > 5:
+    if tries >= 6:
+        wait_for_game_solution()
+        gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
         os.rename(ident_path, ident_path + f"_{tries + 1}_UNSOLVED")
         print("Could not solve...")
-        gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
+        gui.click_on("next_word")
+        wait_for_game_start()
         return False
 
 
 def wait_for_game_start():
-    while not is_game_ready():
+    while not check_game_state(lambda state: gui.ColorCode.EMPTY == state):
         wait(.5, "game start")
+
+
+def wait_for_game_solution():
+    while not check_game_state(lambda state: gui.ColorCode.EMPTY != state):
+        wait(1, "game solution")
 
 
 def is_solved(colors: List[List[gui.ColorCode]]) -> bool:
@@ -338,12 +357,13 @@ def put_solution(next_word):
     gui.click_on("submit")
 
 
-def is_game_ready():
+def check_game_state(fn: typing.Callable[[gui.ColorCode], bool]):
+    """Executes the lambda on all states, and returns true if ALL of them return true"""
     while True:
         _, path = gui.screenshot()
         try:
             colors = gui.get_colors(path)
-            return all([gui.ColorCode.EMPTY == state for state in colors[0]])
+            return all([fn(state) for state in colors[0]])
         except gui.ColorStateException as e:
             os.remove(path)
             wait(.5, f"valid game state because '{e}'")
@@ -354,11 +374,11 @@ def is_game_ready():
 def get_current_game_state(data_path: str):
     again = True
     threshold = 5
+    number: int
     while again:
         _, path = gui.screenshot(path=data_path)
         try:
             colors = gui.get_colors(path)
-
             number = solution_number(colors)
             if number == 0:
                 raise gui.ColorStateException("Cannot get state if no rows are solved yet...")
@@ -392,7 +412,7 @@ def get_current_game_state(data_path: str):
             elif threshold < 1:
                 raise Exception("Could not read words from screenshot")
 
-    return text, colors
+    return text, colors, number
 
 
 def start_phone(phone: gui.Phone):

@@ -132,7 +132,6 @@ aktiv
 Aktor
 akute
 alaaf
-Alain
 Alarm
 Albas
 Alben
@@ -304,9 +303,6 @@ Argot
 ärgre
 Argus
 Arial
-aride
-Ariel
-Arien
 Arier
 Aries
 Arius
@@ -1483,7 +1479,6 @@ Emden
 Emely
 Emils
 Emily
-Emire
 Emirs
 Emmas
 Emmys
@@ -1530,7 +1525,6 @@ ergib
 erhob
 Erich
 Erics
-Erika
 Eriks
 Erker
 erkor
@@ -1626,7 +1620,6 @@ fahre
 Fähre
 fahrt
 fährt
-faire
 fäkal
 Fakes
 Fakir
@@ -1886,7 +1879,6 @@ frage
 fragt
 Frame
 Franc
-frank
 Franz
 fräse
 fräst
@@ -1958,8 +1950,6 @@ Futur
 Fuzzi
 fuzzy
 Gabel
-gaben
-gäben
 gäbet
 Gabis
 gable
@@ -1970,7 +1960,6 @@ Gabun
 Gabys
 gaffe
 gafft
-Gagen
 gähne
 gähnt
 Gaias
@@ -2026,7 +2015,6 @@ Gauen
 Gäule
 Gauls
 Gazas
-Gazen
 GBits
 GByte
 Geany
@@ -2657,7 +2645,6 @@ Hygge
 Hymen
 Hymne
 Hypes
-Hyphe
 Iains
 Ibiza
 Ibsen
@@ -2695,7 +2682,6 @@ Ilium
 Iljas
 Ilkas
 Iller
-Ilona
 Ilses
 Ilten
 Iltis
@@ -2858,6 +2844,7 @@ Jessy
 Jesus
 Jeton
 jette
+jetzt
 Jever
 JHWHs
 Jiffy
@@ -3455,7 +3442,6 @@ lalle
 lallt
 Lamas
 Lamee
-Lamin
 Lamms
 Lampe
 Lanas
@@ -3711,7 +3697,6 @@ Lohns
 lohnt
 löhnt
 Lohra
-Loire
 lokal
 Lokus
 Lolli
@@ -4028,7 +4013,6 @@ Milka
 Mille
 Milli
 Milos
-Milou
 Milva
 mimen
 Mimik
@@ -4401,7 +4385,6 @@ oblag
 Obsts
 OBtsm
 Ochse
-Ocken
 ocker
 Ödeme
 Odems
@@ -4546,7 +4529,6 @@ Padua
 paffe
 pafft
 pagan
-Pagen
 Paket
 Pakte
 Pakts
@@ -4566,7 +4548,6 @@ Panne
 Paola
 Paolo
 Papas
-Papen
 Paper
 pappe
 pappt
@@ -4820,9 +4801,6 @@ prall
 Prana
 Präsi
 preis
-Priel
-Priem
-Prien
 pries
 prima
 Prime
@@ -4965,7 +4943,6 @@ Rahel
 Rahen
 Rahms
 rahmt
-Raine
 Rains
 Rakel
 räkle
@@ -5297,7 +5274,6 @@ rühre
 rührt
 ruhst
 ruhte
-Ruine
 Ruins
 rülps
 Rumba
@@ -5780,8 +5756,6 @@ Stasi
 statt
 Staub
 staue
-Staus
-staut
 Steak
 Steam
 steck
@@ -6441,8 +6415,6 @@ urban
 urbar
 Ureol
 UrhWG
-Uriel
-urige
 Urins
 Urnen
 Uroma
@@ -6910,7 +6882,6 @@ Yusuf
 Yuzus
 Zacke
 Zadek
-zagen
 zähem
 zäher
 zähes
@@ -6927,7 +6898,6 @@ Zahns
 zahnt
 Zähre
 Zaina
-Zaire
 Zäkum
 Zange
 zanke
