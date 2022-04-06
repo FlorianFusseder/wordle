@@ -130,7 +130,7 @@ def cli(ctx, verbose, gui_pause, typing_speed, model):
     ctx.obj['gui_pause'] = gui_pause
     ctx.obj['typing_speed'] = typing_speed
     ctx.obj['model'] = model
-    gui.ColorCode.init(ctx.obj['model'])
+    ctx.obj['phone'] = gui.Phone.init_device(model)
     gui.PAUSE = gui_pause
 
 
@@ -191,8 +191,9 @@ def get_colors(ctx, path):
 
 
 @cli.command()
-def phone_start():
-    phone()
+@click.pass_context
+def phone_start(ctx):
+    pass
 
 
 def wait(s: float, el: str):
@@ -209,7 +210,7 @@ def wait(s: float, el: str):
 def start(ctx, start_word, open, count):
     if open:
         click.echo("Opening phone...")
-        phone()
+        start_phone(ctx.obj['phone'])
         wait(2, "phone")
         gui.click_on("app")
         wait(4, "app to start")
@@ -237,7 +238,7 @@ def resume(ctx, open, count, start_word):
 
     if open:
         click.echo("Opening phone...")
-        phone()
+        start_phone(ctx.obj['phone'])
         wait(2, "phone")
     else:
         gui.move_to("submit")
@@ -374,11 +375,8 @@ def get_current_game_state(data_path: str):
     return text, colors
 
 
-def phone():
-    command = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
-               "--window-y", "0"]
-    subprocess.Popen(command, shell=False,
-                     stdin=None, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
+def start_phone(phone: gui.Phone):
+    phone.start()
 
 
 if __name__ == '__main__':
