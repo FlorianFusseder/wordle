@@ -264,7 +264,7 @@ def resume(ctx, open, count, start_word):
         wordle_container = WordleContainer()
         if i == 0:
             word_list = gui.scr_read()
-            wordle_container.word_list.extend(word_list)
+            wordle_container.word_list.extend([w.lower() for w in word_list.split()])
         else:
             put_solution(start_word)
             wordle_container.word_list.append(start_word)
@@ -296,7 +296,15 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
         next_solution = words[0]
         put_solution(next_solution)
         wait(1, "animation to start")
-        _, next_colors, tries = get_current_game_state(ident_path)
+        all_words, next_colors, tries = get_current_game_state(ident_path)
+
+        for w in all_words.split():
+            w = w.lower()
+            if w not in [wc.lower() for wc in wordle_container.word_list] and w != next_solution.lower():
+                raise Exception(f"""Inconsistent game state: 
+                words read from picture: {', '.join(all_words.split())}
+                words that have been typed until now: {wordle_container.word_list}
+                solution for this iteration: {next_solution}""")
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
@@ -324,6 +332,7 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
         print("Could not solve...")
         gui.click_on("next_word")
         wait_for_game_start()
+
         return False
 
 
