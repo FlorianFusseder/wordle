@@ -260,8 +260,8 @@ def read(path, psm=6):
     return text
 
 
-def scr_read():
+def scr_read(threshold: int = 5):
     _, path = screenshot()
-    path = preprocess_img(path)
+    path = preprocess_img(path, threshold)
     text = read(path)
     return text

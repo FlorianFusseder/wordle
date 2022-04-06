@@ -1,5 +1,5 @@
 todo:
-t...t -> wenn beide gelb sind kommt zweimal vor
+t...t -> wenn beide gelb sind kommt zweimal vor oder wenn eines grün und eines gelb müssen ja zwei vorkommen eg /home/florian/Pictures/wordles/2022-04-06_20:23:19.472667/7_10_7_UNSOLVED/
 endscreen photo auf word auflösung warten
 endscreen word mit tesseract rausfinden
 whitelist für wörter die sicher funktionieren
@@ -7,3 +7,4 @@ ausgabe für colors farbcodieren
 rausfinden warum noch so viele screenshots auf */wordle/ landen
 sorting algorithmus strategie pattern
 endgame ausgabe um durchnittliche versuche/spiele mit jeweilig algoritymus
+use scr-screen and iterate thresholds to check words for inconsistent word states
