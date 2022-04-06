@@ -4,4 +4,6 @@ endscreen photo auf word auflösung warten
 endscreen word mit tesseract rausfinden
 whitelist für wörter die sicher funktionieren
 ausgabe für colors farbcodieren
-rausfinden warum noc so viele screenshots auf */wordle/ landen
+rausfinden warum noch so viele screenshots auf */wordle/ landen
+sorting algorithmus strategie pattern
+endgame ausgabe um durchnittliche versuche/spiele mit jeweilig algoritymus
