@@ -76,7 +76,6 @@ Adolf
 Adorf
 adrig
 Adula
-adult
 aerob
 Aesop
 Affen
@@ -101,7 +100,6 @@ Agios
 Agnes
 Agora
 Agrar
-Aguti
 Ahaus
 Ahlen
 Ahmed
@@ -115,10 +113,8 @@ ahnte
 Ahorn
 Ähren
 Ahura
-Aidas
 Aioli
 Aires
-Aisha
 Akaba
 Akbar
 Akira
@@ -169,9 +165,7 @@ Allyl
 Allys
 allzu
 Almas
-Almut
 aloha
-Alois
 Aloys
 Alpen
 alpha
@@ -183,11 +177,9 @@ alten
 alter
 älter
 altes
-Altis
 Altöl
 Alwin
 Alzey
-Amati
 Amber
 ambig
 Ambon
@@ -368,7 +360,6 @@ Asyle
 AsylG
 Asyls
 Atari
-Atems
 Athen
 Äther
 Athos
@@ -386,7 +377,6 @@ Attac
 ätzte
 Audio
 Audis
-Audit
 Augen
 äugen
 Auges
@@ -507,7 +497,6 @@ Basse
 Bässe
 Basso
 basta
-Basti
 Batch
 baten
 bäten
@@ -591,7 +580,6 @@ berge
 Bergs
 bergt
 Berit
-Bernd
 Berns
 Berta
 Berti
@@ -649,7 +637,6 @@ Bilge
 Bills
 Billy
 Bimbo
-bimst
 binär
 binde
 Bingo
@@ -668,7 +655,6 @@ birst
 Birte
 Bisam
 Bisky
-Bison
 Bisse
 bisst
 Bitch
@@ -916,7 +902,6 @@ Butch
 Bütte
 Butze
 büxen
-büxte
 Byron
 Bytes
 CABSL
@@ -964,7 +949,6 @@ Cents
 Ceran
 CEREC
 Ceres
-Cerny
 Champ
 Chaos
 Chaot
@@ -1207,8 +1191,6 @@ Dinar
 Diner
 dinge
 Dingo
-Dings
-Dinos
 Diode
 Dipol
 dippe
@@ -1266,7 +1248,6 @@ Dorfe
 Dorfs
 Doria
 Doris
-Dorne
 Dorns
 Doros
 dorre
@@ -1359,14 +1340,12 @@ Dusel
 Dutte
 Dutts
 duzen
-duzte
 Dylan
 Earls
 Earth
 ebben
 ebbte
 ebene
-Ebern
 Ebers
 Ebert
 ebnen
@@ -1499,7 +1478,6 @@ Enkel
 Ennui
 enorm
 Enten
-Enter
 Enzym
 Eozän
 Eplax
@@ -1566,7 +1544,6 @@ Ether
 Ethik
 Ethin
 Ethos
-Etons
 Etsch
 Ettal
 Etüde
@@ -1734,7 +1711,6 @@ ficht
 ficke
 Ficks
 fickt
-Ficus
 fidel
 Fidos
 fiele
@@ -1787,7 +1763,6 @@ Flash
 Flats
 flaue
 Flaum
-flaut
 fläze
 fläzt
 Fleck
@@ -1931,7 +1906,6 @@ Fundi
 Funds
 Fünfe
 fünft
-funke
 Funks
 funkt
 funky
@@ -2016,7 +1990,6 @@ Gäule
 Gauls
 Gazas
 GBits
-GByte
 Geany
 Geäst
 gebar
@@ -2087,7 +2060,6 @@ geübt
 gGmbH
 Ghali
 Ghana
-gibst
 Gicht
 giere
 giert
@@ -2099,7 +2071,6 @@ Ginas
 ginge
 gingt
 Ginny
-gipst
 Girls
 Giros
 Gitta
@@ -2253,7 +2224,6 @@ haart
 haben
 habet
 habil
-Habit
 hacke
 Hacks
 hackt
@@ -2264,7 +2234,6 @@ Hafen
 Häfen
 Hafer
 Haffs
-hafte
 Hagel
 Hagen
 hager
@@ -2283,18 +2252,15 @@ haken
 hakig
 häkle
 hakst
-hakte
 halal
 halbe
 Halde
 halft
-Halit
 halle
 hallo
 Halls
 hallt
 Halma
-Halme
 Halms
 halse
 Hälse
@@ -2347,7 +2313,6 @@ hasse
 Hasso
 hasst
 haste
-Hater
 hatte
 hätte
 Haube
@@ -2361,7 +2326,6 @@ Hauke
 Haupt
 hause
 haust
-haute
 häute
 Havel
 Havre
@@ -2451,7 +2415,6 @@ herbe
 Herde
 Herds
 Herme
-Herne
 Heroe
 Heron
 Heros
@@ -2482,7 +2445,6 @@ hielt
 hieve
 hievt
 Hilda
-Hilde
 Hilfe
 hilft
 Hille
@@ -2615,7 +2577,6 @@ hupen
 hüpfe
 hüpft
 hupst
-hupte
 Hürde
 huren
 hurra
@@ -2928,7 +2889,6 @@ Jutta
 Juwel
 juxen
 Juxes
-juxte
 Kaaba
 Kabel
 Kabis
@@ -2942,7 +2902,6 @@ Käfer
 Kaffs
 Käfig
 Kafka
-kahle
 Kahlo
 Kähne
 Kahns
@@ -2964,7 +2923,6 @@ kälke
 Kalks
 kälkt
 Kalle
-Kalme
 kalte
 Kälte
 Kamee
@@ -3024,7 +2982,6 @@ Katen
 Kater
 Kates
 Käthe
-Kathi
 Kathy
 Katia
 Katie
@@ -3081,7 +3038,6 @@ kerbe
 kerbt
 Kerle
 Kerls
-Kerne
 Kerns
 Kerub
 Kerze
@@ -3116,11 +3072,8 @@ Kilts
 Kimme
 Kimon
 Kindl
-Kinds
-Kings
 Kinne
 Kinns
-Kinos
 Kiosk
 Kioto
 Kiowa
@@ -3145,7 +3098,6 @@ Kiwis
 kkStB
 klack
 klage
-klagt
 klamm
 klang
 Klans
@@ -3158,7 +3110,6 @@ klaro
 klart
 klaue
 Klaus
-klaut
 klebe
 klebt
 Klees
@@ -3264,7 +3215,6 @@ Körbe
 Korbs
 Korea
 Korfu
-körne
 Korns
 körnt
 Korps
@@ -3361,7 +3311,6 @@ Kunde
 künde
 Kunos
 Kunst
-Kunze
 Kupon
 Kuppe
 Kurde
@@ -3393,7 +3342,6 @@ Kyoto
 Kyrie
 Kyros
 Laach
-Label
 laben
 laber
 labil
@@ -3426,7 +3374,6 @@ lahme
 lähme
 lahmt
 lähmt
-Lahti
 Laibs
 Laich
 Laien
@@ -3459,7 +3406,6 @@ Larry
 Larve
 lasch
 lasen
-läsen
 Laser
 läset
 Lassa
@@ -3575,7 +3521,6 @@ Leoni
 Leons
 Leony
 Lepra
-lerne
 lernt
 Leroy
 Lesbe
@@ -3620,7 +3565,6 @@ liest
 lifte
 Lifts
 Ligen
-light
 liken
 Likes
 Likör
@@ -3645,7 +3589,6 @@ linke
 links
 Linon
 linse
-linst
 Linum
 Linus
 Linux
@@ -3817,7 +3760,6 @@ Magus
 Mahdi
 mähen
 Mäher
-mahle
 Mahls
 mahlt
 mahne
@@ -3900,7 +3842,6 @@ MaStR
 Masud
 Masut
 Match
-mater
 Mathe
 matte
 mauem
@@ -3924,7 +3865,6 @@ Mayer
 Mayrs
 Mazda
 Mäzen
-MByte
 McCay
 McCoy
 McKay
@@ -4015,7 +3955,6 @@ mimen
 Mimik
 mimst
 mimte
-Minas
 Minen
 Mings
 Minis
@@ -4049,7 +3988,6 @@ mobil
 modal
 Model
 Modem
-Moden
 Moder
 modre
 Modul
@@ -4131,7 +4069,6 @@ muhen
 mühen
 Mühle
 mühst
-mühte
 Mulch
 Mulde
 Mulis
@@ -4142,7 +4079,6 @@ Mumie
 Mumms
 Mumps
 Münch
-munde
 münde
 Munot
 münze
@@ -4301,12 +4237,9 @@ Nigel
 Niger
 Nikes
 Nikon
-Nikos
 Nilay
 nimmt
-Ninas
 Ninja
-Niobs
 nippe
 nippt
 Nisse
@@ -4492,7 +4425,6 @@ ossär
 Ossis
 Ostau
 Osten
-Ostia
 Otmar
 Otter
 Ottos
@@ -4575,7 +4507,6 @@ Patch
 Paten
 Pater
 Patin
-Patio
 Patte
 Patts
 patze
@@ -4670,7 +4601,6 @@ Piers
 Piezo
 Pikee
 piken
-pikst
 pikte
 Pille
 Pilot
@@ -4679,13 +4609,11 @@ pimpe
 Pimpf
 pimpt
 pinge
-Pings
 Pinie
 pinke
 pinne
 pinnt
 Pinte
-Pinus
 Piotr
 Piper
 Pippi
@@ -4702,7 +4630,6 @@ Pizza
 PJler
 Pjotr
 plage
-plagt
 Plaid
 plane
 Pläne
@@ -4763,7 +4690,6 @@ Ponzi
 poole
 Pools
 poolt
-Popel
 Popen
 Popos
 poppe
@@ -4926,7 +4852,6 @@ Rades
 Radio
 Radix
 radle
-Radom
 Radon
 raffe
 rafft
@@ -5100,7 +5025,6 @@ Rhein
 Rhema
 Rhino
 Rhode
-Rhone
 Riads
 Ricas
 Richy
@@ -5395,7 +5319,6 @@ säuge
 saugt
 säugt
 Säule
-Sauls
 säume
 Saums
 säumt
@@ -5422,14 +5345,12 @@ scher
 scheu
 Schia
 Schis
-Schmu
 schob
 schon
 schön
 schor
 Schub
 schuf
-SchUG
 Schuh
 Schur
 Score
@@ -5473,7 +5394,6 @@ Semit
 Senat
 sende
 SENEC
-Senfs
 senge
 sengt
 senil
@@ -5482,7 +5402,6 @@ senkt
 Senne
 Sense
 Senta
-Seoul
 Sepia
 Sepps
 Serah
@@ -5656,7 +5575,6 @@ sorry
 Sorte
 Souks
 Sound
-Sousa
 South
 sowie
 Sozia
@@ -5711,7 +5629,6 @@ Sprit
 spröd
 spuck
 spuke
-Spuks
 spukt
 spule
 spüle
@@ -5869,13 +5786,11 @@ surfe
 surft
 surre
 surrt
-Susan
 Sushi
 Susie
 Susis
 Suter
 Sutra
-Suzys
 Svens
 Sveta
 SWAPO
@@ -6082,7 +5997,6 @@ Timmy
 Timon
 Timor
 Timur
-Tinas
 Tinos
 Tinte
 Tioga
@@ -6096,7 +6010,6 @@ Tisch
 Titan
 Titel
 Titer
-Titos
 Titte
 Titus
 Toast
@@ -6511,7 +6424,6 @@ Virus
 Visen
 Visio
 Visit
-vista
 Visum
 Visus
 vitae
@@ -6545,7 +6457,6 @@ Vomex
 Vopos
 vorab
 voran
-vorne
 Voten
 Votum
 vRack
@@ -6735,8 +6646,6 @@ Wilma
 Wilms
 Wilna
 winde
-Winds
-Wings
 winke
 Winks
 winkt
@@ -6970,7 +6879,6 @@ zinkt
 Zinne
 Zinns
 Zinse
-Zions
 zippe
 Zippo
 Zirbe
@@ -7039,7 +6947,6 @@ Zunge
 zupfe
 zupft
 zurät
-zürne
 zürnt
 zurre
 zurrt

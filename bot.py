@@ -234,7 +234,8 @@ def start(ctx, start_word, open, count):
 
 def __print_game_solution(not_solved):
     if not_solved:
-        print(f"Game{'s' if len(not_solved) == 1 else ''} {', '.join(not_solved)} could not be solved!")
+        print(
+            f"Game{'s' if len(not_solved) != 1 else ''} {', '.join([str(i) for i in not_solved])} could not be solved!")
     else:
         print("Could solve all words! Ending...")
 
@@ -327,9 +328,10 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
 
     if tries >= 6:
         wait_for_game_solution()
-        gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
         os.rename(ident_path, ident_path + f"_{tries + 1}_UNSOLVED")
         print("Could not solve...")
+        wait(3, "endscreen solution")
+        gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
         gui.click_on("next_word")
         wait_for_game_start()
 
