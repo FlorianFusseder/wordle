@@ -97,7 +97,6 @@ Agens
 Agent
 Agfas
 Ägide
-agile
 Agios
 Agnes
 Agora
@@ -151,7 +150,6 @@ Algin
 alias
 Alibi
 Alica
-Alice
 Alien
 Alina
 Aliya
@@ -172,7 +170,6 @@ Allyl
 Allys
 allzu
 Almas
-Almen
 Almut
 aloha
 Alois
@@ -198,11 +195,9 @@ Ambon
 Ambra
 Ameos
 Amida
-Amide
 Amids
 Amiga
 Amigo
-Amine
 Amins
 Amirs
 Amman
@@ -239,7 +234,6 @@ anhin
 anhob
 Anika
 Anima
-Anime
 Anion
 Anjas
 Anjou
@@ -456,7 +450,6 @@ BAföG
 Bagel
 Bahai
 bahne
-bahnt
 Bahre
 Baken
 Bakus
@@ -485,13 +478,11 @@ Bande
 bände
 Bands
 bange
-bangt
 Banjo
 Bänke
 banne
 Banns
 bannt
-Bantu
 Barbe
 Barde
 barem
@@ -729,7 +720,6 @@ blühe
 blüht
 Blume
 Bluse
-blute
 Blüte
 Bluts
 BMVBW
@@ -763,7 +753,6 @@ bölke
 bölkt
 Bolle
 Bölls
-Bolte
 Bolus
 bolze
 bolzt
@@ -894,7 +883,6 @@ buhlt
 Buhne
 Bühne
 buhst
-buhte
 Buick
 buken
 büken
@@ -1114,7 +1102,6 @@ Dänin
 Danis
 danke
 Danks
-dankt
 Danny
 Dante
 daran
@@ -1485,13 +1472,8 @@ Eleve
 Elfen
 elfte
 Elgar
-Elias
-Elina
 Eliot
-Elisa
-Elise
 Elite
-Eliza
 Ellen
 Eller
 Ellis
@@ -1504,7 +1486,6 @@ Elspe
 Elvis
 Emden
 Emely
-Emile
 Emils
 Emily
 Emire
@@ -1524,8 +1505,6 @@ enger
 enges
 engst
 engte
-ENIAC
-ENISA
 Enkel
 Ennui
 enorm
@@ -1579,7 +1558,6 @@ Esbit
 Esche
 Eseln
 Esels
-eSIMs
 Eskes
 Essay
 ESSEC
@@ -1625,7 +1603,6 @@ ewige
 exakt
 Excel
 exFAT
-Exile
 Exils
 Expat
 Exter
@@ -1866,7 +1843,6 @@ Flurs
 Fluse
 Flush
 Fluss
-flute
 Flyer
 focht
 Focus
@@ -2191,7 +2167,6 @@ gönne
 gönnt
 Goofy
 GoPro
-Göran
 Gorch
 goren
 gören
@@ -2268,7 +2243,6 @@ Guave
 Gucci
 gucke
 guckt
-Guide
 Guido
 Gulag
 Gülle
@@ -2325,7 +2299,6 @@ Haien
 Haies
 Haifa
 Haiku
-Haine
 Hains
 Haiti
 haken
@@ -2461,7 +2434,6 @@ Heime
 Heims
 Heine
 Heini
-Heino
 Heins
 Heinz
 Heise
@@ -2600,7 +2572,6 @@ Holme
 Holms
 Holon
 holst
-holte
 holze
 holzt
 Homer
@@ -3315,7 +3286,6 @@ köpfe
 Kopfs
 köpft
 Kopie
-Kopte
 Koran
 Körbe
 Korbs
@@ -3412,7 +3382,6 @@ kühne
 Kuhns
 Küken
 Kulis
-Kulte
 Kults
 Kumin
 Kumys
@@ -3486,7 +3455,6 @@ lähme
 lahmt
 lähmt
 Lahti
-Laibe
 Laibs
 Laich
 Laien
@@ -3556,7 +3524,6 @@ Laune
 Laura
 lause
 Läuse
-läute
 Lauts
 LAVES
 Lavur
@@ -3607,17 +3574,14 @@ lehrt
 Leibe
 Leibs
 leibt
-Leica
 leide
 Leids
 Leier
 leihe
 leiht
-Leila
 leime
 leimt
 Leine
-Leins
 leise
 leite
 Leitz
@@ -3735,7 +3699,6 @@ loben
 Lobes
 Lobos
 lobst
-lobte
 loche
 Lochs
 locht
@@ -3754,14 +3717,12 @@ Logis
 Logoi
 Logos
 logst
-Lohen
 lohne
 löhne
 Lohns
 lohnt
 löhnt
 Lohra
-Loipe
 Loire
 lokal
 Lokus
@@ -3823,10 +3784,8 @@ Luger
 Lugol
 lugst
 lügst
-lugte
 Luigi
 Luisa
-Luise
 Lukas
 Luken
 Lukes
@@ -3862,7 +3821,6 @@ Lynns
 Lyons
 Lyrik
 Lysin
-Maare
 Macao
 Macau
 mache
@@ -3895,18 +3853,14 @@ Mahls
 mahlt
 mahne
 Mähne
-mahnt
 Mähre
 mähst
 mähte
 Maier
 Maika
-Maike
 Maiks
-maile
 Mails
 mailt
-Maine
 Mains
 Mainz
 Majas
@@ -4277,7 +4231,6 @@ naher
 näher
 nahes
 nähme
-nahmt
 nähmt
 nähre
 nährt
@@ -4285,7 +4238,6 @@ nähst
 nahte
 nähte
 Naila
-naive
 Najat
 Namen
 Namib
@@ -4333,13 +4285,10 @@ Negro
 nehme
 nehmt
 Nehru
-neide
 Neids
 neige
 neigt
 Neill
-Neins
-Neiva
 Nelke
 Nelly
 nenne
@@ -4422,7 +4371,6 @@ Nonce
 Nonne
 NOPAT
 Noppe
-Norah
 Noras
 Norma
 norme
@@ -4825,7 +4773,6 @@ pofte
 pogen
 Pogos
 pogst
-pogte
 Pöhle
 Poing
 Point
@@ -4844,7 +4791,6 @@ Polle
 Polly
 Polos
 polst
-polte
 Polyp
 Pomps
 Ponal
@@ -4934,7 +4880,6 @@ Pulpa
 Pulpe
 pulse
 pulst
-pulte
 Pults
 Pumas
 pumpe
@@ -6442,7 +6387,6 @@ Ubier
 übtet
 Übung
 Uchta
-Udine
 UdSSR
 Uedem
 ufere
@@ -6455,7 +6399,6 @@ Ulcus
 ulken
 ulkig
 ulkst
-ulkte
 Ulkus
 Ullas
 Ulmen
@@ -6650,7 +6593,6 @@ volle
 Völle
 Volos
 Volta
-Volte
 Volvo
 Vomex
 Vopos
@@ -6769,7 +6711,6 @@ wehst
 wehte
 Weibe
 weich
-Weida
 weide
 weihe
 weiht

@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import subprocess
+import sys
 import time
 from typing import List
 
@@ -50,13 +51,13 @@ class WordleContainer:
                 c = text[j]
                 color_code = colors[i][j]
 
-                if color_code == gui.WordleColor.OK:
+                if color_code == gui.ColorCode.OK:
                     self.state.add_solved(c, j)
-                elif color_code == gui.WordleColor.CONTAINED:
+                elif color_code == gui.ColorCode.CONTAINED:
                     self.state.add_contained(c, j)
-                elif color_code == gui.WordleColor.NOT_CONTAINED:
+                elif color_code == gui.ColorCode.NOT_CONTAINED:
                     self.state.add_not_contained(c)
-                elif color_code == gui.WordleColor.EMPTY:
+                elif color_code == gui.ColorCode.EMPTY:
                     break
             text = text[6:]
 
@@ -103,8 +104,8 @@ def solution_number(colors):
     count = 0
     for row in range(len(colors)):
         row_ = colors[row][0]
-        if row_ != gui.WordleColor.EMPTY:
-            is_complete = all([column != gui.WordleColor.EMPTY for column in colors[row]])
+        if row_ != gui.ColorCode.EMPTY:
+            is_complete = all([column != gui.ColorCode.EMPTY for column in colors[row]])
             if not is_complete:
                 raise gui.ColorStateException("Not all Colors seem to be solved just yet")
             count = count + 1
@@ -113,16 +114,23 @@ def solution_number(colors):
     return count
 
 
+models = ['PSMART2019', 'P30']
+
+
 @click.group()
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @click.option('--gui-pause', default=0.5, required=False)
 @click.option('--typing-speed', default=0.5, required=False)
+@click.option("-m", "--model",
+              type=click.Choice(models, case_sensitive=False), default=models[0])
 @click.pass_context
-def cli(ctx, verbose, gui_pause, typing_speed):
+def cli(ctx, verbose, gui_pause, typing_speed, model):
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
     ctx.obj['gui_pause'] = gui_pause
     ctx.obj['typing_speed'] = typing_speed
+    ctx.obj['model'] = model
+    gui.ColorCode.init(ctx.obj['model'])
     gui.PAUSE = gui_pause
 
 
@@ -150,7 +158,7 @@ def screenshot(path):
 
 
 @cli.command()
-@click.option('-p', '--path', type=click.Path(exists=True))
+@click.argument('path', type=click.Path(exists=True))
 def preprocess_img(path):
     gui.preprocess_img(path)
 
@@ -171,8 +179,14 @@ def read(path, psm):
 
 
 @cli.command()
+def scr_read():
+    gui.scr_read()
+
+
+@cli.command()
 @click.argument("path", type=click.Path(exists=True))
-def get_colors(path):
+@click.pass_context
+def get_colors(ctx, path):
     gui.get_colors(path)
 
 
@@ -202,8 +216,8 @@ def start(ctx, start_word, open, count):
         gui.click_on("play")
 
     for i in range(count):
+        print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
         put_solution(start_word)
-        print(f"Play game {i + 1}/{count}")
         wordle_container = WordleContainer()
         wordle_container.word_list.append(start_word)
         play(wordle_container)
@@ -212,9 +226,15 @@ def start(ctx, start_word, open, count):
 
 @cli.command()
 @click.option("-o", "--open", is_flag=True, default=False)
-@click.option("-c", "--count", default=1)
+@click.option("-c", "--count", default=1, type=click.IntRange(1, sys.maxsize))
+@click.option("-w", "--start_word")
 @click.pass_context
-def resume(ctx, open, count):
+def resume(ctx, open, count, start_word):
+    if count > 1 and not start_word:
+        raise click.BadParameter(
+            "If 'count' option is used, you have to define a start_word with '-w' (e.g. '-w stier')",
+            start_word)
+
     if open:
         click.echo("Opening phone...")
         phone()
@@ -223,9 +243,15 @@ def resume(ctx, open, count):
         gui.move_to("submit")
 
     for i in range(count):
-        print("Play game " + str(i))
-
+        print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
         wordle_container = WordleContainer()
+        if i == 0:
+            word_list = gui.scr_read()
+            wordle_container.word_list.extend(word_list)
+        else:
+            put_solution(start_word)
+            wordle_container.word_list.append(start_word)
+
         play(wordle_container)
     print("Ended!")
 
@@ -260,7 +286,8 @@ def play(wordle_container: WordleContainer):
         elif not was_legit_input(next_colors, current_colors):
             print(f"Word {next_solution} seems not to be wordle word, removing...")
             wh.remove_word(next_solution)
-            [gui.click_on("delete", duration=0) for _ in range(5)]
+            print("Delete word...")
+            [gui.click_on("delete", duration=0, echo=False) for _ in range(5)]
         else:
             print(f"Word '{next_solution}' was not solution, starting next iteration...")
             wordle_container.word_list.append(next_solution)
@@ -271,9 +298,9 @@ def wait_for_game_start(session_path):
         wait(.5, "game start")
 
 
-def is_solved(colors: List[List[gui.WordleColor]]) -> bool:
+def is_solved(colors: List[List[gui.ColorCode]]) -> bool:
     for color in colors:
-        if all(solution == gui.WordleColor.OK for solution in color):
+        if all(solution == gui.ColorCode.OK for solution in color):
             return True
 
 
@@ -296,10 +323,10 @@ def is_game_ready(data_path: str):
         _, path = gui.screenshot(path=data_path)
         try:
             colors = gui.get_colors(path)
-            return all([gui.WordleColor.EMPTY == state for state in colors[0]])
-        except gui.ColorStateException:
+            return all([gui.ColorCode.EMPTY == state for state in colors[0]])
+        except gui.ColorStateException as e:
             os.remove(path)
-            wait(.5, "for valid game state")
+            wait(.5, f"valid game state because '{e}'")
             continue
 
 
@@ -307,7 +334,6 @@ def get_current_game_state(data_path: str):
     again = True
     threshold = 5
     while again:
-        print(f"Threshold {threshold}")
         _, path = gui.screenshot(path=data_path)
         try:
             colors = gui.get_colors(path)
@@ -316,10 +342,10 @@ def get_current_game_state(data_path: str):
             if number == 0:
                 raise gui.ColorStateException("Cannot get state if no rows are solved yet...")
 
-        except gui.ColorStateException:
+        except gui.ColorStateException as e:
             """Solution is not yet done.."""
             os.remove(path)
-            wait(1, "for valid game state")
+            wait(1, f"valid game state because '{e}'")
             continue
 
         processed_path = gui.preprocess_img(path, threshold=threshold)

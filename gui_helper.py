@@ -1,10 +1,12 @@
 import datetime
-from enum import Enum, unique, auto
+from abc import ABC, ABCMeta
+from enum import Enum, unique, auto, EnumMeta
+from typing import Tuple
 
 import numpy as numpy
 import pyautogui as gui
-from pytesseract import image_to_string
 from PIL import Image, ImageOps, ImageChops
+from pytesseract import image_to_string
 
 q_row_y = 770
 a_row_y = 830
@@ -64,23 +66,97 @@ class ColorStateException(Exception):
     pass
 
 
+class PhoneModel(ABC):
+
+    @classmethod
+    def is_empty(cls, rgb) -> bool:
+        pass
+
+    @classmethod
+    def is_ok(cls, rgb) -> bool:
+        pass
+
+    @classmethod
+    def is_not_contained(cls, rgb) -> bool:
+        pass
+
+    @classmethod
+    def is_contained(cls, rgb) -> bool:
+        pass
+
+    @classmethod
+    def get_model(cls, model: str = None):
+        if model == "P30":
+            return P30()
+        elif model == 'PSMART2019':
+            return PSMART2019()
+        else:
+            return PSMART2019()
+
+
+class P30(PhoneModel):
+
+    @classmethod
+    def is_empty(cls, rgb) -> bool:
+        return rgb == (146, 148, 150)
+
+    @classmethod
+    def is_ok(cls, rgb) -> bool:
+        return rgb == (13, 188, 40)
+
+    @classmethod
+    def is_not_contained(cls, rgb) -> bool:
+        return rgb == (83, 83, 83)
+
+    @classmethod
+    def is_contained(cls, rgb) -> bool:
+        return rgb == (250, 217, 57)
+
+
+class PSMART2019(PhoneModel):
+
+    @classmethod
+    def is_empty(cls, rgb) -> bool:
+        return rgb == (146, 148, 152)
+
+    @classmethod
+    def is_ok(cls, rgb) -> bool:
+        return rgb[0] in range(0, 11) and rgb[1] in range(155, 165) and rgb[2] in range(35, 45)
+
+    @classmethod
+    def is_not_contained(cls, rgb) -> bool:
+        return rgb == (83, 83, 83)
+
+    @classmethod
+    def is_contained(cls, rgb) -> bool:
+        return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(50, 60)
+
+
 @unique
-class WordleColor(Enum):
+class ColorCode(Enum):
     OK = auto()
     NOT_CONTAINED = auto()
     CONTAINED = auto()
     EMPTY = auto()
 
+    _model: PhoneModel
+    color_name_max_length: int
+
+    @classmethod
+    def init(cls, model: str):
+        cls._model = PhoneModel.get_model(model)
+        cls.color_name_max_length = max([len(color.name) for color in ColorCode])
+
     @classmethod
     def code(cls, code: tuple):
-        if code == (13, 188, 40):
-            return WordleColor.OK
-        elif code == (250, 217, 57):
-            return WordleColor.CONTAINED
-        elif code == (83, 83, 83):
-            return WordleColor.NOT_CONTAINED
-        elif code == (146, 148, 150):
-            return WordleColor.EMPTY
+        if cls._model.is_ok(code):
+            return ColorCode.OK
+        elif cls._model.is_contained(code):
+            return ColorCode.CONTAINED
+        elif cls._model.is_not_contained(code):
+            return ColorCode.NOT_CONTAINED
+        elif cls._model.is_empty(code):
+            return ColorCode.EMPTY
         else:
             raise ColorStateException("Color tuple " + str(code) + " unknown")
 
@@ -97,7 +173,7 @@ def type(word: str, duration: float = .5, echo: bool = True):
     if echo:
         print(f"Type word {word}...")
     for c in word:
-        click_on(c, duration)
+        click_on(c, duration, False)
 
 
 def move_to(element: str, duration: float = .5):
@@ -117,7 +193,7 @@ def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/flori
 
 
 def preprocess_img(path: str, threshold: int = 5):
-    print("Preprocess Image")
+    print(f"Preprocess Image with threshold value: {threshold}")
     gui_screenshot = Image.open(path)
     gray_image = ImageOps.grayscale(gui_screenshot)
     gray = ImageChops.invert(gray_image)
@@ -144,20 +220,26 @@ def crop_img(in_p, out_p=None):
 def get_colors(path: str):
     px = Image.open(path).load()
 
-    color_matrix = [None] * 6
+    color_matrix: [] = [None] * 6
     for i in range(6):
         color_matrix[i] = [None] * 5
 
+    color_string = ""
     for i in range(0, 6):
         for j in range(0, 5):
             x, y = color_pos[i][j]
             pixel = px[x, y]
-            color = WordleColor.code(pixel)
-            print(f"{i}|{j}: " + color.name, end=", ")
+            try:
+                color = ColorCode.code(pixel)
+            except ColorStateException as e:
+                raise ColorStateException(str(e) + f" at location ({i}|{j})")
+            color_string += f"{i}|{j}: " + color.name + (
+                    (ColorCode.color_name_max_length - len(color.name)) * " ") + " "
             color_matrix[i][j] = color
-            if j == 4:
-                print("")
+            if j == 4 and i != 5:
+                color_string += "\n"
 
+    print(color_string)
     return color_matrix
 
 
@@ -165,6 +247,12 @@ def read(path, psm=6):
     print(f"Read characters from {path}")
     text = image_to_string(Image.open(path), lang="deu",
                            config=f'--psm {psm} -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZÖÄÜ')
-    print("Found words:")
-    print(f"[{', '.join(text.split())}]")
+    print(f"Found words: [{', '.join(text.split())}]")
+    return text
+
+
+def scr_read():
+    _, path = screenshot()
+    path = preprocess_img(path)
+    text = read(path)
     return text
