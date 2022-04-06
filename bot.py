@@ -328,7 +328,7 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
 
     if tries >= 6:
         wait_for_game_solution()
-        renamed_path = ident_path, ident_path + f"_{tries + 1}_UNSOLVED"
+        renamed_path = ident_path + f"_{tries + 1}_UNSOLVED"
         os.rename(ident_path, renamed_path)
         print("Could not solve...")
         wait(3, "endscreen solution")
