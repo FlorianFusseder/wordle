@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import random
 import subprocess
 import sys
 import time
@@ -193,7 +194,7 @@ def get_colors(ctx, path):
 @cli.command()
 @click.pass_context
 def phone_start(ctx):
-    pass
+    start_phone(ctx.obj['phone'])
 
 
 def wait(s: float, el: str):
@@ -216,12 +217,16 @@ def start(ctx, start_word, open, count):
         wait(4, "app to start")
         gui.click_on("play")
 
+    session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
+
     for i in range(count):
         print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
         put_solution(start_word)
         wordle_container = WordleContainer()
         wordle_container.word_list.append(start_word)
-        play(wordle_container)
+        solved = play(wordle_container, session_string, "/" + f"{i + 1}_{count}")
+        if not solved:
+            break
     print("Ended!")
 
 
@@ -243,6 +248,8 @@ def resume(ctx, open, count, start_word):
     else:
         gui.move_to("submit")
 
+    session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
+
     for i in range(count):
         print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
         wordle_container = WordleContainer()
@@ -253,49 +260,61 @@ def resume(ctx, open, count, start_word):
             put_solution(start_word)
             wordle_container.word_list.append(start_word)
 
-        play(wordle_container)
+        solved = play(wordle_container, session_string, "/" + f"{i + 1}_{count}")
+        if not solved:
+            break
     print("Ended!")
 
 
-def play(wordle_container: WordleContainer):
-    session_path = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
-    os.mkdir(session_path)
-    while not wordle_container.is_solved():
-        current_text, current_colors = get_current_game_state(session_path)
+def play(wordle_container: WordleContainer, session_path, game_identifier):
+    ident_path = session_path + game_identifier
+    os.makedirs(ident_path)
+    tries = 0
+    while not wordle_container.is_solved() and tries <= 5:
+        current_text, current_colors = get_current_game_state(ident_path)
         wordle_container.update(current_text, current_colors)
         if is_solved(current_colors):
             words = current_text.split()
             i = len(words) - 1
             print(f"Already solved with {words[i]}")
-            wordle_container.set_solved(words[i], session_path)
+            wordle_container.set_solved(words[i], ident_path)
             gui.click_on("next_word")
-            wait_for_game_start(session_path)
+            wait_for_game_start()
             break
 
         words = wordle_container.find()
         next_solution = words[0]
         put_solution(next_solution)
         wait(1, "animation to start")
-        _, next_colors = get_current_game_state(session_path)
+        _, next_colors = get_current_game_state(ident_path)
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
-            wordle_container.set_solved(next_solution, session_path)
+            wordle_container.set_solved(next_solution, ident_path)
+            gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
             gui.click_on("next_word")
-            wait_for_game_start(session_path)
-            break
+            os.rename(ident_path, ident_path + f"_{tries + 1}_{next_solution}")
+            wait_for_game_start()
+            return True
         elif not was_legit_input(next_colors, current_colors):
             print(f"Word {next_solution} seems not to be wordle word, removing...")
             wh.remove_word(next_solution)
             print("Delete word...")
             [gui.click_on("delete", duration=0, echo=False) for _ in range(5)]
         else:
-            print(f"Word '{next_solution}' was not solution, starting next iteration...")
+            tries += 1
+            print(f"Word '{next_solution}' was not solution, starting iteration {tries + 1}/6...")
             wordle_container.word_list.append(next_solution)
 
+    if tries > 5:
+        os.rename(ident_path, ident_path + f"_{tries + 1}_UNSOLVED")
+        print("Could not solve...")
+        gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
+        return False
 
-def wait_for_game_start(session_path):
-    while not is_game_ready(session_path):
+
+def wait_for_game_start():
+    while not is_game_ready():
         wait(.5, "game start")
 
 
@@ -319,9 +338,9 @@ def put_solution(next_word):
     gui.click_on("submit")
 
 
-def is_game_ready(data_path: str):
+def is_game_ready():
     while True:
-        _, path = gui.screenshot(path=data_path)
+        _, path = gui.screenshot()
         try:
             colors = gui.get_colors(path)
             return all([gui.ColorCode.EMPTY == state for state in colors[0]])
@@ -329,6 +348,7 @@ def is_game_ready(data_path: str):
             os.remove(path)
             wait(.5, f"valid game state because '{e}'")
             continue
+    os.remove(path)
 
 
 def get_current_game_state(data_path: str):
