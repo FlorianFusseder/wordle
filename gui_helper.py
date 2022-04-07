@@ -231,7 +231,11 @@ def get_colors(path: str):
 
     color_matrix: [] = [None] * 6
     for i in range(6):
-        color_matrix[i] = [None] * 5
+        color_matrix[i] = [ColorCode.EMPTY] * 5
+
+    pos_ = px[color_pos[0][0]]
+    if pos_ == ColorCode.EMPTY:
+        print(f"First position was {pos_}, returning immediately...")
 
     color_string = ""
     for i in range(0, 6):

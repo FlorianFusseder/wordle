@@ -1,8 +1,6 @@
 import datetime
 import json
 import os
-import random
-import subprocess
 import sys
 import time
 import typing
@@ -70,7 +68,7 @@ class WordleContainer:
             raise Exception("No Words could be found!")
         return words
 
-    def set_solved(self, solution, path=None):
+    def set_solved(self, solution: str = None, path=None):
         self.solution = solution
         file_name = "game_data.json"
 
@@ -156,7 +154,7 @@ def screenshot(path):
     if not path:
         gui.screenshot()
     else:
-        gui.screenshot(True, path)
+        gui.screenshot(with_datetime=True, path=path)
 
 
 @cli.command()
@@ -253,8 +251,8 @@ def resume(ctx, open, count, start_word):
         click.echo("Opening phone...")
         start_phone(ctx.obj['phone'])
         wait(2, "phone")
-    else:
-        gui.move_to("submit")
+
+    gui.move_to("submit")
 
     session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
     not_solved = []
@@ -328,6 +326,7 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
         wait_for_game_solution()
         renamed_path = ident_path + f"_{tries + 1}_UNSOLVED"
         os.rename(ident_path, renamed_path)
+        wordle_container.set_solved(None, renamed_path)
         print("Could not solve...")
         wait(3, "endscreen solution")
         gui.screenshot((0, 65, 470, 990), False, renamed_path, "endscreen.png")
@@ -372,55 +371,55 @@ def check_game_state(fn: typing.Callable[[gui.ColorCode], bool]):
         _, path = gui.screenshot()
         try:
             colors = gui.get_colors(path)
-            return all([fn(state) for state in colors[0]])
+            all_match = all([fn(state) for state in colors[0]])
+            os.remove(path)
+            return all_match
         except gui.ColorStateException as e:
             os.remove(path)
             wait(.5, f"valid game state because '{e}'")
             continue
-    os.remove(path)
 
 
 def get_current_game_state(data_path: str):
     again = True
     threshold = 5
     number: int
-    while again:
-        _, path = gui.screenshot(path=data_path)
-        try:
-            colors = gui.get_colors(path)
-            number = solution_number(colors)
-            if number == 0:
-                raise gui.ColorStateException("Cannot get state if no rows are solved yet...")
+    if data_path:
+        while again:
+            _, path = gui.screenshot(path=data_path)
+            try:
+                colors = gui.get_colors(path)
+                number = solution_number(colors)
+                if number == 0:
+                    raise gui.ColorStateException("Cannot get state if no rows are solved yet...")
 
-        except gui.ColorStateException as e:
-            """Solution is not yet done.."""
-            os.remove(path)
-            wait(1, f"valid game state because '{e}'")
-            continue
+            except gui.ColorStateException as e:
+                """Solution is not yet done.."""
+                os.remove(path)
+                wait(1, f"valid game state because '{e}'")
+                continue
 
-        processed_path = gui.preprocess_img(path, threshold=threshold)
-        # os.remove(path) remove first screenshot
-        text = gui.read(processed_path).lower()
+            processed_path = gui.preprocess_img(path, threshold=threshold)
+            text = gui.read(processed_path).lower()
 
-        again = False
-        text_split = text.split()
-        for i, word in enumerate(text_split):
-            if len(word) != 5:
-                again = True
-                break
-            if not all([char in "abcdefghijklmnopqrstuvwxyzöäü" for char in word]):
-                again = True
+            again = False
+            text_split = text.split()
+            for i, word in enumerate(text_split):
+                if len(word) != 5:
+                    again = True
+                    break
+                if not all([char in "abcdefghijklmnopqrstuvwxyzöäü" for char in word]):
+                    again = True
 
-        if again:
-            if 20 > threshold >= 5:
-                threshold = threshold + 1
-            elif threshold >= 20:
-                threshold = 4
-            elif 5 > threshold > 0:
-                threshold = threshold - 1
-            elif threshold < 1:
-                raise Exception("Could not read words from screenshot")
-
+            if again:
+                if 20 > threshold >= 5:
+                    threshold = threshold + 1
+                elif threshold >= 20:
+                    threshold = 4
+                elif 5 > threshold > 0:
+                    threshold = threshold - 1
+                elif threshold < 1:
+                    raise Exception("Could not read words from screenshot")
     return text, colors, number
 
 
