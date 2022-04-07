@@ -1,10 +1,7 @@
 todo:
-gamedata.json muss gespeichert werden, auch wenns nicht gesolved wird
-endscreen photo auf word auflösung warten
 endscreen word mit tesseract rausfinden
 whitelist für wörter die sicher funktionieren
 ausgabe für colors farbcodieren
-rausfinden warum noch so viele screenshots auf */wordle/ landen
 sorting algorithmus strategie pattern
 endgame ausgabe um durchnittliche versuche/spiele mit jeweilig algoritymus
 use scr-screen and iterate thresholds to check words for inconsistent word states

@@ -2,9 +2,6 @@ aalen
 aalst
 aalte
 Aarau
-Aasee
-Aases
-Aatal
 Abart
 abbat
 Abbau
@@ -203,7 +200,6 @@ Amsel
 Ämter
 Amtes
 Amway
-anale
 Anbau
 anbei
 anbot
@@ -1111,7 +1107,6 @@ Debüt
 decke
 Decks
 deckt
-Defoe
 Degen
 Degus
 dehne
@@ -1540,9 +1535,7 @@ Etuis
 etwas
 Etzel
 Euböa
-Eugen
 Eulen
-Eupen
 eurem
 euren
 eurer
@@ -2020,7 +2013,6 @@ Gents
 Genua
 genug
 Genus
-Geode
 Geoid
 geölt
 Georg
@@ -2330,7 +2322,6 @@ Heber
 heble
 hebst
 Hecht
-hecke
 Hecks
 heckt
 Hedda
@@ -2386,7 +2377,6 @@ Helms
 Helot
 Hemds
 Hemer
-hemme
 hemmt
 Hendl
 Henna
@@ -4129,7 +4119,6 @@ näsle
 nasse
 nässe
 nässt
-natal
 nativ
 Natur
 Nauen
@@ -4178,7 +4167,6 @@ nette
 netto
 Netze
 neuem
-neuen
 neuer
 neues
 Neune
