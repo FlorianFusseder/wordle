@@ -233,9 +233,11 @@ def get_colors(path: str):
     for i in range(6):
         color_matrix[i] = [ColorCode.EMPTY] * 5
 
-    pos_ = px[color_pos[0][0]]
-    if pos_ == ColorCode.EMPTY:
-        print(f"First position was {pos_}, returning immediately...")
+    x, y = color_pos[0][0]
+    pixel = px[x, y]
+    if ColorCode.EMPTY == ColorCode.code(pixel):
+        print(f"First position was {ColorCode.EMPTY.name}, returning immediately...")
+        return color_matrix
 
     color_string = ""
     for i in range(0, 6):
@@ -266,6 +268,8 @@ def read(path, psm=6):
 
 def scr_read(threshold: int = 5):
     _, path = screenshot()
-    path = preprocess_img(path, threshold)
-    text = read(path)
+    new_path = preprocess_img(path, threshold)
+    text = read(new_path)
+    os.remove(new_path)
+    os.remove(path)
     return text

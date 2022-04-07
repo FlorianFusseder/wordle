@@ -383,7 +383,6 @@ Augur
 Aupke
 aural
 Aurar
-Aurel
 Aurum
 Autor
 Autos
@@ -1005,7 +1004,6 @@ Codex
 Codon
 Coils
 Colas
-Colin
 Colts
 Combo
 Comic
@@ -1042,7 +1040,6 @@ Cross
 Crowd
 Curie
 Curry
-Cyber
 Cybex
 Cyrus
 dabei
@@ -1207,11 +1204,9 @@ Diwan
 DJane
 DNSAP
 Docht
-docke
 Docks
 dockt
 Dödel
-Dodge
 Dodos
 Dogen
 Dogge
@@ -1653,7 +1648,6 @@ faxte
 Fäzes
 Fazit
 Feder
-FedEx
 Feeds
 fegen
 Feger
@@ -1679,7 +1673,6 @@ felin
 Felix
 Felle
 Fells
-Femen
 Femur
 Fendt
 Ferdi
@@ -2471,7 +2464,6 @@ hoble
 Hobos
 hobst
 Hochs
-hocke
 hockt
 Hoden
 Höfen
@@ -2507,7 +2499,6 @@ Holon
 holst
 holze
 holzt
-Homer
 Homos
 Honey
 Honig
@@ -2597,7 +2588,6 @@ Hygge
 Hymen
 Hymne
 Hypes
-Iains
 Ibiza
 Ibsen
 ICANN
@@ -2629,7 +2619,6 @@ ihres
 Ikone
 Ileus
 Ilgen
-Ilias
 Ilium
 Iljas
 Ilkas
@@ -2996,7 +2985,6 @@ KByte
 Kebab
 kecke
 Kedar
-Keder
 Kefir
 kegel
 kegle
@@ -3163,7 +3151,6 @@ Knuts
 Koala
 Kobel
 Kobra
-koche
 Köche
 Kochs
 kocht
@@ -3199,7 +3186,6 @@ könnt
 Konny
 Konto
 Konus
-Kopfe
 köpfe
 Kopfs
 köpft
@@ -3619,7 +3605,6 @@ logen
 logge
 loggt
 Logik
-Login
 Logis
 Logoi
 Logos
@@ -3662,7 +3647,6 @@ Louan
 Louis
 Lover
 Löwen
-Löwin
 loyal
 Lübbe
 Lübke
@@ -3690,7 +3674,6 @@ Lugol
 lugst
 lügst
 Luigi
-Luisa
 Lukas
 Luken
 Lukes
@@ -3871,7 +3854,6 @@ Mehls
 mehre
 mehrt
 meide
-Meier
 Meike
 Meile
 meine
@@ -3911,7 +3893,6 @@ Metro
 Mette
 Metze
 Meute
-Meyer
 Miami
 miaue
 miaut
@@ -3951,7 +3932,6 @@ Mings
 Minis
 Minna
 Minne
-Minos
 Minou
 Minsk
 minus
@@ -3979,7 +3959,6 @@ mobil
 modal
 Model
 Modem
-Moder
 modre
 Modul
 Modus
@@ -4005,7 +3984,6 @@ Monat
 Mönch
 Monde
 Monet
-Monis
 Monte
 Monty
 MOOCs
@@ -4225,7 +4203,6 @@ niete
 Nigel
 Niger
 Nikes
-Nikon
 Nilay
 nimmt
 Ninja
@@ -4640,9 +4617,7 @@ plump
 Pluto
 Pneus
 Pöbel
-poche
 pocht
-Pocke
 Podex
 Poems
 pofen
@@ -4661,7 +4636,6 @@ polar
 Poldi
 polen
 polig
-Polin
 Polio
 Polis
 Polka
@@ -5084,7 +5058,6 @@ rodet
 Rodin
 rodle
 Rogen
-Roger
 Rohei
 rohem
 rohen
@@ -5136,10 +5109,8 @@ Rotor
 rotte
 rotze
 rotzt
-Rouen
 Rouge
 Route
-Rover
 Rowdy
 Roxil
 royal
@@ -6538,7 +6509,6 @@ Watts
 Wayne
 weben
 Weber
-WebEx
 webOS
 webst
 webte
@@ -6547,7 +6517,6 @@ Wedel
 weder
 wedle
 Weeze
-wegen
 Weges
 wehen
 wehre
@@ -6818,7 +6787,6 @@ Zebus
 zeche
 zecht
 Zecke
-Zeder
 Zehen
 zehnt
 zehre

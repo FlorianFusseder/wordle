@@ -1,6 +1,6 @@
 import re
 from abc import ABC, abstractmethod
-from typing import Set
+from typing import Set, Dict
 
 import click
 
@@ -45,9 +45,18 @@ class AnyChar(Char):
 
 
 class WordleRegex:
+    allowed_characters = "abcdefghijklmnopqrstuvwxyzöäü"
+    any_character = "."
+    # The 'ignore_character' can be used for the '-c' keyword to mark, that this position already contains the character
+    # but there has to be another one, e.g. -c a..!.  which means there has to be an 'a' on one of the indexes, 1, 2, 4
+    # there cannot be 'a' on 0 and the 'a' on index 3 has to be ignored. There are basically two 'a' in this word
+    ignore_character = "!"
+    # The 'not_character'  can be used for the '-c' keyword to mark, that the contained character is not at this index
+    # e.g. -c a..^. the a character can only be at indexes 1, 2, 4
+    not_character = "^"
 
-    def regex_elements_as_str_arr(self) -> [str]:
-        return [elem.character for elem in self.regex_elements]
+    def get_word(self) -> [str]:
+        return "".join([elem.character for elem in self.regex_elements])
 
     def __init__(self, word, contains, excludes, verbose):
         click.echo(f"Passed glob: {word}")
@@ -62,7 +71,7 @@ class WordleRegex:
 
         self.verbose = verbose
         self.excludes: str = excludes
-        self.contains = contains if contains else []
+        self.contains: [str] = contains if contains else []
         self.regex_elements: [Char] = []
         self.regex_lookaheads: [str] = set()
         for character in word:
@@ -81,10 +90,10 @@ class WordleRegex:
 
     def _add_contains(self):
         for contains in self.contains:
+            character = self._create_lookahead(contains)
             for i, contain in enumerate(contains):
-                if contain != ".":
-                    self.regex_elements[i].add_excludes(contain)
-                    self._create_lookahead(contain)
+                if contain == character or contain == self.not_character:
+                    self.regex_elements[i].add_excludes(character)
 
     def _add_anchors(self) -> str:
         return rf"^{self._get_regex()}$"
@@ -105,19 +114,29 @@ class WordleRegex:
         click.echo(f"Final regex: {final_regex}")
         return final_regex
 
-    def _create_lookahead(self, contain):
-        occurrences: int = self.regex_elements_as_str_arr().count(contain)
-        if occurrences == 0:
-            self._create_single_character_lookahead(contain)
+    def _create_lookahead(self, term: str) -> str:
+        """
+        :param term: search term
+        :return: the search char
+        """
+        ignore_character_count = term.count(self.ignore_character)
+        not_character_count = term.count(self.not_character)
+        character = term \
+            .replace(self.any_character, "") \
+            .replace(self.ignore_character, "") \
+            .replace(self.not_character, "")
+
+        if not ignore_character_count and not not_character_count:
+            reg = f"(?:.*{character})+"
+        elif ignore_character_count and not not_character_count:
+            reg = f"(?:{'.*' + character}){{{ignore_character_count + 1},}}"
+        elif not ignore_character_count and not_character_count:
+            reg = f"(?:.*{character})"
         else:
-            self._create_multi_character_occurrence_lookahead(contain, occurrences + 1)
+            reg = f"(?:{'.*' + character}){{{ignore_character_count + 1}}}"
 
-    def _create_single_character_lookahead(self, contain):
-        self.regex_lookaheads.add(f"(?=.*{contain}+.*)")
-
-    def _create_multi_character_occurrence_lookahead(self, contain, occurrences):
-        contain_quantified = f"(?:{'.*' + contain}){{{occurrences},}}"
-        self.regex_lookaheads.add(f"(?={contain_quantified})")
+        self.regex_lookaheads.add(f"(?={reg})")
+        return character
 
     def _add_lookahead(self, regex) -> str:
         for regex_lookahead in self.regex_lookaheads:
@@ -190,7 +209,7 @@ def find_words(word, contains, exclude, verbose):
     click.echo(f"Found {len(matches)} words that match the passed structure...")
     matches.sort(reverse=True, key=sort_word)
     click.echo(f"{matches}")
-    return matches
+    return matches, regex
 
 
 if __name__ == '__main__':
