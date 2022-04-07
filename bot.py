@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import re
 import sys
 import time
 import typing
@@ -16,6 +17,7 @@ import wordle
 class WordleState:
 
     def __init__(self) -> None:
+        self.regex = None
         self.word_glob = "." * 5
         self.char_contained_list = []
         self.char_not_contained = ""
@@ -23,13 +25,25 @@ class WordleState:
     def add_solved(self, c, i):
         self.word_glob = self.word_glob[:i] + c + self.word_glob[i + 1:]
 
-    def add_contained(self, c, i):
-        contained_word = "." * 5
-        contained_word = contained_word[:i] + c + contained_word[i + 1:]
+    def add_contained(self, c, contain_list: [int], not_list: [int], ignore_list: [int]):
+        contained_word = ""
+        for j in range(5):
+            if j in not_list:
+                contained_word += wordle.WordleRegex.not_character
+            elif j in ignore_list:
+                contained_word += wordle.WordleRegex.ignore_character
+            elif j in contain_list:
+                contained_word += c
+            else:
+                contained_word += wordle.WordleRegex.any_character
+
         self.char_contained_list.append(contained_word)
 
     def add_not_contained(self, c):
         self.char_not_contained = self.char_not_contained + c
+
+    def add_regex(self, regex):
+        self.regex = regex
 
 
 class WordleContainer:
@@ -41,20 +55,32 @@ class WordleContainer:
         self.word_list = []
 
     def update(self, text, colors):
-        self.states.append(self.state)
+        if self.state:
+            self.states.append(self.state)
         self.state = WordleState()
 
         number = solution_number(colors)
 
         for i in range(number):
+            color_row = colors[i]
+            word = text[:6]
             for j in range(0, 5):
-                c = text[j]
-                color_code = colors[i][j]
+                c = word[j]
+                color_code = color_row[j]
 
                 if color_code == gui.ColorCode.OK:
                     self.state.add_solved(c, j)
                 elif color_code == gui.ColorCode.CONTAINED:
-                    self.state.add_contained(c, j)
+                    def get_index_list(color: gui.ColorCode):
+                        return [match.start() for match in re.finditer(c, word) if color_row[match.start()] == color]
+
+                    # make list where the containing character cannot occur
+                    not_list = get_index_list(gui.ColorCode.NOT_CONTAINED)
+                    # make list where the containing character is already occurring
+                    ignore_list = get_index_list(gui.ColorCode.OK)
+                    # make list how often the character occurs
+                    character_occurrences_list = get_index_list(gui.ColorCode.CONTAINED)
+                    self.state.add_contained(c, character_occurrences_list, not_list, ignore_list, )
                 elif color_code == gui.ColorCode.NOT_CONTAINED:
                     self.state.add_not_contained(c)
                 elif color_code == gui.ColorCode.EMPTY:
@@ -62,8 +88,10 @@ class WordleContainer:
             text = text[6:]
 
     def find(self) -> List[str]:
-        words = wordle.find_words(self.state.word_glob, self.state.char_contained_list, self.state.char_not_contained,
-                                  False)
+        words, regex = wordle.find_words(self.state.word_glob, self.state.char_contained_list,
+                                         self.state.char_not_contained,
+                                         False)
+        self.state.add_regex(regex)
         if not words:
             raise Exception("No Words could be found!")
         return words
@@ -98,6 +126,9 @@ class WordleContainer:
 
     def is_solved(self) -> bool:
         return self.solution is not None
+
+    def set_not_legit(self):
+        self.state = None
 
 
 def solution_number(colors):
@@ -295,13 +326,22 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
         wait(1, "animation to start")
         all_words, next_colors, tries = get_current_game_state(ident_path)
 
-        for w in all_words.split():
-            w = w.lower()
-            if w not in [wc.lower() for wc in wordle_container.word_list] and w != next_solution.lower():
-                raise Exception(f"""Inconsistent game state: 
-                words read from picture: {', '.join(all_words.split())}
-                words that have been typed until now: {wordle_container.word_list}
-                solution for this iteration: {next_solution}""")
+        was_correctly_read = False
+        reties = 3
+        for retry_count in range(reties):
+            for w in all_words.split():
+                w = w.lower()
+                if w not in [wc.lower() for wc in wordle_container.word_list] and w != next_solution.lower():
+                    all_words, next_colors, tries = get_current_game_state(ident_path)
+                else:
+                    was_correctly_read = True
+                    break
+
+        if not was_correctly_read:
+            raise Exception(f"""Inconsistent game state, even after {reties} retries: 
+                                words read from picture: {', '.join(all_words.split())}
+                                words that have been typed until now: {wordle_container.word_list}
+                                solution for this iteration: {next_solution}""")
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
@@ -313,6 +353,7 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
             return True
         elif not was_legit_input(next_colors, current_colors):
             print(f"Word {next_solution} seems not to be wordle word, removing...")
+            wordle_container.set_not_legit()
             wh.remove_word(next_solution)
             print("Delete word...")
             [gui.click_on("delete", duration=0, echo=False) for _ in range(5)]
@@ -408,7 +449,7 @@ def get_current_game_state(data_path: str):
                 if len(word) != 5:
                     again = True
                     break
-                if not all([char in "abcdefghijklmnopqrstuvwxyzöäü" for char in word]):
+                if not all([char in wordle.WordleRegex.allowed_characters for char in word]):
                     again = True
 
             if again:
