@@ -45,6 +45,10 @@ class AnyChar(Char):
 
 
 class WordleRegex:
+
+    def regex_elements_as_str_arr(self) -> [str]:
+        return [elem.character for elem in self.regex_elements]
+
     def __init__(self, word, contains, excludes, verbose):
         click.echo(f"Passed glob: {word}")
         click.echo(f"Contained: {contains}")
@@ -102,7 +106,18 @@ class WordleRegex:
         return final_regex
 
     def _create_lookahead(self, contain):
+        occurrences: int = self.regex_elements_as_str_arr().count(contain)
+        if occurrences == 0:
+            self._create_single_character_lookahead(contain)
+        else:
+            self._create_multi_character_occurrence_lookahead(contain, occurrences + 1)
+
+    def _create_single_character_lookahead(self, contain):
         self.regex_lookaheads.add(f"(?=.*{contain}+.*)")
+
+    def _create_multi_character_occurrence_lookahead(self, contain, occurrences):
+        contain_quantified = f"(?:{'.*' + contain}){{{occurrences},}}"
+        self.regex_lookaheads.add(f"(?={contain_quantified})")
 
     def _add_lookahead(self, regex) -> str:
         for regex_lookahead in self.regex_lookaheads:
