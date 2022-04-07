@@ -2,17 +2,22 @@ import click
 
 
 @click.group()
-def cli():
+def cli1():
     pass
 
 
-@cli.command("remove")
+@click.group()
+def statistic():
+    pass
+
+
+@cli1.command("remove")
 @click.argument("word")
 @click.pass_context
 def remove(ctx, word):
     remove_word(word)
-    ctx.invoke(create)
-    ctx.invoke(statistics)
+    ctx.invoke(create_wordlist_command)
+    ctx.invoke(create_statistics)
 
 
 def remove_word(word):
@@ -23,18 +28,26 @@ def remove_word(word):
     create_statistics()
 
 
-@cli.command("statistics")
-def statistics():
+@statistic.command()
+def create_statistic():
     create_statistics()
+
+
+@statistic.command()
+def print_statistics():
+    import json
+    with open("statistics.json", mode="r") as file:
+        dic = json.load(file)
+        d = dict(sorted(dic.items(), key=lambda x: x[1], reverse=True))
+        for k, v in d.items():
+            print(f"{k}: {v}")
 
 
 def create_statistics():
     statistics = {}
     with open("5long.txt") as file:
         for word in file.readlines():
-            for i, c in enumerate(word):
-                if i == 5:
-                    continue
+            for c in set(word[:5]):
                 c = c.lower()
                 if c in statistics:
                     statistics[c] = statistics[c] + 1
@@ -42,11 +55,11 @@ def create_statistics():
                     statistics[c] = 1
     import json
     with open("statistics.json", mode="w") as file:
-        file.write(json.dumps(statistics))
+        file.write(json.dumps(statistics, indent=4, sort_keys=True))
 
 
-@cli.command("create")
-def create():
+@cli1.command("create-wordlist")
+def create_wordlist_command():
     create_wordlist()
 
 
@@ -64,12 +77,14 @@ def create_wordlist():
     click.echo("Done recreating wordlists!")
 
 
-@cli.command("all")
+@cli1.command("all")
 @click.pass_context
 def all(ctx):
-    ctx.invoke(create)
-    ctx.invoke(statistics)
+    ctx.invoke(create_wordlist_command)
+    ctx.invoke(create_statistics)
 
+
+cli = click.CommandCollection(sources=[cli1, statistic])
 
 if __name__ == '__main__':
     cli()

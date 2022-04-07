@@ -172,14 +172,23 @@ def sort_word(word):
         import json
         statistics = json.load(file)
 
+    s_dict = {}
+    for i, k in enumerate(sorted(statistics.items(), key=lambda x: x[1])):
+        s_dict[k[0]] = i + 1
+
     score = 0
-    for char in word:
-        score = score + statistics[char.lower()]
+    for char in word.lower():
+        score += s_dict[char]
 
     s = set(word)
-
     for _ in range(len(word) - len(s)):
-        score = score / 2
+        score -= 5
+
+    with open("whitelist.txt") as file:
+        all_solution_words = file.read()
+
+    if word in all_solution_words:
+        score += 10
 
     return score
 

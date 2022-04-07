@@ -349,6 +349,13 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
             gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
             gui.click_on("next_word")
             os.rename(ident_path, ident_path + f"_{tries + 1}_{next_solution}")
+            with open("whitelist.txt", mode="a+") as file:
+                word_set = set(file.read().split())
+                l_b = len(word_set)
+                word_set.add(next_solution)
+                l_a = len(word_set)
+                if l_b < l_a:
+                    file.write(next_solution + "\n")
             wait_for_game_start()
             return True
         elif not was_legit_input(next_colors, current_colors):
