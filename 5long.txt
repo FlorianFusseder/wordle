@@ -252,7 +252,6 @@ Antje
 Anton
 antue
 antun
-antut
 anzog
 Anzug
 Äonen
@@ -2405,7 +2404,6 @@ herzt
 herzu
 Hesse
 hetze
-hetzt
 heuer
 heule
 heult
@@ -3028,7 +3026,6 @@ KiBiz
 kicke
 Kicks
 kickt
-Kiele
 Kiels
 Kieme
 Kiens
@@ -3089,7 +3086,6 @@ Kleid
 Kleie
 klein
 klemm
-Klett
 Kleve
 klick
 Kliff
@@ -3892,7 +3888,6 @@ Micky
 Midas
 Miefs
 mieft
-Miele
 Miene
 miete
 Mieze
@@ -4588,7 +4583,6 @@ Plaid
 plane
 Pläne
 Plans
-plant
 Plato
 platt
 Platz

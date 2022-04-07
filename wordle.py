@@ -124,7 +124,7 @@ class WordleRegex:
         character = term \
             .replace(self.any_character, "") \
             .replace(self.ignore_character, "") \
-            .replace(self.not_character, "")
+            .replace(self.not_character, "")[0] # take only one
 
         if not ignore_character_count and not not_character_count:
             reg = f"(?:.*{character})+"
