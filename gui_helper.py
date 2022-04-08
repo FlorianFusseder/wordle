@@ -152,8 +152,8 @@ class P30(Interface):
 
     def _next_game_pixel_exists(self):
         # color code just copy pasted! check with p30
-        element = get_pixel_color_by_element("next_word")
-        return element == (247, 148, 31)
+        rgb = get_pixel_color_by_element("next_word")
+        return rgb[0] in range(242, 252) and rgb[1] in range(143, 153) and rgb[2] in range(26, 36)
 
 
 class PSMART2019(Interface):
@@ -176,8 +176,8 @@ class PSMART2019(Interface):
         return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(50, 66)
 
     def _next_game_pixel_exists(self):
-        element = get_pixel_color_by_element("next_word")
-        return element == (247, 148, 31)
+        rgb = get_pixel_color_by_element("next_word")
+        return rgb[0] in range(242, 252) and rgb[1] in range(143, 153) and rgb[2] in range(26, 36)
 
 
 @unique

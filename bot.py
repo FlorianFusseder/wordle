@@ -10,7 +10,7 @@ from typing import List
 import click
 
 import gui_helper as gui
-import word_list as wh
+import word_list as wt
 import wordle
 
 
@@ -46,14 +46,45 @@ class WordleState:
         self.regex = regex
 
 
+class StartWordManager:
+
+    def update_statistics(self, won: bool, attempts: int):
+        with open("start_words.json", mode="r") as file:
+            json_file = json.load(file)
+        word = [w for w in json_file if w['word'] == self.__start_word][0]
+        if not word:
+            wt.add_start_word_statistics(self.__start_word, 1 if won else 0, 1 if not won else 0, attempts)
+        else:
+            if won:
+                word['won'] += 1
+            else:
+                word['lost'] += 1
+
+            if word['avg_attempts']:
+                word['avg_attempts'] += attempts
+                word['avg_attempts'] /= 2
+            else:
+                word['avg_attempts'] = attempts
+
+        with open("start_words.json", mode="w") as file:
+            json.dump(json_file, file, indent=2)
+
+    @property
+    def start_word(self):
+        return self.__start_word
+
+    def __init__(self, start_word: str = None) -> None:
+        self.__start_word = start_word if start_word else wt.get_random_start_word()
+
+
 class WordleContainer:
 
-    def __init__(self) -> None:
+    def __init__(self, start_word: str = None) -> None:
         self.state = WordleState()
         self.solution = None
         self.remaining = None
         self.states = []
-        self.word_list = []
+        self.word_list = [] if not start_word else [start_word]
 
     def update(self, text, colors):
         if self.state:
@@ -184,9 +215,12 @@ def click_on(ctx, element):
 
 @cli.command("type")
 @click.argument("word")
+@click.option("-c", "--count", default=1)
 @click.pass_context
-def type(ctx, word):
-    gui.type(word, ctx.obj["typing_speed"])
+def type(ctx, word, count):
+    gui.move_to("submit", 1)
+    for _ in range(count):
+        put_solution(word)
 
 
 @cli.command()
@@ -251,7 +285,7 @@ def wait(s: float, el: str = None):
 
 
 @cli.command()
-@click.argument("start_word")
+@click.option("-w", "--start_word")
 @click.option("-c", "--count", default=1)
 @click.pass_context
 def start(ctx, start_word, count):
@@ -261,10 +295,11 @@ def start(ctx, start_word, count):
     not_solved = []
     for i in range(count):
         print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
-        put_solution(start_word)
-        wordle_container = WordleContainer()
-        wordle_container.word_list.append(start_word)
-        solved = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
+        start_word_manager = StartWordManager(start_word) if start_word else StartWordManager()
+        wordle_container = WordleContainer(start_word_manager.start_word)
+        put_solution(start_word_manager.start_word)
+        solved, attempts = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
+        start_word_manager.update_statistics(solved, attempts)
         if not solved:
             not_solved.append(i)
 
@@ -282,15 +317,18 @@ def resume(ctx, count, start_word):
     not_solved = []
     for i in range(count):
         print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
-        wordle_container = WordleContainer()
         if i == 0:
+            wordle_container = WordleContainer()
             word_list = gui.scr_read()
-            wordle_container.word_list.extend([w.lower() for w in word_list.split()])
+            read_words = [w.lower() for w in word_list.split()]
+            start_word_manager = StartWordManager(read_words[0])
+            wordle_container.word_list.extend(read_words)
         else:
-            put_solution(start_word)
-            wordle_container.word_list.append(start_word)
-
-        solved = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
+            start_word_manager = StartWordManager(start_word) if start_word else StartWordManager
+            wordle_container = WordleContainer(start_word_manager.start_word)
+            put_solution(start_word_manager.start_word)
+        solved, attempts = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
+        start_word_manager.update_statistics(solved, attempts)
         if not solved:
             not_solved.append(i)
 
@@ -300,57 +338,41 @@ def resume(ctx, count, start_word):
 def play(interface: gui.Interface, wordle_container: WordleContainer, session_path, game_identifier):
     ident_path = session_path + game_identifier
     os.makedirs(ident_path)
+    solution: str
     tries = 0
     while not wordle_container.is_solved() and tries < 6:
         current_text, current_colors, _ = get_checked_current_game_state(ident_path, wordle_container)
         wordle_container.update(current_text, current_colors)
         if is_solved(current_colors):
             words = current_text.split()
-            i = len(words) - 1
-            print(f"Already solved with {words[i]}")
-            wordle_container.set_solved(words[i], ident_path)
-            gui.click_on("next_word")
-            wait_for_game_start()
-            break
+            solution = words[len(words) - 1]
+            wordle_container.set_solved(solution, ident_path)
+            continue
 
         words = wordle_container.find()
         next_solution = words[0]
         put_solution(next_solution)
         wait(1, "animation to start")
-
         all_words, next_colors, tries = get_checked_current_game_state(ident_path, wordle_container, next_solution)
 
         if is_solved(next_colors):
-            print(f"Solution was {next_solution}")
-            wordle_container.set_solved(next_solution, ident_path)
-            gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
-            interface.wait_next_game()
-            gui.click_on("next_word")
-            os.rename(ident_path, ident_path + f"_{tries + 1}_{next_solution}")
-            with open("whitelist.txt", mode="a+") as file:
-                word_set = set(file.read().split())
-                l_b = len(word_set)
-                word_set.add(next_solution)
-                l_a = len(word_set)
-                if l_b < l_a:
-                    file.write(next_solution + "\n")
-            wait_for_game_start()
-            return True
+            solution = next_solution
+            wordle_container.set_solved(solution, ident_path)
         elif not was_legit_input(next_colors, current_colors):
             print(f"Word {next_solution} seems not to be wordle word, removing...")
             wordle_container.set_not_legit()
-            wh.remove_word(next_solution)
+            wt.remove_word(next_solution)
             print("Delete word...")
             [gui.click_on("delete", duration=0, echo=False) for _ in range(5)]
             _, _, tries = get_current_game_state(ident_path)
         else:
             if tries < 6:
-                print(f"Word '{next_solution}' was not solution, starting iteration {tries + 1}/6...")
+                print(f"Word '{next_solution}' was not solution, starting iteration {tries}/6...")
             wordle_container.word_list.append(next_solution)
 
     if tries >= 6:
         interface.wait_next_game()
-        renamed_path = ident_path + f"_{tries + 1}_UNSOLVED"
+        renamed_path = ident_path + f"_{tries}_UNSOLVED"
         os.rename(ident_path, renamed_path)
         remaining = wordle_container.find()
         wordle_container.set_unsolved(remaining, renamed_path)
@@ -358,7 +380,22 @@ def play(interface: gui.Interface, wordle_container: WordleContainer, session_pa
         gui.screenshot((0, 65, 470, 990), False, renamed_path, "endscreen.png")
         gui.click_on("next_word")
         wait_for_game_start()
-        return False
+        return False, tries
+    else:
+        print(f"Solution was {solution}")
+        gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
+        interface.wait_next_game()
+        gui.click_on("next_word")
+        os.rename(ident_path, ident_path + f"_{tries + 1}_{solution}")
+        with open("whitelist.txt", mode="a+") as file:
+            word_set = set(file.read().split())
+            l_b = len(word_set)
+            word_set.add(solution)
+            l_a = len(word_set)
+            if l_b < l_a:
+                file.write(solution + "\n")
+        wait_for_game_start()
+        return True, tries
 
 
 def get_checked_current_game_state(ident_path: str, wordle_container: WordleContainer,

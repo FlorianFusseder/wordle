@@ -1,3 +1,6 @@
+import json
+import random
+
 import click
 
 
@@ -9,6 +12,42 @@ def cli1():
 @click.group()
 def statistic():
     pass
+
+
+def add_start_word_statistics(word: str, won: int = 0, lost: int = 0, avg_attempts: int = None):
+    with open("start_words.json", mode="r") as file:
+        load = json.load(file)
+
+    j_obj = [w for w in load if w['word'] == word]
+    if j_obj:
+        print(f"Word '{word}' already in wordlist:")
+        print(json.dumps(j_obj[0], indent=2))
+        return
+
+    load.append(
+        {
+            "word": word,
+            "won": won,
+            "lost": lost,
+            "avg_attempts": avg_attempts
+        }
+    )
+    with open("start_words.json", mode="w") as file:
+        json.dump(load, file, indent=2)
+
+
+@cli1.command()
+@click.argument("word")
+def add_start_word(word):
+    add_start_word_statistics(word)
+
+
+def get_random_start_word():
+    with open("start_words.json", mode="r") as file:
+        json_file = json.load(file)
+    length = len(json_file)
+    randint = random.randint(0, length - 1)
+    return json_file[randint]['word']
 
 
 @cli1.command("remove")
