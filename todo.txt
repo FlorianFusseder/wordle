@@ -1,6 +1,5 @@
 todo:
 endscreen word mit tesseract rausfinden
-whitelist für wörter die sicher funktionieren
 ausgabe für colors farbcodieren
 sorting algorithmus strategie pattern
 endgame ausgabe um durchnittliche versuche/spiele mit jeweilig algoritymus

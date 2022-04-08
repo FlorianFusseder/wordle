@@ -1,9 +1,10 @@
 import datetime
 import os
 import subprocess
+import time
 from abc import ABC
 from enum import Enum, unique, auto
-from typing import List
+from typing import Dict, Any, Tuple
 
 import numpy as numpy
 import pyautogui as gui
@@ -14,7 +15,7 @@ q_row_y = 770
 a_row_y = 830
 y_row_y = 896
 
-pos = {
+positions = {
     "app": (185, 165),
     "play": (230, 700),
     "delete": (379, y_row_y),
@@ -68,10 +69,20 @@ class ColorStateException(Exception):
     pass
 
 
-class Phone(ABC):
+class Interface(ABC):
+    class Position:
+        class Elem(Enum):
+            KEYBOARD = auto()
+            NEXT_GAME = auto()
+            MATRIX = auto()
 
-    def __init__(self, commands) -> None:
+    def __init__(self, commands: [str], screen_elements: Dict[Enum, Any]) -> None:
+        self._locations: Dict[Interface.Position.Elem, Any] = dict()
         self.commands = commands
+        for element in Interface.Position.Elem:
+            self._locations[element] = {
+                "path": screen_elements[element]
+            }
 
     def is_empty(self, rgb) -> bool:
         pass
@@ -85,29 +96,47 @@ class Phone(ABC):
     def is_contained(self, rgb) -> bool:
         pass
 
-    def start(self):
-        subprocess.Popen(self.commands, shell=False,
-                         stdin=None, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
+    def wait_next_game(self):
+        print("Wait until next game can be started...")
+        while not self._next_game_pixel_exists():
+            time.sleep(.5)
+
+    def _next_game_pixel_exists(self):
+        pass
+
+    def open_(self):
+        subprocess.Popen(self.commands, shell=False, stdin=None, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL, close_fds=True)
+        print(f"Wait 2 seconds for process to open...")
+        time.sleep(2)
+
+    def setup(self):
+        move_to("submit", 1)
 
     @classmethod
-    def init_device(cls, model: str = None):
-        phone: Phone
+    def init(cls, model: str = None):
+        interface: Interface
+        elements = {
+            Interface.Position.Elem.KEYBOARD: "locatables/keyboard.png",
+            Interface.Position.Elem.NEXT_GAME: "locatables/next_game.png",
+            Interface.Position.Elem.MATRIX: "locatables/matrix.png",
+        }
         if model == "P30":
-            phone = P30()
+            interface = P30(elements)
         elif model == 'PSMART2019':
-            phone = PSMART2019()
+            interface = PSMART2019(elements)
         else:
-            phone = PSMART2019()
-        ColorCode.init(phone)
-        return phone
+            interface = PSMART2019(elements)
+        ColorCode.init(interface)
+        return interface
 
 
-class P30(Phone):
+class P30(Interface):
 
-    def __init__(self) -> None:
+    def __init__(self, elements: Dict[Interface.Position.Elem, Any]) -> None:
         commands = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
                     "--window-y", "0"]
-        super().__init__(commands)
+        super().__init__(commands, elements)
 
     def is_empty(self, rgb) -> bool:
         return rgb == (146, 148, 150)
@@ -121,13 +150,18 @@ class P30(Phone):
     def is_contained(self, rgb) -> bool:
         return rgb == (250, 217, 57)
 
+    def _next_game_pixel_exists(self):
+        # color code just copy pasted! check with p30
+        element = get_pixel_color_by_element("next_word")
+        return element == (247, 148, 31)
 
-class PSMART2019(Phone):
 
-    def __init__(self) -> None:
+class PSMART2019(Interface):
+
+    def __init__(self, elements: Dict[Interface.Position.Elem, Any]) -> None:
         commands = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
                     "--window-y", "0", "-m", "1024"]
-        super().__init__(commands)
+        super().__init__(commands, elements)
 
     def is_empty(self, rgb) -> bool:
         return rgb[0] in range(141, 152) and rgb[1] in range(143, 154) and rgb[2] in range(147, 158)
@@ -141,6 +175,10 @@ class PSMART2019(Phone):
     def is_contained(self, rgb) -> bool:
         return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(50, 66)
 
+    def _next_game_pixel_exists(self):
+        element = get_pixel_color_by_element("next_word")
+        return element == (247, 148, 31)
+
 
 @unique
 class ColorCode(Enum):
@@ -149,12 +187,12 @@ class ColorCode(Enum):
     CONTAINED = auto()
     EMPTY = auto()
 
-    _model: Phone
+    _model: Interface
     color_name_max_length: int
 
     @classmethod
-    def init(cls, phone: Phone):
-        cls._model = phone
+    def init(cls, interface: Interface):
+        cls._model = interface
         cls.color_name_max_length = max([len(color.name) for color in ColorCode])
 
     @classmethod
@@ -174,7 +212,7 @@ class ColorCode(Enum):
 def click_on(element: str, duration: float = .5, echo: bool = True):
     if echo:
         print(f"Click on {element}...")
-    x, y = pos[element]
+    x, y = positions[element]
     gui.moveTo(x, y, duration=duration)
     gui.leftClick(x, y)
 
@@ -188,7 +226,7 @@ def type(word: str, duration: float = .5, echo: bool = True):
 
 def move_to(element: str, duration: float = .5):
     print(f"Move to {element}")
-    x, y = pos[element]
+    x, y = positions[element]
     gui.moveTo(x, y, duration=duration)
 
 
@@ -274,3 +312,17 @@ def scr_read(threshold: int = 5):
     os.remove(new_path)
     os.remove(path)
     return text
+
+
+def get_pixel_color_by_element(element: str):
+    element_position = positions[element]
+    return get_pixel_color_by_position(element_position)
+
+
+def get_pixel_color_by_position(pos: Tuple[int, int]):
+    x, y = pos
+    _, path = screenshot((x - 1, y - 1, 3, 3))
+    px = Image.open(path).load()
+    pixel = px[1, 1]
+    os.remove(path)
+    return pixel
