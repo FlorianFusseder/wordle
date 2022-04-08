@@ -13,5 +13,5 @@ PyScreeze==0.1.28
 pytesseract==0.3.9
 python3-xlib==0.15
 pytweening==1.0.4
--e git+ssh://git@github.com/FlorianFusseder/wordle.git@d7f69392c068c7a0e93875a84905226f8243bc7f#egg=wordle
--e git+ssh://git@github.com/FlorianFusseder/wordle.git@d7f69392c068c7a0e93875a84905226f8243bc7f#egg=wordle_helper
+-e git+ssh://git@github.com/FlorianFusseder/wordle.git@cc635634ef918db66445669d22ca34c4d9e90a95#egg=wordle
+-e git+ssh://git@github.com/FlorianFusseder/wordle.git@cc635634ef918db66445669d22ca34c4d9e90a95#egg=wordle_helper

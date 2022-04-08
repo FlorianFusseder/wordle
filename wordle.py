@@ -124,7 +124,7 @@ class WordleRegex:
         character = term \
             .replace(self.any_character, "") \
             .replace(self.ignore_character, "") \
-            .replace(self.not_character, "")[0] # take only one
+            .replace(self.not_character, "")[0]  # take only one
 
         if not ignore_character_count and not not_character_count:
             reg = f"(?:.*{character})+"
@@ -193,8 +193,13 @@ def sort_word(word):
     return score
 
 
-@click.command()
-@click.argument('word')
+@click.group()
+def wordle():
+    pass
+
+
+@wordle.command("solve")
+@click.argument('start-word')
 @click.option('--contains', '-c', required=False, multiple=True)
 @click.option('--exclude', '-x')
 @click.option('--verbose', '-v', is_flag=True)
@@ -202,24 +207,38 @@ def find(word, contains, exclude, verbose):
     find_words(word, contains, exclude, verbose)
 
 
+@wordle.command()
+@click.argument("regex")
+def regex(regex_):
+    with open("5long.txt", "r") as file:
+        all_words = file.read()
+    word_list = execute_regex(all_words, regex_)
+    print(word_list)
+
+
 def find_words(word, contains, exclude, verbose):
     with open("5long.txt", "r") as file:
         all_words = file.read()
     regex_builder: WordleRegex = WordleRegex(word, contains, exclude, verbose)
-    regex = regex_builder.create()
-    matches = re.findall(regex, all_words, re.IGNORECASE | re.MULTILINE)
+    regex_ = regex_builder.create()
+    matches = execute_regex(all_words, regex_)
 
     if not matches:
         print("Try arena problem solution... PRAY TO THE ALMIGHTY")
         wordle_regex = ArenaWordleRegex(word, contains, exclude, verbose)
-        regex = wordle_regex.create()
-        matches = re.findall(regex, all_words, re.IGNORECASE | re.MULTILINE)
+        regex_ = wordle_regex.create()
+        matches = execute_regex(all_words, regex_)
 
     click.echo(f"Found {len(matches)} words that match the passed structure...")
     matches.sort(reverse=True, key=sort_word)
     click.echo(f"{matches}")
-    return matches, regex
+    return matches, regex_
+
+
+def execute_regex(all_words, regex):
+    matches = re.findall(regex, all_words, re.IGNORECASE | re.MULTILINE)
+    return matches
 
 
 if __name__ == '__main__':
-    find()
+    wordle()

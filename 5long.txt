@@ -1,7 +1,5 @@
 aalen
-aalst
 aalte
-Aarau
 Abart
 abbat
 Abbau
@@ -56,7 +54,6 @@ adden
 addet
 Addis
 Addon
-adele
 adeln
 Adels
 adelt
@@ -98,7 +95,6 @@ Agnes
 Agora
 Agrar
 Ahaus
-Ahlen
 Ahmed
 ahmen
 Ahmet
@@ -109,7 +105,6 @@ ahnen
 ahnte
 Ahorn
 Ähren
-Ahura
 Aioli
 Aires
 Akaba
@@ -145,14 +140,12 @@ Alien
 Alina
 Aliya
 Alkin
-Alkis
 Alkyd
 Alkyl
 Allah
 Allee
 Allel
 allem
-allen
 aller
 alles
 Allod
@@ -235,7 +228,6 @@ Annas
 Annes
 Annex
 Annie
-Annis
 Annys
 Anode
 anöde
@@ -372,7 +364,6 @@ Auges
 Augur
 Aupke
 aural
-Aurar
 Aurum
 Autor
 Autos
@@ -421,7 +412,6 @@ Bagel
 Bahai
 bahne
 Bahre
-Baken
 Bakus
 Bälde
 balge
@@ -636,9 +626,6 @@ Birne
 birst
 Birte
 Bisam
-Bisky
-Bisse
-bisst
 Bitch
 bitte
 Biwak
@@ -873,7 +860,6 @@ Busch
 Busen
 Bushs
 Busse
-Bussi
 Büste
 Büsum
 Butan
@@ -1177,8 +1163,6 @@ Discs
 Disko
 Disks
 Dispo
-disse
-disst
 DITIB
 Divas
 Diven
@@ -1224,8 +1208,6 @@ Dorns
 Doros
 dorre
 dörre
-dorrt
-dörrt
 Dörte
 Dosen
 dösen
@@ -1321,7 +1303,6 @@ Ebers
 Ebert
 ebnen
 ebnet
-Ebola
 eBook
 Echos
 Echse
@@ -1416,7 +1397,6 @@ Elgar
 Eliot
 Elite
 Ellen
-Eller
 Ellis
 Elmar
 Eloys
@@ -1425,7 +1405,6 @@ Elsas
 Elses
 Elspe
 Elvis
-Emden
 Emely
 Emils
 Emily
@@ -1837,7 +1816,6 @@ fröne
 Front
 frönt
 fröre
-frort
 Frost
 Froyo
 frühe
@@ -2156,7 +2134,6 @@ Gunst
 Guppy
 gurke
 gurkt
-gurrt
 gurte
 Gurus
 Güsse
@@ -2208,7 +2185,6 @@ halal
 halbe
 Halde
 halft
-halle
 hallo
 Halls
 hallt
@@ -2235,7 +2211,6 @@ Hanns
 Hanoi
 Hansa
 Hanse
-Hansi
 Hapag
 Happs
 happy
@@ -2263,7 +2238,6 @@ Hasen
 Häsin
 hasse
 Hasso
-hasst
 haste
 hatte
 hätte
@@ -2277,7 +2251,6 @@ häuft
 Hauke
 Haupt
 hause
-haust
 häute
 Havel
 Havre
@@ -2317,12 +2290,10 @@ hehre
 Heide
 Heidi
 Heidy
-Heike
 Heiko
 heile
 Heils
 heilt
-Heime
 Heims
 Heine
 Heini
@@ -2349,7 +2320,6 @@ Helme
 Helms
 Helot
 Hemds
-Hemer
 hemmt
 Hendl
 Henna
@@ -2413,8 +2383,6 @@ Hirni
 Hirns
 Hirse
 Hirte
-hisse
-hisst
 Hitze
 Hiwis
 Hobby
@@ -2581,7 +2549,6 @@ Ileus
 Ilgen
 Ilium
 Iljas
-Ilkas
 Iller
 Ilses
 Ilten
@@ -2619,12 +2586,10 @@ Infix
 Infos
 Inges
 Ingos
-Inkas
 Inlay
 innen
 innig
 Input
-Insas
 Insel
 Intel
 intim
@@ -2651,7 +2616,6 @@ irrig
 irrst
 irrte
 Isaac
-Isaak
 Ische
 Ischl
 Islam
@@ -2857,7 +2821,6 @@ Kalbs
 kalbt
 Kaleb
 Kalif
-Kalis
 kalke
 kälke
 Kalks
@@ -2952,7 +2915,6 @@ keift
 keile
 Keils
 keilt
-keime
 Keims
 keimt
 keine
@@ -2986,7 +2948,6 @@ keuch
 keule
 Kevin
 khaki
-Khane
 Khans
 Khmer
 Kiana
@@ -3007,7 +2968,6 @@ Kimme
 Kimon
 Kindl
 Kinne
-Kinns
 Kiosk
 Kioto
 Kiowa
@@ -3058,7 +3018,6 @@ Klima
 Klimt
 klipp
 klirr
-klomm
 klone
 klöne
 Klons
@@ -3078,7 +3037,6 @@ knapp
 knarr
 Knast
 Knauf
-Knaur
 knete
 Knick
 knien
@@ -3300,8 +3258,6 @@ Läger
 Lagos
 lagst
 lägst
-Lahar
-lahme
 lähme
 lahmt
 lähmt
@@ -3341,7 +3297,6 @@ läset
 Lassa
 lasse
 Lasso
-lasst
 lässt
 laste
 Lasur
@@ -3411,7 +3366,6 @@ leger
 Legos
 legst
 legte
-Lehen
 Lehme
 Lehms
 lehne
@@ -3489,7 +3443,6 @@ lieft
 liege
 liegt
 lieht
-Liese
 Liesl
 liest
 lifte
@@ -3526,7 +3479,6 @@ Lions
 Liors
 Lipid
 Lippe
-Lisas
 Lisel
 Lissy
 liste
@@ -3591,7 +3543,6 @@ lotse
 lotst
 Lotta
 Lotte
-Lotti
 Lotto
 Lotus
 Louan
@@ -3802,8 +3753,6 @@ Mehle
 Mehls
 mehre
 mehrt
-meide
-Meike
 Meile
 meine
 meins
@@ -3887,8 +3836,6 @@ Mirko
 Mirow
 misch
 Mises
-misse
-misst
 miste
 Mitau
 Mitra
@@ -3917,7 +3864,6 @@ Mogul
 Mohns
 Möhre
 Mokka
-Molen
 Molex
 Molke
 MOLLE
@@ -3978,7 +3924,6 @@ müder
 müdes
 Muffe
 Mufti
-muhen
 mühen
 Mühle
 mühst
@@ -4001,7 +3946,6 @@ Murau
 mürbe
 Murks
 murre
-murrt
 Musau
 musig
 Musik
@@ -4023,7 +3967,6 @@ myope
 Myrte
 MySQL
 Myzel
-Naarn
 Nabel
 Naben
 Nabob
@@ -4139,7 +4082,6 @@ Nidda
 Niels
 Niere
 Niers
-niese
 niest
 niete
 Nigel
@@ -4211,7 +4153,6 @@ nützt
 Nylon
 ÖAMTC
 Oasen
-Oasis
 OAuth
 Obama
 obere
@@ -4255,7 +4196,6 @@ OLEDs
 Olegs
 ölend
 Ölens
-Oleum
 Olgas
 Ölgas
 ölige
@@ -4526,8 +4466,6 @@ Pirat
 Pirna
 Pirol
 Pisas
-pisse
-pisst
 Piste
 Pixar
 Pixel
@@ -4817,7 +4755,6 @@ Räude
 Raudi
 rauem
 rauen
-rauer
 raues
 raufe
 rauft
@@ -4878,7 +4815,6 @@ Reiki
 reime
 Reims
 reimt
-reine
 reise
 reite
 reize
@@ -4992,7 +4928,6 @@ rohes
 Rohöl
 röhre
 Rohrs
-röhrt
 Rolex
 Rolfs
 rolle
@@ -5073,7 +5008,6 @@ rühme
 Ruhms
 rühmt
 rühre
-rührt
 ruhst
 ruhte
 Ruins
@@ -5084,7 +5018,6 @@ Rumpf
 rumse
 rumst
 runde
-Runen
 Runge
 Rüpel
 rupfe
@@ -5101,8 +5034,6 @@ Ruths
 Rutin
 Rutte
 Ruwer
-Saale
-Saals
 Säbel
 Sache
 Sachs
@@ -5144,7 +5075,6 @@ Salem
 Sally
 Salma
 Salon
-Salsa
 Salti
 Salto
 Salut
@@ -5158,7 +5088,6 @@ Sammy
 Samoa
 Samos
 Samys
-Sanaa
 Sanam
 Sande
 Sands
@@ -5525,7 +5454,6 @@ Stadt
 Stage
 stahl
 Staig
-stakt
 Stall
 Stamm
 stand
@@ -5579,7 +5507,6 @@ Stirn
 stöbe
 Stock
 Stoff
-stöhn
 Stola
 stolz
 Stoma
@@ -5807,7 +5734,6 @@ Texel
 texte
 Texts
 TGBBZ
-Thais
 Theia
 Thein
 Theke
@@ -5944,7 +5870,6 @@ Touch
 tough
 Touri
 Tours
-tourt
 Tower
 Toxin
 Trabi
@@ -6062,7 +5987,6 @@ türmt
 turnt
 Tusch
 Tusse
-Tussi
 tuten
 tüten
 tutet
@@ -6513,7 +6437,6 @@ Wirte
 Wirts
 wisch
 wisse
-wisst
 Witwe
 Witze
 wobei
@@ -6798,7 +6721,6 @@ zupft
 zurät
 zürnt
 zurre
-zurrt
 Zuruf
 zusah
 zutat
