@@ -96,3 +96,10 @@ sagen
 genau
 heute
 Sache
+sonst
+etwas
+essen
+nicht
+Boden
+heute
+neben

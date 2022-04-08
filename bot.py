@@ -160,14 +160,18 @@ models = ['PSMART2019', 'P30']
 @click.option('--typing-speed', default=0.5, required=False)
 @click.option("-m", "--model",
               type=click.Choice(models, case_sensitive=False), default=models[0])
+@click.option("-o", "--open", is_flag=True, default=False)
 @click.pass_context
-def cli(ctx, verbose, gui_pause, typing_speed, model):
+def cli(ctx, verbose, gui_pause, typing_speed, model, open):
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
     ctx.obj['gui_pause'] = gui_pause
     ctx.obj['typing_speed'] = typing_speed
     ctx.obj['model'] = model
-    ctx.obj['phone'] = gui.Phone.init_device(model)
+    ctx.obj['interface'] = gui.Interface.init(model)
+    ctx.obj['open'] = open
+    if open:
+        ctx.obj['interface'].open_()
     gui.PAUSE = gui_pause
 
 
@@ -183,6 +187,13 @@ def click_on(ctx, element):
 @click.pass_context
 def type(ctx, word):
     gui.type(word, ctx.obj["typing_speed"])
+
+
+@cli.command()
+@click.argument('element')
+def get_pixel_color(element):
+    by_element = gui.get_pixel_color_by_element(element)
+    print(f"R[{by_element[0]}]G[{by_element[1]}]B[{by_element[2]}]")
 
 
 @cli.command()
@@ -230,7 +241,7 @@ def get_colors(ctx, path):
 @cli.command()
 @click.pass_context
 def phone_start(ctx):
-    start_phone(ctx.obj['phone'])
+    ctx.obj['interface'].open_()
 
 
 def wait(s: float, el: str = None):
@@ -241,16 +252,11 @@ def wait(s: float, el: str = None):
 
 @cli.command()
 @click.argument("start_word")
-@click.option("-o", "--open", is_flag=True, default=False)
 @click.option("-c", "--count", default=1)
 @click.pass_context
-def start(ctx, start_word, open, count):
-    if open:
-        click.echo("Opening phone...")
-        start_phone(ctx.obj['phone'])
-        wait(2, "phone")
-        gui.click_on("play")
-
+def start(ctx, start_word, count):
+    interface: gui.Interface = ctx.obj["interface"]
+    interface.setup()
     session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
     not_solved = []
     for i in range(count):
@@ -258,39 +264,20 @@ def start(ctx, start_word, open, count):
         put_solution(start_word)
         wordle_container = WordleContainer()
         wordle_container.word_list.append(start_word)
-        solved = play(wordle_container, session_string, "/" + f"{i + 1}_{count}")
+        solved = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
         if not solved:
             not_solved.append(i)
 
     __print_game_solution(not_solved)
 
 
-def __print_game_solution(not_solved):
-    if not_solved:
-        print(
-            f"Game{'s' if len(not_solved) != 1 else ''} {', '.join([str(i) for i in not_solved])} could not be solved!")
-    else:
-        print("Could solve all words! Ending...")
-
-
 @cli.command()
-@click.option("-o", "--open", is_flag=True, default=False)
 @click.option("-c", "--count", default=1, type=click.IntRange(1, sys.maxsize))
 @click.option("-w", "--start_word")
 @click.pass_context
-def resume(ctx, open, count, start_word):
-    if count > 1 and not start_word:
-        raise click.BadParameter(
-            "If 'count' option is used, you have to define a start_word with '-w' (e.g. '-w stier')",
-            start_word)
-
-    if open:
-        click.echo("Opening phone...")
-        start_phone(ctx.obj['phone'])
-        wait(2, "phone")
-
-    gui.move_to("submit")
-
+def resume(ctx, count, start_word):
+    interface: gui.Interface = ctx.obj["interface"]
+    interface.setup()
     session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
     not_solved = []
     for i in range(count):
@@ -303,14 +290,14 @@ def resume(ctx, open, count, start_word):
             put_solution(start_word)
             wordle_container.word_list.append(start_word)
 
-        solved = play(wordle_container, session_string, "/" + f"{i + 1}_{count}")
+        solved = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
         if not solved:
             not_solved.append(i)
 
     __print_game_solution(not_solved)
 
 
-def play(wordle_container: WordleContainer, session_path, game_identifier):
+def play(interface: gui.Interface, wordle_container: WordleContainer, session_path, game_identifier):
     ident_path = session_path + game_identifier
     os.makedirs(ident_path)
     tries = 0
@@ -337,6 +324,7 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
             print(f"Solution was {next_solution}")
             wordle_container.set_solved(next_solution, ident_path)
             gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
+            interface.wait_next_game()
             gui.click_on("next_word")
             os.rename(ident_path, ident_path + f"_{tries + 1}_{next_solution}")
             with open("whitelist.txt", mode="a+") as file:
@@ -361,13 +349,12 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
             wordle_container.word_list.append(next_solution)
 
     if tries >= 6:
-        wait_for_game_solution()
+        interface.wait_next_game()
         renamed_path = ident_path + f"_{tries + 1}_UNSOLVED"
         os.rename(ident_path, renamed_path)
         remaining = wordle_container.find()
         wordle_container.set_unsolved(remaining, renamed_path)
         print("Could not solve...")
-        wait(3, "endscreen solution")
         gui.screenshot((0, 65, 470, 990), False, renamed_path, "endscreen.png")
         gui.click_on("next_word")
         wait_for_game_start()
@@ -405,15 +392,18 @@ def wait_for_game_start():
         wait(.5, "game start")
 
 
-def wait_for_game_solution():
-    while not check_game_state(lambda state: gui.ColorCode.EMPTY != state):
-        wait(1, "game solution")
-
-
 def is_solved(colors: List[List[gui.ColorCode]]) -> bool:
     for color in colors:
         if all(solution == gui.ColorCode.OK for solution in color):
             return True
+
+
+def __print_game_solution(not_solved):
+    if not_solved:
+        print(
+            f"Game{'s' if len(not_solved) != 1 else ''} {', '.join([str(i) for i in not_solved])} could not be solved!")
+    else:
+        print("Could solve all words! Ending...")
 
 
 def was_legit_input(new_colors, old_colors):
@@ -486,10 +476,6 @@ def get_current_game_state(data_path: str) -> (str, [[gui.ColorCode]], int):
                 elif threshold < 1:
                     raise Exception("Could not read words from screenshot")
     return text, colors, row_number
-
-
-def start_phone(phone: gui.Phone):
-    phone.start()
 
 
 if __name__ == '__main__':
