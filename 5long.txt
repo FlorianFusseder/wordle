@@ -1359,7 +1359,6 @@ Eilat
 eilen
 eilig
 eilst
-eilte
 Eimer
 Einar
 einem
@@ -1375,7 +1374,6 @@ Eises
 eisig
 eitel
 Eiter
-eitle
 eitre
 ekele
 ekeln
@@ -4872,7 +4870,6 @@ Riffs
 Rigas
 Rigor
 Riley
-Rilke
 Rille
 Rinas
 Rinde
@@ -5253,7 +5250,6 @@ Siegs
 siegt
 siehe
 sieht
-Siele
 Siels
 Siena
 sieze
@@ -5266,7 +5262,6 @@ sigma
 Sikhs
 Silas
 Silbe
-Silke
 Silvy
 Simba
 Simon
