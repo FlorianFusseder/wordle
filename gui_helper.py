@@ -3,6 +3,7 @@ import os
 import subprocess
 from abc import ABC
 from enum import Enum, unique, auto
+from typing import List
 
 import numpy as numpy
 import pyautogui as gui
@@ -226,7 +227,7 @@ def crop_img(in_p, out_p=None):
     return img
 
 
-def get_colors(path: str):
+def get_colors(path: str) -> [[ColorCode]]:
     px = Image.open(path).load()
 
     color_matrix: [] = [None] * 6

@@ -51,6 +51,7 @@ class WordleContainer:
     def __init__(self) -> None:
         self.state = WordleState()
         self.solution = None
+        self.remaining = None
         self.states = []
         self.word_list = []
 
@@ -96,12 +97,17 @@ class WordleContainer:
             raise Exception("No Words could be found!")
         return words
 
-    def set_solved(self, solution: str = None, path=None):
+    def set_solved(self, solution: str, path: str = None):
+        self.__game_solution(path, solution, None)
+
+    def set_unsolved(self, remaining: [str], path: str = None):
+        self.__game_solution(path, None, remaining)
+
+    def __game_solution(self, path, solution: str, remaining: [str]):
         self.solution = solution
+        self.remaining = remaining
         file_name = "game_data.json"
-
         path = path + "/" + file_name if path else file_name
-
         with open(path, mode='w') as file:
             def class2dict(instance):
                 if isinstance(instance, list):
@@ -309,7 +315,7 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
     os.makedirs(ident_path)
     tries = 0
     while not wordle_container.is_solved() and tries < 6:
-        current_text, current_colors, _ = get_current_game_state(ident_path)
+        current_text, current_colors, _ = get_checked_current_game_state(ident_path, wordle_container)
         wordle_container.update(current_text, current_colors)
         if is_solved(current_colors):
             words = current_text.split()
@@ -324,24 +330,8 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
         next_solution = words[0]
         put_solution(next_solution)
         wait(1, "animation to start")
-        all_words, next_colors, tries = get_current_game_state(ident_path)
 
-        was_correctly_read = False
-        reties = 3
-        for retry_count in range(reties):
-            for w in all_words.split():
-                w = w.lower()
-                if w not in [wc.lower() for wc in wordle_container.word_list] and w != next_solution.lower():
-                    all_words, next_colors, tries = get_current_game_state(ident_path)
-                else:
-                    was_correctly_read = True
-                    break
-
-        if not was_correctly_read:
-            raise Exception(f"""Inconsistent game state, even after {reties} retries: 
-                                words read from picture: {', '.join(all_words.split())}
-                                words that have been typed until now: {wordle_container.word_list}
-                                solution for this iteration: {next_solution}""")
+        all_words, next_colors, tries = get_checked_current_game_state(ident_path, wordle_container, next_solution)
 
         if is_solved(next_colors):
             print(f"Solution was {next_solution}")
@@ -374,13 +364,40 @@ def play(wordle_container: WordleContainer, session_path, game_identifier):
         wait_for_game_solution()
         renamed_path = ident_path + f"_{tries + 1}_UNSOLVED"
         os.rename(ident_path, renamed_path)
-        wordle_container.set_solved(None, renamed_path)
+        remaining = wordle_container.find()
+        wordle_container.set_unsolved(remaining, renamed_path)
         print("Could not solve...")
         wait(3, "endscreen solution")
         gui.screenshot((0, 65, 470, 990), False, renamed_path, "endscreen.png")
         gui.click_on("next_word")
         wait_for_game_start()
         return False
+
+
+def get_checked_current_game_state(ident_path: str, wordle_container: WordleContainer,
+                                   next_solution: str = None) -> ([str], [[gui.ColorCode]], int):
+    all_words, next_colors, row_number = get_current_game_state(ident_path)
+    tmp_ = [wc.lower() for wc in wordle_container.word_list]
+    reties = 2
+    try_ = 0
+    if next_solution:
+        tmp_.append(next_solution.lower())
+
+    def check_all():
+        return all([w.lower() in tmp_ for w in all_words.split()])
+
+    correctly_read = check_all()
+    while not correctly_read and try_ < reties:
+        all_words, _, _ = get_current_game_state(ident_path)
+        correctly_read = check_all()
+
+    if not correctly_read:
+        raise Exception(f"""Inconsistent game state, even after {reties} retries: 
+                            words read from picture: {', '.join(all_words.split())}
+                            words that have been typed until now: {wordle_container.word_list}
+                            solution for this iteration: {next_solution}""")
+    else:
+        return all_words, next_colors, row_number
 
 
 def wait_for_game_start():
@@ -428,17 +445,17 @@ def check_game_state(fn: typing.Callable[[gui.ColorCode], bool]):
             continue
 
 
-def get_current_game_state(data_path: str):
+def get_current_game_state(data_path: str) -> (str, [[gui.ColorCode]], int):
     again = True
     threshold = 5
-    number: int
+    row_number: int
     if data_path:
         while again:
             _, path = gui.screenshot(path=data_path)
             try:
                 colors = gui.get_colors(path)
-                number = solution_number(colors)
-                if number == 0:
+                row_number = solution_number(colors)
+                if row_number == 0:
                     raise gui.ColorStateException("Cannot get state if no rows are solved yet...")
 
             except gui.ColorStateException as e:
@@ -468,7 +485,7 @@ def get_current_game_state(data_path: str):
                     threshold = threshold - 1
                 elif threshold < 1:
                     raise Exception("Could not read words from screenshot")
-    return text, colors, number
+    return text, colors, row_number
 
 
 def start_phone(phone: gui.Phone):

@@ -9,7 +9,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        wordle=wordle:find
+        wordle=wordle:wordle
         wt=word_list:cli
         bot=bot:cli
     ''',
