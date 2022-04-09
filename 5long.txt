@@ -1,5 +1,4 @@
 aalen
-aalte
 Abart
 abbat
 Abbau
@@ -129,15 +128,12 @@ Aldis
 Alecs
 Aleph
 alert
-Alete
 Alexa
 Algen
 Algin
 alias
 Alibi
 Alica
-Alien
-Alina
 Aliya
 Alkin
 Alkyd
@@ -316,7 +312,6 @@ ASEAN
 äsend
 Äsens
 äsest
-Asiat
 Asien
 Asket
 Aslan
@@ -623,7 +618,6 @@ birgt
 Birke
 Birma
 Birne
-birst
 Birte
 Bisam
 Bitch
@@ -746,7 +740,6 @@ botet
 bötet
 Botin
 Botox
-botst
 bovin
 Bowie
 Bowle
@@ -889,7 +882,6 @@ Caras
 Cards
 Carey
 Cargo
-Carla
 Carlo
 Carls
 Carly
@@ -1249,7 +1241,6 @@ Drüse
 DSchG
 DSGVO
 DSLAM
-DSLRs
 duale
 Dubai
 Dübel
@@ -1332,7 +1323,6 @@ Edukt
 Edwin
 Efeus
 Effet
-Egels
 Eggen
 Egger
 eGmbH
@@ -1377,7 +1367,6 @@ Eiter
 eitre
 ekele
 ekeln
-Ekels
 ekelt
 Eklat
 eklig
@@ -1400,7 +1389,6 @@ Elmar
 Eloys
 Elphi
 Elsas
-Elses
 Elspe
 Elvis
 Emely
@@ -1456,7 +1444,6 @@ erkor
 erlag
 Erlös
 Ernas
-Ernie
 ernst
 ernte
 errät
@@ -1468,7 +1455,6 @@ erzog
 Esaus
 Esbit
 Esche
-Esels
 Eskes
 Essay
 ESSEC
@@ -1493,7 +1479,6 @@ Etzel
 Euböa
 Eulen
 eurem
-euren
 eurer
 eures
 Euros
@@ -2187,7 +2172,6 @@ Halls
 hallt
 Halma
 Halms
-halse
 Hälse
 halte
 Hamam
@@ -2221,7 +2205,6 @@ härme
 härmt
 Harns
 harre
-Harro
 harrt
 Harry
 harte
@@ -2269,8 +2252,6 @@ Hecks
 heckt
 Hedda
 Hedis
-Heels
-Heere
 Heers
 Hefen
 hefte
@@ -2288,11 +2269,9 @@ Heide
 Heidi
 Heidy
 Heiko
-heile
 Heils
 heilt
 Heims
-Heine
 Heini
 Heins
 Heinz
@@ -2321,7 +2300,6 @@ hemmt
 Hendl
 Henna
 Henne
-Henni
 Henri
 Henry
 Henze
@@ -2388,7 +2366,6 @@ höben
 höbet
 hoble
 Hobos
-hobst
 Hochs
 hockt
 Hoden
@@ -2422,7 +2399,6 @@ Holly
 Holme
 Holms
 Holon
-holst
 holze
 holzt
 Homos
@@ -2590,7 +2566,6 @@ Input
 Insel
 Intel
 intim
-Intro
 intus
 Inuit
 Iodat
@@ -2831,10 +2806,8 @@ kamen
 kämen
 kämet
 Kamin
-kämme
 Kamms
 kämmt
-Kämpe
 Kampf
 kämpf
 kamst
@@ -2899,7 +2872,6 @@ Käuze
 KBaud
 KByte
 Kebab
-kecke
 Kedar
 Kefir
 kegel
@@ -2914,7 +2886,6 @@ Keils
 keilt
 Keims
 keimt
-keine
 keins
 Keith
 Kekse
@@ -2934,7 +2905,6 @@ Kents
 kerbe
 kerbt
 Kerle
-Kerls
 Kerns
 Kerub
 Kerze
@@ -2975,7 +2945,6 @@ Kiras
 Kirch
 Kirks
 Kirow
-kirre
 Kiste
 KitaG
 Kitas
@@ -3375,7 +3344,6 @@ leibt
 leide
 Leids
 Leier
-leihe
 leiht
 leime
 leimt
@@ -3538,7 +3506,6 @@ lötet
 Lotos
 lotse
 lotst
-Lotta
 Lotte
 Lotto
 Lotus
@@ -3699,7 +3666,6 @@ Marke
 Marko
 Marks
 Markt
-Marlo
 Marls
 Marne
 Marta
@@ -3777,7 +3743,6 @@ merci
 Merck
 merke
 merkt
-Merle
 merze
 merzt
 messe
@@ -3809,10 +3774,8 @@ Milas
 Milbe
 Milch
 milde
-Milet
 Miliz
 Milka
-Mille
 Milva
 mimen
 Mimik
@@ -4252,7 +4215,6 @@ Orgie
 Orion
 Orkan
 Orkus
-Orlog
 Ornat
 orten
 Ortes
@@ -4271,7 +4233,6 @@ Ostau
 Osten
 Otmar
 Otter
-Ottos
 Ötzis
 outen
 outet
@@ -4474,7 +4435,6 @@ Plaid
 plane
 Pläne
 Plans
-Plato
 platt
 Platz
 Playa
@@ -4546,7 +4506,6 @@ Posts
 Potis
 Potte
 Pötte
-Potts
 Power
 Prada
 Prado
@@ -4571,7 +4530,6 @@ PRler
 probe
 probt
 Profi
-Prolo
 Promi
 Promo
 Prosa
@@ -4696,7 +4654,6 @@ ragst
 ragte
 Rahab
 Rahel
-Rahen
 Rahms
 rahmt
 Rains
@@ -4736,10 +4693,8 @@ Rasse
 Rasur
 raten
 Räten
-Rates
 ratet
 Rätin
-ratio
 rätst
 Ratte
 ratze
@@ -4768,7 +4723,6 @@ raute
 Ravel
 Raver
 Rayon
-reale
 Realo
 Rebus
 reche
@@ -4879,18 +4833,15 @@ Ringo
 rings
 ringt
 rinne
-rinnt
 Rinse
 Rioja
 Rippe
 Rispe
 Risse
-risst
 Ritas
 Riten
 ritte
 Ritts
-Ritus
 ritze
 ritzt
 River
@@ -4928,7 +4879,6 @@ Rolex
 Rolfs
 rolle
 Rolli
-Rollo
 Rolls
 rollt
 Roman
@@ -5104,7 +5054,6 @@ Sarde
 Särge
 Sargs
 Sarin
-Saris
 Satan
 säten
 sätet
@@ -5130,7 +5079,6 @@ säumt
 Sauna
 saure
 Säure
-sause
 saust
 saute
 Savoy
@@ -5174,13 +5122,11 @@ sehen
 Seher
 sehnt
 Seide
-seien
 seife
 seift
 Seiko
 seile
 seine
-seins
 seist
 Seite
 Sekte
@@ -5309,13 +5255,10 @@ Slang
 Slawe
 Slick
 Slips
-Slots
-Slums
 smart
 Smith
 Smogs
 Snack
-Snobs
 Soaps
 Socke
 Sodas
@@ -5329,10 +5272,8 @@ softe
 sogar
 sögen
 Soges
-sogst
 Sohle
 söhne
-Sohns
 söhnt
 Sojus
 solar
@@ -5344,13 +5285,11 @@ Solid
 solle
 sollt
 Solon
-Solos
 somit
 Somme
 Sonar
 SONAX
 Sonde
-Songs
 Sonia
 Sonja
 Sönke
@@ -5367,7 +5306,6 @@ sorge
 sorgt
 sorry
 Sorte
-Souks
 Sound
 South
 sowie
@@ -5414,7 +5352,6 @@ Spock
 Spore
 Sporn
 Sport
-Spots
 Spott
 Spray
 Spree
@@ -5478,7 +5415,6 @@ Stenz
 Stern
 Sterz
 stete
-Stetl
 stets
 Steve
 Stews
@@ -5655,7 +5591,6 @@ Tarif
 tarne
 tarnt
 Tarps
-Taser
 Tasks
 Tasse
 Tasso
@@ -5716,7 +5651,6 @@ Terra
 Terry
 Teseo
 Tesla
-TESOL
 teste
 Tests
 Tetum
@@ -5747,7 +5681,6 @@ Thuja
 Thuje
 Thule
 Thurn
-Tiara
 Tiber
 Tibet
 Tibia
@@ -5777,7 +5710,6 @@ Timmy
 Timon
 Timor
 Timur
-Tinos
 Tinte
 Tioga
 Tipis
@@ -5790,13 +5722,11 @@ Titan
 Titel
 Titer
 Titte
-Titus
 Toast
 Tobak
 Tobel
 toben
 Tobis
-tobst
 tobte
 Tobys
 Toddy
@@ -5824,7 +5754,6 @@ Tones
 Tonga
 Tonic
 tonig
-Tonis
 Tonja
 Tonne
 tönst
@@ -5859,7 +5788,6 @@ töten
 toter
 totes
 tötet
-Totos
 Touch
 tough
 Touri
@@ -5878,7 +5806,6 @@ trage
 träge
 tragt
 trägt
-Trail
 Trakl
 Trakt
 tramp
@@ -5886,7 +5813,6 @@ Trams
 Trane
 träne
 trank
-Trans
 tränt
 Trapp
 Trara
@@ -5961,7 +5887,6 @@ tumbe
 Tumor
 tunen
 Tuner
-Tunis
 tunke
 tunkt
 tunst
@@ -5986,7 +5911,6 @@ tüten
 tutet
 tütet
 Tutor
-Tutsi
 tutti
 Tutus
 Twain
@@ -6089,7 +6013,6 @@ Unzen
 Urahn
 Urals
 uralt
-Urans
 Uräus
 urban
 urbar
@@ -6099,7 +6022,6 @@ Urins
 Urnen
 Uroma
 Uropa
-Ursel
 Ursus
 Urtyp
 USAAF
@@ -6112,7 +6034,6 @@ Uslar
 USMCA
 Usutu
 Utahs
-Utans
 Uteri
 Uvula
 vadis
@@ -6466,7 +6387,6 @@ Woods
 Woody
 woran
 worin
-World
 Worms
 Worte
 Wörth

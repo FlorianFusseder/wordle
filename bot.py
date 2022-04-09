@@ -1,11 +1,12 @@
 import datetime
 import json
 import os
+import pickle
 import re
 import sys
 import time
 import typing
-from typing import List
+from typing import List, Callable
 
 import click
 
@@ -46,65 +47,30 @@ class WordleState:
         self.regex = regex
 
 
-class StartWordManager:
-
-    def update_statistics(self, won: bool, attempts: int):
-        with open("start_words.json", mode="r") as file:
-            json_file = json.load(file)
-        word = [w for w in json_file if w['word'] == self.__start_word][0]
-        if not word:
-            wt.add_start_word_statistics(self.__start_word, 1 if won else 0, 1 if not won else 0, attempts)
-        else:
-            if won:
-                word['won'] += 1
-            else:
-                word['lost'] += 1
-
-            if word['avg_attempts']:
-                word['avg_attempts'] += attempts
-                word['avg_attempts'] /= 2
-            else:
-                word['avg_attempts'] = attempts
-
-        with open("start_words.json", mode="w") as file:
-            json.dump(json_file, file, indent=2)
-
-    @property
-    def start_word(self):
-        return self.__start_word
-
-    def __init__(self, start_word: str = None) -> None:
-        self.__start_word = start_word if start_word else wt.get_random_start_word()
-
-
 class WordleContainer:
 
-    def __init__(self, start_word: str = None) -> None:
+    def __init__(self) -> None:
         self.state = WordleState()
         self.solution = None
         self.remaining = None
         self.states = []
-        self.word_list = [] if not start_word else [start_word]
+        self.word_list = []
 
-    def update(self, text, colors):
+    def update(self, new_word, colors):
         if self.state:
             self.states.append(self.state)
         self.state = WordleState()
+        self.word_list.append(new_word)
 
-        number = solution_number(colors)
-
-        for i in range(number):
-            color_row = colors[i]
-            word = text[:6]
-            for j in range(0, 5):
-                c = word[j]
-                color_code = color_row[j]
-
+        for row, word in enumerate(self.word_list):
+            color_row = colors[row]
+            for column, char in enumerate(word):
+                color_code = color_row[column]
                 if color_code == gui.ColorCode.OK:
-                    self.state.add_solved(c, j)
+                    self.state.add_solved(char, column)
                 elif color_code == gui.ColorCode.CONTAINED:
                     def get_index_list(color: gui.ColorCode):
-                        return [match.start() for match in re.finditer(c, word) if color_row[match.start()] == color]
+                        return [match.start() for match in re.finditer(char, word) if color_row[match.start()] == color]
 
                     # make list where the containing character cannot occur
                     not_list = get_index_list(gui.ColorCode.NOT_CONTAINED)
@@ -112,12 +78,11 @@ class WordleContainer:
                     ignore_list = get_index_list(gui.ColorCode.OK)
                     # make list how often the character occurs
                     character_occurrences_list = get_index_list(gui.ColorCode.CONTAINED)
-                    self.state.add_contained(c, character_occurrences_list, not_list, ignore_list, )
+                    self.state.add_contained(char, character_occurrences_list, not_list, ignore_list, )
                 elif color_code == gui.ColorCode.NOT_CONTAINED:
-                    self.state.add_not_contained(c)
+                    self.state.add_not_contained(char)
                 elif color_code == gui.ColorCode.EMPTY:
                     break
-            text = text[6:]
 
     def find(self) -> List[str]:
         words, regex = wordle.find_words(self.state.word_glob, self.state.char_contained_list,
@@ -128,10 +93,11 @@ class WordleContainer:
             raise Exception("No Words could be found!")
         return words
 
-    def set_solved(self, solution: str, path: str = None):
-        self.__game_solution(path, solution, None)
+    def set_solved(self, path: str = None):
+        self.__game_solution(path, self.word_list[len(self.word_list) - 1], None)
 
-    def set_unsolved(self, remaining: [str], path: str = None):
+    def set_unsolved(self, path: str = None):
+        remaining = self.find()
         self.__game_solution(path, None, remaining)
 
     def __game_solution(self, path, solution: str, remaining: [str]):
@@ -168,41 +134,126 @@ class WordleContainer:
         self.state = None
 
 
-def solution_number(colors):
-    count = 0
-    for row in range(len(colors)):
-        row_ = colors[row][0]
-        if row_ != gui.ColorCode.EMPTY:
-            is_complete = all([column != gui.ColorCode.EMPTY for column in colors[row]])
-            if not is_complete:
-                raise gui.ColorStateException("Not all Colors seem to be solved just yet")
-            count = count + 1
+class GameMaster:
+
+    def __init__(self, scoring_algorithm: wordle.Scoring,
+                 start_word_manager: wt.StartWordManager,
+                 interface: gui.Interface,
+                 base_path: str,
+                 games_to_play: int = 1) -> None:
+        self._wordle_container: WordleContainer = None
+        self._session_path: str = None
+        self._current_solution_word: str = None
+        self._scoring_algorithm: wordle.Scoring = scoring_algorithm
+        self._start_word_manager: wt.StartWordManager = start_word_manager
+        self._interface: gui.Interface = interface
+        self._base_path: str = base_path
+        self._games_to_play: int = games_to_play
+        self._won: int = 0
+        self._lost: int = 0
+        self._attempts: int = 0
+
+    def prepare_game(self):
+        readable_game_number = self.games_played() + 1
+        print(f"{'-' * 10}Play game {readable_game_number}/{self._games_to_play}{'-' * 10}")
+        self._session_path = self._base_path + "/" + f"{readable_game_number}_{self._games_to_play}"
+        os.makedirs(self._session_path)
+        self._current_solution_word = self._start_word_manager.start_word
+        self._wordle_container: WordleContainer = WordleContainer()
+        self._interface.move_to("submit")
+
+    def play_game(self):
+
+        def all_current_row(predicate: Callable[[gui.ColorCode], bool]):
+            return all([predicate(code) for code in current_colors[self._attempts]])
+
+        while not self._wordle_container.is_solved() and self._attempts < 6:
+            self._interface.put_solution(self._current_solution_word)
+            self.wait(1, "animation to start")
+            current_colors = self._interface.get_colors(self._attempts + 1)
+
+            if not all_current_row(lambda code: code != gui.ColorCode.EMPTY):
+                print(f"Word {self._current_solution_word} seems not to be wordle word, removing...")
+                wt.remove_word(self._current_solution_word)
+                if self._attempts == 0:
+                    raise Exception(f"Your start word {self._current_solution_word} is not in wordlist!")
+                print("Delete word...")
+                [self._interface.click_on("delete", duration=0, echo=False) for _ in range(5)]
+                continue
+
+            self._attempts += 1
+            self._wordle_container.update(self._current_solution_word, current_colors)
+
+            if all_current_row(lambda code: code == gui.ColorCode.OK):
+                self._wordle_container.set_solved(self._session_path)
+            else:
+                print(
+                    f"Word '{self._current_solution_word}' was not solution, starting iteration {self._attempts}/6...")
+                words = self._wordle_container.find()
+                self._current_solution_word = self._scoring_algorithm.evaluate(words)[0]
+
+    def end_game(self):
+        self._interface.wait_for_endscreen()
+        # todo: make gui.make_endscreen_screenshot part of interface
+        gui.make_endscreen_screenshot(self._session_path)
+        new_path = self._session_path + f"_{self._attempts}_"
+        if self._wordle_container.is_solved():
+            print(f"Solution was {self._current_solution_word}")
+            self._won += 1
+            new_path += self._current_solution_word
+            with open("whitelist.txt", mode="a+") as file:
+                word_set = set(file.read().split())
+                l_b = len(word_set)
+                word_set.add(self._current_solution_word)
+                l_a = len(word_set)
+                if l_b < l_a:
+                    file.write(self._current_solution_word + "\n")
         else:
-            break
-    return count
+            print("Could not solve wordle puzzle")
+            self._lost += 1
+            new_path += "UNSOLVED"
+            self._wordle_container.set_unsolved(self._session_path)
+            print("Could not solve...")
+
+        self._start_word_manager.update_statistics(self._wordle_container.is_solved(), self._attempts)
+        self._interface.click_on("next_word")
+        os.rename(self._session_path, new_path)
+
+    def games_played(self) -> int:
+        return self._won + self._lost
+
+    def keep_playing(self) -> bool:
+        return self.games_played() < self._games_to_play
+
+    @staticmethod
+    def wait(s: float, el: str = None):
+        if el:
+            click.echo(f"Wait {s} sec for {el}...")
+        time.sleep(s)
 
 
-models = ['PSMART2019', 'P30']
+models = os.listdir("interfaces")
 
 
 @click.group()
 @click.option('-v', '--verbose', is_flag=True, default=False)
 @click.option('--gui-pause', default=0.5, required=False)
 @click.option('--typing-speed', default=0.5, required=False)
-@click.option("-m", "--model",
-              type=click.Choice(models, case_sensitive=False), default=models[0])
-@click.option("-o", "--open", is_flag=True, default=False)
+@click.option("-i", "--interface", type=click.Choice(models, case_sensitive=False))
+@click.option("-o", "--open-interface", is_flag=True, default=False)
 @click.pass_context
-def cli(ctx, verbose, gui_pause, typing_speed, model, open):
+def cli(ctx, verbose, gui_pause, typing_speed, interface, open_interface):
     ctx.ensure_object(dict)
+
+    if interface:
+        with open(f"interfaces/{interface}", mode="rb") as unpickle:
+            ctx.obj['interface'] = pickle.load(unpickle)
+            if open_interface and ctx.obj['interface'].commands:
+                ctx.obj['interface'].open_()
+
     ctx.obj['verbose'] = verbose
     ctx.obj['gui_pause'] = gui_pause
     ctx.obj['typing_speed'] = typing_speed
-    ctx.obj['model'] = model
-    ctx.obj['interface'] = gui.Interface.init(model)
-    ctx.obj['open'] = open
-    if open:
-        ctx.obj['interface'].open_()
     gui.PAUSE = gui_pause
 
 
@@ -210,7 +261,7 @@ def cli(ctx, verbose, gui_pause, typing_speed, model, open):
 @click.argument("element")
 @click.pass_context
 def click_on(ctx, element):
-    gui.click_on(element, ctx.obj["typing_speed"])
+    ctx.obj['interface'].click_on(element)
 
 
 @cli.command("type")
@@ -218,15 +269,15 @@ def click_on(ctx, element):
 @click.option("-c", "--count", default=1)
 @click.pass_context
 def type(ctx, word, count):
-    gui.move_to("submit", 1)
+    ctx.obj['interface'].move_to("submit", 1)
     for _ in range(count):
-        put_solution(word)
+        ctx.obj['interface'].put_solution(word)
 
 
 @cli.command()
 @click.argument('element')
-def get_pixel_color(element):
-    by_element = gui.get_pixel_color_by_element(element)
+def get_pixel_color(ctx, element):
+    by_element = ctx.obj['interface'].get_pixel_color_by_element(element)
     print(f"R[{by_element[0]}]G[{by_element[1]}]B[{by_element[2]}]")
 
 
@@ -266,6 +317,13 @@ def scr_read():
 
 
 @cli.command()
+def mouse():
+    position = gui.mouse_position()
+    colors = gui.get_pixel_color_by_position(position)
+    print(f"Position: {position}, Color {colors}")
+
+
+@cli.command()
 @click.argument("path", type=click.Path(exists=True))
 @click.pass_context
 def get_colors(ctx, path):
@@ -278,241 +336,78 @@ def phone_start(ctx):
     ctx.obj['interface'].open_()
 
 
-def wait(s: float, el: str = None):
-    if el:
-        click.echo(f"Wait {s} sec for {el}...")
-    time.sleep(s)
+@cli.command("interface")
+@click.pass_context
+def new_interface(ctx):
+    interface: gui.Interface = ctx.obj['interface'] if 'interface' in ctx.obj else gui.Interface()
+    try:
+        if not interface.identifier:
+            interface.identifier = input("Id: ")
+
+        if not interface.commands:
+            interface.commands = input("Start Command: ")
+
+        x_p: [int] = [0] * 5
+        y_p: [int] = [0] * 6
+
+        def define_positions(p_list, name, skip: bool = False):
+            for i in range(len(p_list)):
+                if skip and i == 0:
+                    continue
+                input(f"Hover {name}{i + 1} and press enter")
+                p_list[i] = gui.mouse_position()
+            return p_list
+
+        if not interface.color_positions:
+            matrix: [[typing.Tuple]] = []
+            for _ in range(6):
+                matrix.append([()] * 5)
+
+            x_p = define_positions(x_p, 'x')
+            y_p = define_positions(y_p, 'y', True)
+            y_p[0] = x_p[0]
+            for i, y in enumerate(y_p):
+                for j, x in enumerate(x_p):
+                    matrix[i][j] = (x[0], y[1])
+
+            interface.color_positions = matrix
+
+        for k, v in interface.elements.items():
+            if v[0] == -1 and v[1] == -1:
+                input(f"Hover {k} and press enter ")
+                interface.elements[k] = gui.mouse_position()
+
+        for k, v in interface.color_codes.items():
+            if v == gui.RGB():
+                input(f"Hover {k.name} and press enter")
+                pos = gui.mouse_position()
+                interface.color_codes[k] = gui.Interface.get_pixel_color_by_position(pos)
 
 
-@cli.command()
+    except Exception as e:
+        print(f"{e}")
+
+    if interface.identifier:
+        print(f"Save {interface}")
+        with open(f"interfaces/{interface.identifier}", mode="wb") as pickle_file:
+            pickle.dump(interface, pickle_file)
+
+
+@cli.command("play")
 @click.option("-w", "--start_word")
-@click.option("-c", "--count", default=1)
+@click.option("-c", "--count", default=1, type=click.IntRange(1, sys.maxsize))
 @click.pass_context
 def start(ctx, start_word, count):
     interface: gui.Interface = ctx.obj["interface"]
-    interface.setup()
-    session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
-    not_solved = []
-    for i in range(count):
-        print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
-        start_word_manager = StartWordManager(start_word) if start_word else StartWordManager()
-        wordle_container = WordleContainer(start_word_manager.start_word)
-        put_solution(start_word_manager.start_word)
-        solved, attempts = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
-        start_word_manager.update_statistics(solved, attempts)
-        if not solved:
-            not_solved.append(i)
+    base_path = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
+    start_word_manager = wt.StartWordManager(start_word) if start_word else wt.StartWordManager()
+    scoring_algorithm: wordle.Scoring = wordle.SimpleScoring()
 
-    __print_game_solution(not_solved)
-
-
-@cli.command()
-@click.option("-c", "--count", default=1, type=click.IntRange(1, sys.maxsize))
-@click.option("-w", "--start_word")
-@click.pass_context
-def resume(ctx, count, start_word):
-    interface: gui.Interface = ctx.obj["interface"]
-    interface.setup()
-    session_string = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
-    not_solved = []
-    for i in range(count):
-        print(f"{'-' * 10}Play game {i + 1}/{count}{'-' * 10}")
-        if i == 0:
-            wordle_container = WordleContainer()
-            word_list = gui.scr_read()
-            read_words = [w.lower() for w in word_list.split()]
-            start_word_manager = StartWordManager(read_words[0])
-            wordle_container.word_list.extend(read_words)
-        else:
-            start_word_manager = StartWordManager(start_word) if start_word else StartWordManager
-            wordle_container = WordleContainer(start_word_manager.start_word)
-            put_solution(start_word_manager.start_word)
-        solved, attempts = play(interface, wordle_container, session_string, "/" + f"{i + 1}_{count}")
-        start_word_manager.update_statistics(solved, attempts)
-        if not solved:
-            not_solved.append(i)
-
-    __print_game_solution(not_solved)
-
-
-def play(interface: gui.Interface, wordle_container: WordleContainer, session_path, game_identifier):
-    ident_path = session_path + game_identifier
-    os.makedirs(ident_path)
-    solution: str
-    tries = 0
-    while not wordle_container.is_solved() and tries < 6:
-        current_text, current_colors, _ = get_checked_current_game_state(ident_path, wordle_container)
-        wordle_container.update(current_text, current_colors)
-        if is_solved(current_colors):
-            words = current_text.split()
-            solution = words[len(words) - 1]
-            wordle_container.set_solved(solution, ident_path)
-            continue
-
-        words = wordle_container.find()
-        next_solution = words[0]
-        put_solution(next_solution)
-        wait(1, "animation to start")
-        all_words, next_colors, tries = get_checked_current_game_state(ident_path, wordle_container, next_solution)
-
-        if is_solved(next_colors):
-            solution = next_solution
-            wordle_container.set_solved(solution, ident_path)
-        elif not was_legit_input(next_colors, current_colors):
-            print(f"Word {next_solution} seems not to be wordle word, removing...")
-            wordle_container.set_not_legit()
-            wt.remove_word(next_solution)
-            print("Delete word...")
-            [gui.click_on("delete", duration=0, echo=False) for _ in range(5)]
-            _, _, tries = get_current_game_state(ident_path)
-        else:
-            if tries < 6:
-                print(f"Word '{next_solution}' was not solution, starting iteration {tries}/6...")
-            wordle_container.word_list.append(next_solution)
-
-    if tries >= 6:
-        interface.wait_next_game()
-        renamed_path = ident_path + f"_{tries}_UNSOLVED"
-        os.rename(ident_path, renamed_path)
-        remaining = wordle_container.find()
-        wordle_container.set_unsolved(remaining, renamed_path)
-        print("Could not solve...")
-        gui.screenshot((0, 65, 470, 990), False, renamed_path, "endscreen.png")
-        gui.click_on("next_word")
-        wait_for_game_start()
-        return False, tries
-    else:
-        print(f"Solution was {solution}")
-        gui.screenshot((0, 65, 470, 990), False, ident_path, "endscreen.png")
-        interface.wait_next_game()
-        gui.click_on("next_word")
-        os.rename(ident_path, ident_path + f"_{tries + 1}_{solution}")
-        with open("whitelist.txt", mode="a+") as file:
-            word_set = set(file.read().split())
-            l_b = len(word_set)
-            word_set.add(solution)
-            l_a = len(word_set)
-            if l_b < l_a:
-                file.write(solution + "\n")
-        wait_for_game_start()
-        return True, tries
-
-
-def get_checked_current_game_state(ident_path: str, wordle_container: WordleContainer,
-                                   next_solution: str = None) -> ([str], [[gui.ColorCode]], int):
-    all_words, next_colors, row_number = get_current_game_state(ident_path)
-    tmp_ = [wc.lower() for wc in wordle_container.word_list]
-    reties = 2
-    try_ = 0
-    if next_solution:
-        tmp_.append(next_solution.lower())
-
-    def check_all():
-        return all([w.lower() in tmp_ for w in all_words.split()])
-
-    correctly_read = check_all()
-    while not correctly_read and try_ < reties:
-        all_words, _, _ = get_current_game_state(ident_path)
-        correctly_read = check_all()
-
-    if not correctly_read:
-        raise Exception(f"""Inconsistent game state, even after {reties} retries: 
-                            words read from picture: {', '.join(all_words.split())}
-                            words that have been typed until now: {wordle_container.word_list}
-                            solution for this iteration: {next_solution}""")
-    else:
-        return all_words, next_colors, row_number
-
-
-def wait_for_game_start():
-    while not check_game_state(lambda state: gui.ColorCode.EMPTY == state):
-        wait(.5, "game start")
-
-
-def is_solved(colors: List[List[gui.ColorCode]]) -> bool:
-    for color in colors:
-        if all(solution == gui.ColorCode.OK for solution in color):
-            return True
-
-
-def __print_game_solution(not_solved):
-    if not_solved:
-        print(
-            f"Game{'s' if len(not_solved) != 1 else ''} {', '.join([str(i) for i in not_solved])} could not be solved!")
-    else:
-        print("Could solve all words! Ending...")
-
-
-def was_legit_input(new_colors, old_colors):
-    last_row_number = solution_number(old_colors)
-    new_row_number = solution_number(new_colors)
-    return last_row_number == new_row_number - 1
-
-
-def put_solution(next_word):
-    w = next_word.lower()
-    print(f"Put word: {next_word}")
-    gui.type(w[:1], echo=False)
-    gui.type(w[1:], duration=.1, echo=False)
-    gui.click_on("submit")
-
-
-def check_game_state(fn: typing.Callable[[gui.ColorCode], bool]):
-    """Executes the lambda on all states, and returns true if ALL of them return true"""
-    while True:
-        _, path = gui.screenshot()
-        try:
-            colors = gui.get_colors(path)
-            all_match = all([fn(state) for state in colors[0]])
-            os.remove(path)
-            return all_match
-        except gui.ColorStateException as e:
-            os.remove(path)
-            wait(.5, f"valid game state because '{e}'")
-            continue
-
-
-def get_current_game_state(data_path: str) -> (str, [[gui.ColorCode]], int):
-    again = True
-    threshold = 5
-    row_number: int
-    if data_path:
-        while again:
-            _, path = gui.screenshot(path=data_path)
-            try:
-                colors = gui.get_colors(path)
-                row_number = solution_number(colors)
-                if row_number == 0:
-                    raise gui.ColorStateException("Cannot get state if no rows are solved yet...")
-
-            except gui.ColorStateException as e:
-                """Solution is not yet done.."""
-                os.remove(path)
-                wait(1, f"valid game state because '{e}'")
-                continue
-
-            processed_path = gui.preprocess_img(path, threshold=threshold)
-            text = gui.read(processed_path).lower()
-
-            again = False
-            text_split = text.split()
-            for i, word in enumerate(text_split):
-                if len(word) != 5:
-                    again = True
-                    break
-                if not all([char in wordle.WordleRegex.allowed_characters for char in word]):
-                    again = True
-
-            if again:
-                if 20 > threshold >= 5:
-                    threshold = threshold + 1
-                elif threshold >= 20:
-                    threshold = 4
-                elif 5 > threshold > 0:
-                    threshold = threshold - 1
-                elif threshold < 1:
-                    raise Exception("Could not read words from screenshot")
-    return text, colors, row_number
+    game_master = GameMaster(scoring_algorithm, start_word_manager, interface, base_path, count)
+    while game_master.keep_playing():
+        game_master.prepare_game()
+        game_master.play_game()
+        game_master.end_game()
 
 
 if __name__ == '__main__':
