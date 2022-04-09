@@ -14,40 +14,74 @@ def statistic():
     pass
 
 
-def add_start_word_statistics(word: str, won: int = 0, lost: int = 0, avg_attempts: int = None):
-    with open("start_words.json", mode="r") as file:
-        load = json.load(file)
+class StartWordManager:
 
-    j_obj = [w for w in load if w['word'] == word]
-    if j_obj:
-        print(f"Word '{word}' already in wordlist:")
-        print(json.dumps(j_obj[0], indent=2))
-        return
+    def update_statistics(self, won: bool, attempts: int):
+        with open("start_words.json", mode="r") as file:
+            json_file = json.load(file)
+        word = [w for w in json_file if w['word'] == self.__start_word][0]
+        if not word:
+            self.add_start_word_statistics(self.__start_word, 1 if won else 0, 1 if not won else 0, attempts)
+        else:
+            if won:
+                word['won'] += 1
+            else:
+                word['lost'] += 1
 
-    load.append(
-        {
-            "word": word,
-            "won": won,
-            "lost": lost,
-            "avg_attempts": avg_attempts
-        }
-    )
-    with open("start_words.json", mode="w") as file:
-        json.dump(load, file, indent=2)
+            if word['avg_attempts']:
+                word['avg_attempts'] += attempts
+                word['avg_attempts'] /= 2
+            else:
+                word['avg_attempts'] = attempts
+
+        with open("start_words.json", mode="w") as file:
+            json.dump(json_file, file, indent=2)
+        self.__statistics_updated = True
+
+    @property
+    def start_word(self):
+        if not self.__statistics_updated:
+            raise Exception("Update statistics before getting another start_word")
+        if self.__generate_word:
+            with open("start_words.json", mode="r") as file:
+                json_file = json.load(file)
+            length = len(json_file)
+            randint = random.randint(0, length - 1)
+            self.__start_word = json_file[randint]['word']
+        return self.__start_word
+
+    def __init__(self, start_word: str = None) -> None:
+        self.__generate_word = start_word is None
+        self.__start_word = start_word
+        self.__statistics_updated = True
+
+    @staticmethod
+    def add_start_word_statistics(word: str, won: int = 0, lost: int = 0, avg_attempts: int = None):
+        with open("start_words.json", mode="r") as file:
+            load = json.load(file)
+
+        j_obj = [w for w in load if w['word'] == word]
+        if j_obj:
+            print(f"Word '{word}' already in wordlist:")
+            print(json.dumps(j_obj[0], indent=2))
+            return
+
+        load.append(
+            {
+                "word": word,
+                "won": won,
+                "lost": lost,
+                "avg_attempts": avg_attempts
+            }
+        )
+        with open("start_words.json", mode="w") as file:
+            json.dump(load, file, indent=2)
 
 
 @cli1.command()
 @click.argument("word")
 def add_start_word(word):
-    add_start_word_statistics(word)
-
-
-def get_random_start_word():
-    with open("start_words.json", mode="r") as file:
-        json_file = json.load(file)
-    length = len(json_file)
-    randint = random.randint(0, length - 1)
-    return json_file[randint]['word']
+    StartWordManager.add_start_word_statistics(word)
 
 
 @cli1.command("remove")

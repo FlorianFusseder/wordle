@@ -144,53 +144,53 @@ class WordleRegex:
         return regex
 
 
-class ArenaWordleRegex(WordleRegex):
-    """
-    This Class creates a regex that will check an try to solve the ARENA problem
-    where double Characters (like the a) are marked as 'contained' for the first character a (A)RENA but the last
-    a AREN(A) is marked as 'not_contained'. If this happens, we do not use a for exclusion
-    :return:
-    """
+class Scoring(ABC):
 
-    def _add_excludes(self):
-        dont_remove = set()
-        if self.excludes:
-            for c in self.excludes:
-                for contained in self.contains:
-                    if c in contained:
-                        dont_remove.add(c)
+    def __init__(self, name: str) -> None:
+        self._name = name
 
-            for remove in dont_remove:
-                self.excludes = self.excludes.replace(remove, "")
+    @abstractmethod
+    def evaluate(self, word_list: [str]) -> [str]:
+        print(f"Using {self._name} Algorithm...")
 
-            for regex_element in self.regex_elements:
-                regex_element.add_excludes(self.excludes)
+    def __str__(self) -> str:
+        return self._name
 
 
-def sort_word(word):
-    with open("statistics.json") as file:
-        import json
-        statistics = json.load(file)
+class SimpleScoring(Scoring):
 
-    s_dict = {}
-    for i, k in enumerate(sorted(statistics.items(), key=lambda x: x[1])):
-        s_dict[k[0]] = i + 1
+    def __init__(self) -> None:
+        super().__init__("SimpleScoring")
 
-    score = 0
-    for char in word.lower():
-        score += s_dict[char]
+    def evaluate(self, word_list: [str]) -> [str]:
+        super().evaluate(word_list)
 
-    s = set(word)
-    for _ in range(len(word) - len(s)):
-        score -= 5
+        def sort_word(word):
+            with open("statistics.json") as file:
+                import json
+                statistics = json.load(file)
 
-    with open("whitelist.txt") as file:
-        all_solution_words = file.read()
+            s_dict = {}
+            for i, k in enumerate(sorted(statistics.items(), key=lambda x: x[1])):
+                s_dict[k[0]] = i + 1
 
-    if word in all_solution_words:
-        score += 10
+            score = 0
+            for char in word.lower():
+                score += s_dict[char]
 
-    return score
+            s = set(word)
+            for _ in range(len(word) - len(s)):
+                score -= 5
+
+            with open("whitelist.txt") as file:
+                all_solution_words = file.read()
+
+            if word in all_solution_words:
+                score += 10
+            return score
+
+        word_list.sort(reverse=True, key=sort_word)
+        return word_list
 
 
 @click.group()
@@ -222,15 +222,9 @@ def find_words(word, contains, exclude, verbose):
     regex_builder: WordleRegex = WordleRegex(word, contains, exclude, verbose)
     regex_ = regex_builder.create()
     matches = execute_regex(all_words, regex_)
-
-    if not matches:
-        print("Try arena problem solution... PRAY TO THE ALMIGHTY")
-        wordle_regex = ArenaWordleRegex(word, contains, exclude, verbose)
-        regex_ = wordle_regex.create()
-        matches = execute_regex(all_words, regex_)
-
     click.echo(f"Found {len(matches)} words that match the passed structure...")
-    matches.sort(reverse=True, key=sort_word)
+    scoring = SimpleScoring()
+    matches = scoring.evaluate(matches)
     click.echo(f"{matches}")
     return matches, regex_
 

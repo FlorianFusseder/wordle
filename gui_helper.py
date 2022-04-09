@@ -1,183 +1,47 @@
 import datetime
 import os
 import subprocess
+import tempfile
 import time
 from abc import ABC
 from enum import Enum, unique, auto
-from typing import Dict, Any, Tuple
+from typing import Dict, Tuple, Iterable
 
 import numpy as numpy
 import pyautogui as gui
 from PIL import Image, ImageOps, ImageChops
 from pytesseract import image_to_string
 
-q_row_y = 770
-a_row_y = 830
-y_row_y = 896
-
-positions = {
-    "app": (185, 165),
-    "play": (230, 700),
-    "delete": (379, y_row_y),
-    "submit": (235, 950),
-    "next_word": (228, 743),
-
-    "q": (25, q_row_y),
-    "w": (65, q_row_y),
-    "e": (107, q_row_y),
-    "r": (150, q_row_y),
-    "t": (192, q_row_y),
-    "z": (237, q_row_y),
-    "u": (277, q_row_y),
-    "i": (318, q_row_y),
-    "o": (360, q_row_y),
-    "p": (403, q_row_y),
-    "ü": (445, q_row_y),
-
-    "a": (25, a_row_y),
-    "s": (65, a_row_y),
-    "d": (107, a_row_y),
-    "f": (150, a_row_y),
-    "g": (192, a_row_y),
-    "h": (237, a_row_y),
-    "j": (277, a_row_y),
-    "k": (318, a_row_y),
-    "l": (360, a_row_y),
-    "ö": (403, a_row_y),
-    "ä": (445, a_row_y),
-
-    "y": (90, y_row_y),
-    "x": (131, y_row_y),
-    "c": (172, y_row_y),
-    "v": (214, y_row_y),
-    "b": (254, y_row_y),
-    "n": (297, y_row_y),
-    "m": (341, y_row_y),
-}
-
-color_pos = [
-    [(34, 60), (110, 60), (185, 60), (260, 60), (333, 60)],
-    [(34, 135), (110, 135), (185, 135), (260, 135), (333, 135)],
-    [(34, 205), (110, 205), (185, 205), (260, 205), (333, 205)],
-    [(34, 280), (110, 280), (185, 280), (260, 280), (333, 280)],
-    [(34, 355), (110, 355), (185, 355), (260, 355), (333, 355)],
-    [(34, 430), (110, 430), (185, 430), (260, 430), (333, 430)],
-]
-
 
 class ColorStateException(Exception):
     pass
 
 
-class Interface(ABC):
-    class Position:
-        class Elem(Enum):
-            KEYBOARD = auto()
-            NEXT_GAME = auto()
-            MATRIX = auto()
+class RGB:
 
-    def __init__(self, commands: [str], screen_elements: Dict[Enum, Any]) -> None:
-        self._locations: Dict[Interface.Position.Elem, Any] = dict()
-        self.commands = commands
-        for element in Interface.Position.Elem:
-            self._locations[element] = {
-                "path": screen_elements[element]
-            }
+    @property
+    def r(self):
+        return self.__r
 
-    def is_empty(self, rgb) -> bool:
-        pass
+    @property
+    def g(self):
+        return self.__g
 
-    def is_ok(self, rgb) -> bool:
-        pass
+    @property
+    def b(self):
+        return self.__b
 
-    def is_not_contained(self, rgb) -> bool:
-        pass
+    @property
+    def rgb(self):
+        return self.__r, self.__g, self.__b
 
-    def is_contained(self, rgb) -> bool:
-        pass
+    def __init__(self, code: Tuple[int, int, int] = (-1, -1, -1)) -> None:
+        self.__r, self.__g, self.__b = code
 
-    def wait_next_game(self):
-        print("Wait until next game can be started...")
-        while not self._next_game_pixel_exists():
-            time.sleep(.5)
-
-    def _next_game_pixel_exists(self):
-        pass
-
-    def open_(self):
-        subprocess.Popen(self.commands, shell=False, stdin=None, stdout=subprocess.DEVNULL,
-                         stderr=subprocess.DEVNULL, close_fds=True)
-        print(f"Wait 2 seconds for process to open...")
-        time.sleep(2)
-
-    def setup(self):
-        move_to("submit", 1)
-
-    @classmethod
-    def init(cls, model: str = None):
-        interface: Interface
-        elements = {
-            Interface.Position.Elem.KEYBOARD: "locatables/keyboard.png",
-            Interface.Position.Elem.NEXT_GAME: "locatables/next_game.png",
-            Interface.Position.Elem.MATRIX: "locatables/matrix.png",
-        }
-        if model == "P30":
-            interface = P30(elements)
-        elif model == 'PSMART2019':
-            interface = PSMART2019(elements)
-        else:
-            interface = PSMART2019(elements)
-        ColorCode.init(interface)
-        return interface
-
-
-class P30(Interface):
-
-    def __init__(self, elements: Dict[Interface.Position.Elem, Any]) -> None:
-        commands = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
-                    "--window-y", "0"]
-        super().__init__(commands, elements)
-
-    def is_empty(self, rgb) -> bool:
-        return rgb == (146, 148, 150)
-
-    def is_ok(self, rgb) -> bool:
-        return rgb == (13, 188, 40)
-
-    def is_not_contained(self, rgb) -> bool:
-        return rgb == (83, 83, 83)
-
-    def is_contained(self, rgb) -> bool:
-        return rgb == (250, 217, 57)
-
-    def _next_game_pixel_exists(self):
-        # color code just copy pasted! check with p30
-        rgb = get_pixel_color_by_element("next_word")
-        return rgb[0] in range(242, 252) and rgb[1] in range(143, 153) and rgb[2] in range(26, 36)
-
-
-class PSMART2019(Interface):
-
-    def __init__(self, elements: Dict[Interface.Position.Elem, Any]) -> None:
-        commands = ["scrcpy", "--always-on-top", "--window-width", "470", "--window-height", "1015", "--window-x", "0",
-                    "--window-y", "0", "-m", "1024"]
-        super().__init__(commands, elements)
-
-    def is_empty(self, rgb) -> bool:
-        return rgb[0] in range(141, 152) and rgb[1] in range(143, 154) and rgb[2] in range(147, 158)
-
-    def is_ok(self, rgb) -> bool:
-        return rgb[0] in range(0, 11) and rgb[1] in range(155, 165) and rgb[2] in range(35, 45)
-
-    def is_not_contained(self, rgb) -> bool:
-        return all([val in range(78, 89) for val in rgb])
-
-    def is_contained(self, rgb) -> bool:
-        return rgb[0] in range(245, 256) and rgb[1] in range(205, 215) and rgb[2] in range(50, 66)
-
-    def _next_game_pixel_exists(self):
-        rgb = get_pixel_color_by_element("next_word")
-        return rgb[0] in range(242, 252) and rgb[1] in range(143, 153) and rgb[2] in range(26, 36)
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, RGB):
+            return False
+        return self.rgb == o.rgb
 
 
 @unique
@@ -187,57 +51,187 @@ class ColorCode(Enum):
     CONTAINED = auto()
     EMPTY = auto()
 
-    _model: Interface
-    color_name_max_length: int
 
-    @classmethod
-    def init(cls, interface: Interface):
-        cls._model = interface
-        cls.color_name_max_length = max([len(color.name) for color in ColorCode])
+class Interface(ABC):
 
-    @classmethod
-    def code(cls, code: tuple):
-        if cls._model.is_ok(code):
-            return ColorCode.OK
-        elif cls._model.is_contained(code):
-            return ColorCode.CONTAINED
-        elif cls._model.is_not_contained(code):
-            return ColorCode.NOT_CONTAINED
-        elif cls._model.is_empty(code):
-            return ColorCode.EMPTY
-        else:
-            raise ColorStateException("Color tuple " + str(code) + " unknown")
+    @property
+    def identifier(self):
+        return self._identifier
+
+    @identifier.setter
+    def identifier(self, value):
+        self._identifier = value
+
+    @property
+    def commands(self):
+        return self._commands
+
+    @commands.setter
+    def commands(self, value):
+        self._commands = value.split()
+
+    @property
+    def color_positions(self):
+        return self._color_positions
+
+    @color_positions.setter
+    def color_positions(self, value):
+        self._color_positions = value
+
+    @property
+    def color_codes(self):
+        return self._color_codes
+
+    @color_codes.setter
+    def color_codes(self, value):
+        self._color_codes = value
+
+    @property
+    def elements(self):
+        return self._elements
+
+    @elements.setter
+    def elements(self, value):
+        self._elements = value
+
+    def __init__(self) -> None:
+        self._identifier: str = ""
+        self._commands: [str] = ""
+        self._color_positions: [[Tuple[int, int]]] = None
+        self._color_codes: Dict[ColorCode, RGB] = {
+            ColorCode.OK: RGB(),
+            ColorCode.NOT_CONTAINED: RGB(),
+            ColorCode.CONTAINED: RGB(),
+            ColorCode.EMPTY: RGB()
+        }
+        self._elements: Dict[str, Tuple[int, int]] = {
+            "delete": (-1, -1),
+            "submit": (-1, -1),
+            "next_word": (-1, -1),
+            "q": (-1, -1),
+            "w": (-1, -1),
+            "e": (-1, -1),
+            "r": (-1, -1),
+            "t": (-1, -1),
+            "z": (-1, -1),
+            "u": (-1, -1),
+            "i": (-1, -1),
+            "o": (-1, -1),
+            "p": (-1, -1),
+            "ü": (-1, -1),
+            "a": (-1, -1),
+            "s": (-1, -1),
+            "d": (-1, -1),
+            "f": (-1, -1),
+            "g": (-1, -1),
+            "h": (-1, -1),
+            "j": (-1, -1),
+            "k": (-1, -1),
+            "l": (-1, -1),
+            "ö": (-1, -1),
+            "ä": (-1, -1),
+            "y": (-1, -1),
+            "x": (-1, -1),
+            "c": (-1, -1),
+            "v": (-1, -1),
+            "b": (-1, -1),
+            "n": (-1, -1),
+            "m": (-1, -1),
+        }
+
+    def is_empty(self, rgb: RGB) -> bool:
+        pass
+
+    def is_ok(self, rgb: RGB) -> bool:
+        pass
+
+    def is_not_contained(self, rgb: RGB) -> bool:
+        pass
+
+    def is_contained(self, rgb: RGB) -> bool:
+        pass
+
+    def wait_for_endscreen(self):
+        pass
+
+    def open_(self):
+        subprocess.Popen(self.commands, shell=False, stdin=None, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL, close_fds=True)
+        print(f"Wait 2 seconds for process to open...")
+        time.sleep(2)
+
+    def click_on(self, element: str, duration: float = .5, echo: bool = True):
+        x, y = self.elements[element]
+        gui.moveTo(x, y, duration=duration)
+        gui.leftClick(x, y)
+
+    def type(self, word: str, duration: float = .5, echo: bool = True):
+        if echo:
+            print(f"Type word {word}...")
+        for c in word:
+            self.click_on(c, duration, False)
+
+    def put_solution(self, next_word):
+        w = next_word.lower()
+        print(f"Put word: {next_word}")
+        self.type(w[:1], echo=False)
+        self.type(w[1:], duration=.1, echo=False)
+        self.click_on("submit")
+
+    def move_to(self, element: str, duration: float = .5):
+        x, y = self.elements[element]
+        gui.moveTo(x, y, duration=duration)
+
+    def get_colors(self, current_solution_row: int) -> [[ColorCode]]:
+        color_matrix: [] = [[ColorCode.EMPTY] * 5] * 6
+        while any([code == ColorCode.EMPTY for code in color_matrix[current_solution_row]]):
+            color_string = ""
+            for i in range(current_solution_row):
+                for j in range(0, 5):
+                    pos = self.color_positions[i][j]
+                    try:
+                        color = self.get_color_code_by_position(pos)
+                    except ColorStateException as e:
+                        raise ColorStateException(str(e) + f" at location ({i}|{j})")
+                    color_string += f"{i}|{j}: " + color.name + ((13 - len(color.name)) * " ") + " "
+                    color_matrix[i][j] = color
+                    if j == 4 and i != 5:
+                        color_string += "\n"
+
+        print(color_string)
+        return color_matrix
+
+    def get_pixel_color_by_element(self, element: str) -> RGB:
+        element_position = self.elements[element]
+        return self.get_pixel_color_by_position(element_position)
+
+    @staticmethod
+    def get_pixel_color_by_position(pos: Tuple[int, int]) -> RGB:
+        x, y = pos
+        path = tempfile.gettempdir() + f"/tmp_{int(round(datetime.datetime.now().timestamp()))}.png"
+        gui.screenshot(path, region=(x - 1, y - 1, 3, 3))
+        px = Image.open(path).load()
+        pixel = px[1, 1]
+        os.remove(path)
+        return RGB(pixel)
+
+    def get_color_code_by_position(self, pos: Tuple[int, int]) -> ColorCode:
+        pixel_rgb: RGB = self.get_pixel_color_by_position(pos)
+        for color_code, rgb in self._color_codes.items():
+            if rgb == pixel_rgb:
+                return color_code
+        raise ColorStateException(f"Could not recognize color at ({pos[0]}, {pos[1]}: {pixel_rgb})")
+
+    def __str__(self) -> str:
+        return self.identifier
 
 
-def click_on(element: str, duration: float = .5, echo: bool = True):
-    if echo:
-        print(f"Click on {element}...")
-    x, y = positions[element]
-    gui.moveTo(x, y, duration=duration)
-    gui.leftClick(x, y)
+def make_endscreen_screenshot(_session_path):
+    gui.screenshot((0, 65, 470, 990), False, _session_path, "endscreen.png")
 
 
-def type(word: str, duration: float = .5, echo: bool = True):
-    if echo:
-        print(f"Type word {word}...")
-    for c in word:
-        click_on(c, duration, False)
-
-
-def move_to(element: str, duration: float = .5):
-    print(f"Move to {element}")
-    x, y = positions[element]
-    gui.moveTo(x, y, duration=duration)
-
-
-def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/florian/Pictures/wordles", file_name=None):
-    print("Take screenshot")
-    if not file_name:
-        file_name = "unnamed.png"
-    date_string = str(datetime.datetime.now()) + "_" if with_datetime else ""
-    date_string = date_string.replace(" ", "_")
-    path = path + "/" + date_string + file_name
-    return gui.screenshot(path, region=region), path
+def mouse_position():
+    return gui.position()
 
 
 def preprocess_img(path: str, threshold: int = 5):
@@ -265,36 +259,14 @@ def crop_img(in_p, out_p=None):
     return img
 
 
-def get_colors(path: str) -> [[ColorCode]]:
-    px = Image.open(path).load()
-
-    color_matrix: [] = [None] * 6
-    for i in range(6):
-        color_matrix[i] = [ColorCode.EMPTY] * 5
-
-    x, y = color_pos[0][0]
-    pixel = px[x, y]
-    if ColorCode.EMPTY == ColorCode.code(pixel):
-        print(f"First position was {ColorCode.EMPTY.name}, returning immediately...")
-        return color_matrix
-
-    color_string = ""
-    for i in range(0, 6):
-        for j in range(0, 5):
-            x, y = color_pos[i][j]
-            pixel = px[x, y]
-            try:
-                color = ColorCode.code(pixel)
-            except ColorStateException as e:
-                raise ColorStateException(str(e) + f" at location ({i}|{j})")
-            color_string += f"{i}|{j}: " + color.name + (
-                    (ColorCode.color_name_max_length - len(color.name)) * " ") + " "
-            color_matrix[i][j] = color
-            if j == 4 and i != 5:
-                color_string += "\n"
-
-    print(color_string)
-    return color_matrix
+def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/florian/Pictures/wordles", file_name=None):
+    print("Take screenshot")
+    if not file_name:
+        file_name = "unnamed.png"
+    date_string = str(datetime.datetime.now()) + "_" if with_datetime else ""
+    date_string = date_string.replace(" ", "_")
+    path = path + "/" + date_string + file_name
+    return gui.screenshot(path, region=region), path
 
 
 def read(path, psm=6):
@@ -312,17 +284,3 @@ def scr_read(threshold: int = 5):
     os.remove(new_path)
     os.remove(path)
     return text
-
-
-def get_pixel_color_by_element(element: str):
-    element_position = positions[element]
-    return get_pixel_color_by_position(element_position)
-
-
-def get_pixel_color_by_position(pos: Tuple[int, int]):
-    x, y = pos
-    _, path = screenshot((x - 1, y - 1, 3, 3))
-    px = Image.open(path).load()
-    pixel = px[1, 1]
-    os.remove(path)
-    return pixel
