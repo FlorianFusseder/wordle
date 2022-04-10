@@ -50,6 +50,10 @@ class StartWordManager:
             self.__start_word = json_file[randint]['word']
         return self.__start_word
 
+    @start_word.setter
+    def start_word(self, value):
+        self.__start_word = value
+
     def __init__(self, start_word: str = None) -> None:
         self.__generate_word = start_word is None
         self.__start_word = start_word

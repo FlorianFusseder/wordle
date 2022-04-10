@@ -42,7 +42,7 @@ class RGB:
     def rgb(self) -> Tuple[int, int, int]:
         return self.__r, self.__g, self.__b
 
-    def compare_to(self, other: 'RGB', _range: int = 5) -> bool:
+    def compare_with_range(self, other: 'RGB', _range: int = 5) -> bool:
         color_range = self.__get_as_range(_range)
         return other.rgb[0] in color_range[0] and \
                other.rgb[1] in color_range[1] and \
@@ -141,6 +141,14 @@ class Interface(ABC):
     def elements(self, value):
         self._elements = value
 
+    @property
+    def endscreen_window(self):
+        return self._endscreen_window
+
+    @endscreen_window.setter
+    def endscreen_window(self, value):
+        self._endscreen_window = value
+
     def __init__(self) -> None:
         self._identifier: str = ""
         self._commands: [str] = ""
@@ -185,9 +193,17 @@ class Interface(ABC):
             "m": (-1, -1),
             "next_word": (-1, -1),
         }
+        self._endscreen_window = (-1, -1, -1, -1)
 
     def wait_for_endscreen(self):
-        raise NotImplemented()
+        x, y, rgb = self.elements["next_word"]
+        rgb_next = self.get_pixel_color_by_position((x, y))
+        print("Waiting for endscreen...")
+        while not rgb.compare_with_range(rgb_next):
+            time.sleep(.2)
+
+    def make_endscreen_screenshot(self, _session_path):
+        screenshot(self.endscreen_window, False, _session_path, "endscreen.png")
 
     def open_(self):
         subprocess.Popen(self.commands, shell=False, stdin=None, stdout=subprocess.DEVNULL,
@@ -295,7 +311,7 @@ class Interface(ABC):
         return self.__get_rgb_code(pixel_rgb)
 
     def __get_rgb_code(self, rgb: RGB) -> ColorCode:
-        color_codes = [color_code for color_code, rgb_ in self._color_codes.items() if rgb.compare_to(rgb_)]
+        color_codes = [color_code for color_code, rgb_ in self._color_codes.items() if rgb.compare_with_range(rgb_)]
         if len(color_codes) == 1:
             return color_codes[0]
         elif len(color_codes) > 1:
@@ -305,10 +321,6 @@ class Interface(ABC):
 
     def __str__(self) -> str:
         return self.identifier
-
-
-def make_endscreen_screenshot(_session_path):
-    gui.screenshot((0, 65, 470, 990), False, _session_path, "endscreen.png")
 
 
 def mouse_position():
