@@ -1,6 +1,7 @@
 import datetime
 import os
 import subprocess
+import sys
 import tempfile
 import time
 from abc import ABC
@@ -15,10 +16,8 @@ from pytesseract import image_to_string
 
 class ColorStateException(Exception):
 
-    def __init__(self, row, column, *args: object) -> None:
+    def __init__(self, *args: object) -> None:
         super().__init__(*args)
-        self.row = row
-        self.column = column
 
 
 class MultipleColorMatches(Exception):
@@ -67,6 +66,9 @@ class RGB:
 
     def __str__(self) -> str:
         return f"RGB(R: {self.__r}, G: {self.__g}, B: {self.__b})"
+
+    def __repr__(self):
+        return str(self)
 
 
 class RGBIterator:
@@ -215,30 +217,53 @@ class Interface(ABC):
         x, y = self.elements[element]
         gui.moveTo(x, y, duration=duration)
 
-    def get_colors(self, current_solution_row: int, check_if_some_empty_in_current_row: bool = True) -> [[ColorCode]]:
-        color_matrix: [] = [None] * 6
-        for row in range(6):
-            color_matrix[row] = [ColorCode.EMPTY] * 5
+    def __get_pixel_matrix(self):
+        left, top = self.color_positions[0][0]
+        right, bottom = self.color_positions[len(self.color_positions) - 1][len(self.color_positions[0]) - 1]
+        width = right - left
+        height = bottom - top
+        scr, path = screenshot((left, top, width + 1, height + 1))
+        px = Image.open(path).load()
+        os.remove(path)
+
+        matrix = []
+        for row_ in range(6):
+            row = []
+            for col_ in range(5):
+                x, y = self.color_positions[row_][col_]
+                x -= left
+                y -= top
+                pixel = px[x, y]
+                row.append(RGB(pixel))
+            matrix.append(row)
+        return matrix
+
+    def get_colors(self, attempt_row: int, check_if_some_empty_in_current_row: bool = True) -> [[ColorCode]]:
+        color_matrix: [[ColorCode]] = []
+        for _ in range(6):
+            color_matrix.append([ColorCode.EMPTY] * 5)
 
         while True:
-            for row in range(current_solution_row):
+            matrix: [[Tuple[int, int]]] = self.__get_pixel_matrix()
+            for row in range(attempt_row + 1):
                 for col in range(5):
-                    pos = self.color_positions[row][col]
+                    rgb: RGB = matrix[row][col]
                     try:
-                        color = self.get_color_code_by_position(pos)
+                        color: ColorCode = self.__get_rgb_code(rgb)
                     except ColorStateException as e:
                         raise ColorStateException(str(e) + f" at location ({col}|{row})")
                     color_matrix[row][col] = color
             if not check_if_some_empty_in_current_row:
                 break
-            elif color_matrix[0][0] != ColorCode.EMPTY and \
-                    any([code == ColorCode.EMPTY for code in color_matrix[current_solution_row]]):
+            elif color_matrix[attempt_row][0] != ColorCode.EMPTY and \
+                    any([code == ColorCode.EMPTY for code in color_matrix[attempt_row]]):
                 continue
+            else:
+                break
         return color_matrix
 
     @staticmethod
     def print_matrix(matrix: [[ColorCode]]):
-
         if matrix[0][0] == ColorCode.EMPTY:
             print(f"All {ColorCode.EMPTY.name}, skip printing...")
             return
@@ -267,14 +292,16 @@ class Interface(ABC):
 
     def get_color_code_by_position(self, pos: Tuple[int, int]) -> ColorCode:
         pixel_rgb: RGB = self.get_pixel_color_by_position(pos)
+        return self.__get_rgb_code(pixel_rgb)
 
-        color_codes = [color_code for color_code, rgb in self._color_codes.items() if pixel_rgb.compare_to(rgb)]
+    def __get_rgb_code(self, rgb: RGB) -> ColorCode:
+        color_codes = [color_code for color_code, rgb_ in self._color_codes.items() if rgb.compare_to(rgb_)]
         if len(color_codes) == 1:
             return color_codes[0]
         elif len(color_codes) > 1:
-            raise MultipleColorMatches(f"Pos {pos} match multiple colors {[code.name for code in color_codes]}")
+            raise MultipleColorMatches(f"{rgb} matched multiple colors {[code.name for code in color_codes]}")
         else:
-            raise ColorStateException(f"Could not recognize color at ({pos[0]}, {pos[1]}: {pixel_rgb})")
+            raise ColorStateException(f"Could not recognize color: {rgb})")
 
     def __str__(self) -> str:
         return self.identifier
