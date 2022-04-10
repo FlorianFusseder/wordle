@@ -174,7 +174,8 @@ class GameMaster:
             print("Game seems to have started already!")
             self._attempts = len([color[0] for color in colors if color[0] != gui.ColorCode.EMPTY])
             while True:
-                words = input(f"Input words (space seperated) for {self._attempts} filled rows:").lower().split()
+                input_ = input(f"Input words (space seperated) for {self._attempts} filled rows:")
+                words = input_.lower().split()
                 if len(words) != self._attempts:
                     print("Input to few words, again...")
                 else:
