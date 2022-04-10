@@ -85,6 +85,13 @@ class WordleRegex:
 
     def _add_excludes(self):
         if self.excludes:
+
+            # check if any of the excludes is in contained -> then we have to remove it from general excludes
+            remove = [char for char in self.excludes if
+                      any([char in contained_glob for contained_glob in self.contains])]
+            for char_to_remove in remove:
+                self.excludes = self.excludes.replace(char_to_remove, "")
+
             for regex_element in self.regex_elements:
                 regex_element.add_excludes(self.excludes)
 

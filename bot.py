@@ -49,18 +49,23 @@ class WordleState:
 
 class WordleContainer:
 
-    def __init__(self) -> None:
-        self.state = WordleState()
+    def __init__(self, word_list: [str] = None, colors: [[gui.ColorCode]] = None) -> None:
         self.solution = None
         self.remaining = None
         self.states = []
-        self.word_list = []
+        if word_list and colors:
+            self.word_list = word_list[:-1]
+            self.state = None
+            self.update(word_list[len(word_list) - 1], colors)
+        else:
+            self.state = WordleState()
+            self.word_list = []
 
     def update(self, new_word, colors):
         if self.state:
             self.states.append(self.state)
         self.state = WordleState()
-        self.word_list.append(new_word)
+        self.word_list.append(new_word.lower())
 
         for row, word in enumerate(self.word_list):
             color_row = colors[row]
@@ -78,7 +83,7 @@ class WordleContainer:
                     ignore_list = get_index_list(gui.ColorCode.OK)
                     # make list how often the character occurs
                     character_occurrences_list = get_index_list(gui.ColorCode.CONTAINED)
-                    self.state.add_contained(char, character_occurrences_list, not_list, ignore_list, )
+                    self.state.add_contained(char, character_occurrences_list, not_list, ignore_list)
                 elif color_code == gui.ColorCode.NOT_CONTAINED:
                     self.state.add_not_contained(char)
                 elif color_code == gui.ColorCode.EMPTY:
@@ -157,8 +162,23 @@ class GameMaster:
         print(f"{'-' * 10}Play game {self.games_played() + 1}/{self._games_to_play}{'-' * 10}")
         self._session_path = self._base_path + "/" + f"{self.games_played() + 1}_{self._games_to_play}"
         os.makedirs(self._session_path)
-        self._current_solution_word = self._start_word_manager.start_word
-        self._wordle_container: WordleContainer = WordleContainer()
+
+        colors = self._interface.get_colors(5, False)
+        if colors[0][0] != gui.ColorCode.EMPTY:
+            print("Game seems to have started already!")
+            self._attempts = len([color[0] for color in colors if color[0] != gui.ColorCode.EMPTY])
+            while True:
+                words = input(f"Input words (space seperated) for {self._attempts} filled rows:").lower().split()
+                if len(words) != self._attempts:
+                    print("Input to few words, again...")
+                else:
+                    break
+            self._wordle_container = WordleContainer(words, colors)
+            self._start_word_manager.start_word = words[0]
+            self._current_solution_word = self._wordle_container.find()[0]
+        else:
+            self._wordle_container: WordleContainer = WordleContainer()
+            self._current_solution_word = self._start_word_manager.start_word
         self._interface.move_to("submit")
 
     def play_game(self):
@@ -188,6 +208,7 @@ class GameMaster:
                     raise Exception(f"Your start word {self._current_solution_word} is not in wordlist!")
                 print("Delete word...")
                 [self._interface.click_on("delete", duration=0, echo=False) for _ in range(5)]
+                self._current_solution_word = self._wordle_container.find()[0]
                 continue
 
             self._wordle_container.update(self._current_solution_word, current_colors)
@@ -203,8 +224,7 @@ class GameMaster:
 
     def end_game(self):
         self._interface.wait_for_endscreen()
-        # todo: make gui.make_endscreen_screenshot part of interface
-        gui.make_endscreen_screenshot(self._session_path)
+        self._interface.make_endscreen_screenshot(self._session_path)
         new_path = self._session_path + f"_{self._attempts}_"
         if self._wordle_container.is_solved():
             print(f"Solution was {self._current_solution_word}")
@@ -369,11 +389,16 @@ def start_interface(ctx):
 @click.pass_context
 def new_interface(ctx):
     interface: gui.Interface = ctx.obj['interface'] if 'interface' in ctx.obj else gui.Interface()
+
+    def update(id_: str) -> bool:
+        if 'interface' in ctx.obj:
+            return input(f"Do you want to update {id_}? (y/n): ") == "y"
+
     try:
-        if not interface.identifier:
+        if not interface.identifier or update("id"):
             interface.identifier = input("Id: ")
 
-        if not interface.commands:
+        if not interface.commands or update('Start Commands'):
             interface.commands = input("Start Command: ")
 
         x_p: [int] = [0] * 5
@@ -387,7 +412,7 @@ def new_interface(ctx):
                 p_list[i] = gui.mouse_position()
             return p_list
 
-        if not interface.color_positions:
+        if not interface.color_positions or update('Color Positions'):
             matrix: [[typing.Tuple]] = []
             for _ in range(6):
                 matrix.append([()] * 5)
@@ -401,16 +426,37 @@ def new_interface(ctx):
 
             interface.color_positions = matrix
 
-        for k, v in interface.elements.items():
-            if v[0] == -1 and v[1] == -1:
-                input(f"Hover {k} and press enter ")
-                interface.elements[k] = gui.mouse_position()
+        to_update = update("an Element")
 
-        for k, v in interface.color_codes.items():
-            if v == gui.RGB():
-                input(f"Hover {k.name} and press enter")
-                pos = gui.mouse_position()
-                interface.color_codes[k] = gui.Interface.get_pixel_color_by_position(pos)
+        def define_element(k: str):
+            input(f"Hover {k} and press enter ")
+            interface.elements[k] = gui.mouse_position()
+            if k == "next_word":
+                x, y = interface.elements[k]
+                px_rgb = gui.Interface.get_pixel_color_by_position((x, y))
+                interface.elements[k] = (x, y, px_rgb)
+
+        if not to_update:
+            for k, v in interface.elements.items():
+                if v[0] == -1 and v[1] == -1:
+                    define_element(k)
+        else:
+            element_name = input("Input element name: ")
+            define_element(element_name)
+
+        if update("Color codes"):
+            for k, v in interface.color_codes.items():
+                if v == gui.RGB():
+                    input(f"Hover {k.name} and press enter")
+                    pos = gui.mouse_position()
+                    interface.color_codes[k] = gui.Interface.get_pixel_color_by_position(pos)
+
+        if update("endscreen"):
+            input("Hover over the left top corner of your desired endscreen and press enter")
+            left, top = gui.mouse_position()
+            input("Hover over the right bottom corner of your desired endscreen and press enter")
+            bottom, right = gui.mouse_position()
+            interface.endscreen_window = (left, top, right - left, bottom - top)
 
     except Exception as e:
         print(f"{e}")
