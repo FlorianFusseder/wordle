@@ -149,6 +149,14 @@ class Interface(ABC):
     def endscreen_window(self, value):
         self._endscreen_window = value
 
+    @property
+    def next_word_rgb(self):
+        return self._next_word_rgb
+
+    @next_word_rgb.setter
+    def next_word_rgb(self, value):
+        self._next_word_rgb = value
+
     def __init__(self) -> None:
         self._identifier: str = ""
         self._commands: [str] = ""
@@ -193,14 +201,16 @@ class Interface(ABC):
             "m": (-1, -1),
             "next_word": (-1, -1),
         }
+        self._next_word_rgb: RGB = None
         self._endscreen_window = (-1, -1, -1, -1)
 
     def wait_for_endscreen(self):
-        x, y, rgb = self.elements["next_word"]
+        x, y = self.elements["next_word"]
         rgb_next = self.get_pixel_color_by_position((x, y))
         print("Waiting for endscreen...")
-        while not rgb.compare_with_range(rgb_next):
+        while not self.next_word_rgb.compare_with_range(rgb_next):
             time.sleep(.2)
+            rgb_next = self.get_pixel_color_by_position((x, y))
 
     def make_endscreen_screenshot(self, _session_path):
         screenshot(self.endscreen_window, False, _session_path, "endscreen.png")
@@ -353,7 +363,6 @@ def crop_img(in_p, out_p=None):
 
 
 def screenshot(region=(52, 178, 367, 440), with_datetime=True, path="/home/florian/Pictures/wordles", file_name=None):
-    print("Take screenshot")
     if not file_name:
         file_name = "unnamed.png"
     date_string = str(datetime.datetime.now()) + "_" if with_datetime else ""

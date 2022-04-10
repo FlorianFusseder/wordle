@@ -1,9 +1,9 @@
 [
   {
     "word": "stier",
-    "won": 20,
+    "won": 23,
     "lost": 0,
-    "avg_attempts": 3.0449581146240234
+    "avg_attempts": 3.255619764328003
   },
   {
     "word": "steak",
@@ -13,20 +13,20 @@
   },
   {
     "word": "islam",
-    "won": 18,
+    "won": 19,
     "lost": 0,
-    "avg_attempts": 3.7646102905273438
+    "avg_attempts": 3.882305145263672
   },
   {
     "word": "liane",
-    "won": 18,
+    "won": 20,
     "lost": 0,
-    "avg_attempts": 3.2691497802734375
+    "avg_attempts": 3.0672874450683594
   },
   {
     "word": "saite",
-    "won": 10,
+    "won": 11,
     "lost": 0,
-    "avg_attempts": 2.51171875
+    "avg_attempts": 2.755859375
   }
 ]

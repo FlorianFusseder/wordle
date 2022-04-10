@@ -163,7 +163,13 @@ class GameMaster:
         self._session_path = self._base_path + "/" + f"{self.games_played() + 1}_{self._games_to_play}"
         os.makedirs(self._session_path)
 
-        colors = self._interface.get_colors(5, False)
+        while True:
+            try:
+                colors = self._interface.get_colors(5, False)
+                break
+            except gui.ColorStateException:
+                self.wait(.2)
+
         if colors[0][0] != gui.ColorCode.EMPTY:
             print("Game seems to have started already!")
             self._attempts = len([color[0] for color in colors if color[0] != gui.ColorCode.EMPTY])
@@ -190,13 +196,14 @@ class GameMaster:
             self._interface.put_solution(self._current_solution_word)
             self.wait(1, "animation to start")
 
-            retries = 10
-            for try_ in range(10):
+            retries = 10 if self._attempts > 5 else 20
+            waiting_duration = .2 if self._attempts > 5 else .5
+            for try_ in range(retries):
                 try:
                     current_colors = self._interface.get_colors(self._attempts)
                     break
                 except gui.ColorStateException as e:
-                    self.wait(.2, "valid game state")
+                    self.wait(waiting_duration, "valid game state")
                     if try_ == retries - 1:
                         print("Could not get valid game state, exiting...")
                         raise e
@@ -230,7 +237,7 @@ class GameMaster:
             print(f"Solution was {self._current_solution_word}")
             self._won += 1
             new_path += self._current_solution_word
-            with open("whitelist.txt", mode="a+") as file:
+            with open("whitelist.txt", mode="r+") as file:
                 word_set = set(file.read().split())
                 l_b = len(word_set)
                 word_set.add(self._current_solution_word)
@@ -242,9 +249,9 @@ class GameMaster:
             self._lost += 1
             new_path += "UNSOLVED"
             self._wordle_container.set_unsolved(self._session_path)
-            print("Could not solve...")
 
         self._start_word_manager.update_statistics(self._wordle_container.is_solved(), self._attempts)
+        self._attempts = 0
         self._interface.click_on("next_word")
         os.rename(self._session_path, new_path)
 
@@ -432,9 +439,7 @@ def new_interface(ctx):
             input(f"Hover {k} and press enter ")
             interface.elements[k] = gui.mouse_position()
             if k == "next_word":
-                x, y = interface.elements[k]
-                px_rgb = gui.Interface.get_pixel_color_by_position((x, y))
-                interface.elements[k] = (x, y, px_rgb)
+                interface.next_word_rgb = gui.Interface.get_pixel_color_by_position(interface.elements[k])
 
         if not to_update:
             for k, v in interface.elements.items():
