@@ -170,7 +170,17 @@ class GameMaster:
             self._interface.put_solution(self._current_solution_word)
             self.wait(1, "animation to start")
 
-            current_colors = self._interface.get_colors(self._attempts + 1)
+            retries = 10
+            for try_ in range(10):
+                try:
+                    current_colors = self._interface.get_colors(self._attempts)
+                    break
+                except gui.ColorStateException as e:
+                    self.wait(.2, "valid game state")
+                    if try_ == retries - 1:
+                        print("Could not get valid game state, exiting...")
+                        raise e
+
             if not all_current_row(lambda code: code != gui.ColorCode.EMPTY):
                 print(f"Word {self._current_solution_word} seems not to be wordle word, removing...")
                 wt.remove_word(self._current_solution_word)
@@ -180,16 +190,16 @@ class GameMaster:
                 [self._interface.click_on("delete", duration=0, echo=False) for _ in range(5)]
                 continue
 
-            self._attempts += 1
             self._wordle_container.update(self._current_solution_word, current_colors)
 
             if all_current_row(lambda code: code == gui.ColorCode.OK):
                 self._wordle_container.set_solved(self._session_path)
             else:
-                print(
-                    f"Word '{self._current_solution_word}' was not solution, starting iteration {self._attempts}/6...")
+                print(f"Word '{self._current_solution_word}' was not solution, "
+                      f"starting iteration {self._attempts + 1}/6...")
                 words = self._wordle_container.find()
                 self._current_solution_word = self._scoring_algorithm.evaluate(words)[0]
+            self._attempts += 1
 
     def end_game(self):
         self._interface.wait_for_endscreen()
@@ -225,9 +235,9 @@ class GameMaster:
         return self.games_played() < self._games_to_play
 
     @staticmethod
-    def wait(s: float, el: str = None):
-        if el:
-            click.echo(f"Wait {s} sec for {el}...")
+    def wait(s: float, echo: str = None):
+        if echo:
+            click.echo(f"Wait {s} sec for {echo}...")
         time.sleep(s)
 
 
@@ -351,7 +361,7 @@ def get_colors(ctx):
 
 @cli.command()
 @click.pass_context
-def phone_start(ctx):
+def start_interface(ctx):
     ctx.obj['interface'].open_()
 
 
@@ -401,7 +411,6 @@ def new_interface(ctx):
                 input(f"Hover {k.name} and press enter")
                 pos = gui.mouse_position()
                 interface.color_codes[k] = gui.Interface.get_pixel_color_by_position(pos)
-
 
     except Exception as e:
         print(f"{e}")
