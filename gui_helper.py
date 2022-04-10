@@ -5,7 +5,7 @@ import tempfile
 import time
 from abc import ABC
 from enum import Enum, unique, auto
-from typing import Dict, Tuple, Iterable
+from typing import Dict, Tuple
 
 import numpy as numpy
 import pyautogui as gui
@@ -14,6 +14,14 @@ from pytesseract import image_to_string
 
 
 class ColorStateException(Exception):
+
+    def __init__(self, row, column, *args: object) -> None:
+        super().__init__(*args)
+        self.row = row
+        self.column = column
+
+
+class MultipleColorMatches(Exception):
     pass
 
 
@@ -32,8 +40,22 @@ class RGB:
         return self.__b
 
     @property
-    def rgb(self):
+    def rgb(self) -> Tuple[int, int, int]:
         return self.__r, self.__g, self.__b
+
+    def compare_to(self, other: 'RGB', _range: int = 5) -> bool:
+        color_range = self.__get_as_range(_range)
+        return other.rgb[0] in color_range[0] and \
+               other.rgb[1] in color_range[1] and \
+               other.rgb[2] in color_range[2]
+
+    def __get_as_range(self, _range: int) -> Tuple[range, range, range]:
+        return (range(self.r - _range, self.r + _range + 1),
+                range(self.g - _range, self.g + _range + 1),
+                range(self.b - _range, self.b + _range + 1))
+
+    def __iter__(self):
+        return RGBIterator(self)
 
     def __init__(self, code: Tuple[int, int, int] = (-1, -1, -1)) -> None:
         self.__r, self.__g, self.__b = code
@@ -42,6 +64,29 @@ class RGB:
         if not isinstance(o, RGB):
             return False
         return self.rgb == o.rgb
+
+    def __str__(self) -> str:
+        return f"RGB(R: {self.__r}, G: {self.__g}, B: {self.__b})"
+
+
+class RGBIterator:
+
+    def __init__(self, rgb: RGB) -> None:
+        self.__index: int = 0
+        self.__element = rgb
+
+    def __next__(self):
+        color: int
+        if self.__index == 0:
+            color = self.__element.r
+        elif self.__index == 1:
+            color = self.__element.g
+        elif self.__index == 2:
+            color = self.__element.b
+        else:
+            raise StopIteration
+        self.__index += 1
+        return color
 
 
 @unique
@@ -107,7 +152,6 @@ class Interface(ABC):
         self._elements: Dict[str, Tuple[int, int]] = {
             "delete": (-1, -1),
             "submit": (-1, -1),
-            "next_word": (-1, -1),
             "q": (-1, -1),
             "w": (-1, -1),
             "e": (-1, -1),
@@ -137,22 +181,11 @@ class Interface(ABC):
             "b": (-1, -1),
             "n": (-1, -1),
             "m": (-1, -1),
+            "next_word": (-1, -1),
         }
 
-    def is_empty(self, rgb: RGB) -> bool:
-        pass
-
-    def is_ok(self, rgb: RGB) -> bool:
-        pass
-
-    def is_not_contained(self, rgb: RGB) -> bool:
-        pass
-
-    def is_contained(self, rgb: RGB) -> bool:
-        pass
-
     def wait_for_endscreen(self):
-        pass
+        raise NotImplemented()
 
     def open_(self):
         subprocess.Popen(self.commands, shell=False, stdin=None, stdout=subprocess.DEVNULL,
@@ -182,24 +215,41 @@ class Interface(ABC):
         x, y = self.elements[element]
         gui.moveTo(x, y, duration=duration)
 
-    def get_colors(self, current_solution_row: int) -> [[ColorCode]]:
-        color_matrix: [] = [[ColorCode.EMPTY] * 5] * 6
-        while any([code == ColorCode.EMPTY for code in color_matrix[current_solution_row]]):
-            color_string = ""
-            for i in range(current_solution_row):
-                for j in range(0, 5):
-                    pos = self.color_positions[i][j]
+    def get_colors(self, current_solution_row: int, check_if_some_empty_in_current_row: bool = True) -> [[ColorCode]]:
+        color_matrix: [] = [None] * 6
+        for row in range(6):
+            color_matrix[row] = [ColorCode.EMPTY] * 5
+
+        while True:
+            for row in range(current_solution_row):
+                for col in range(5):
+                    pos = self.color_positions[row][col]
                     try:
                         color = self.get_color_code_by_position(pos)
                     except ColorStateException as e:
-                        raise ColorStateException(str(e) + f" at location ({i}|{j})")
-                    color_string += f"{i}|{j}: " + color.name + ((13 - len(color.name)) * " ") + " "
-                    color_matrix[i][j] = color
-                    if j == 4 and i != 5:
-                        color_string += "\n"
-
-        print(color_string)
+                        raise ColorStateException(str(e) + f" at location ({col}|{row})")
+                    color_matrix[row][col] = color
+            if not check_if_some_empty_in_current_row:
+                break
+            elif color_matrix[0][0] != ColorCode.EMPTY and \
+                    any([code == ColorCode.EMPTY for code in color_matrix[current_solution_row]]):
+                continue
         return color_matrix
+
+    @staticmethod
+    def print_matrix(matrix: [[ColorCode]]):
+
+        if matrix[0][0] == ColorCode.EMPTY:
+            print(f"All {ColorCode.EMPTY.name}, skip printing...")
+            return
+
+        matrix_string = ""
+        for row in range(len(matrix)):
+            for col in range(len(matrix[row])):
+                matrix_string += f"{col}|{row}: " + matrix[row][col].name + (
+                        (13 - len(matrix[row][col].name)) * " ") + " "
+            matrix_string += "\n"
+        print(matrix_string)
 
     def get_pixel_color_by_element(self, element: str) -> RGB:
         element_position = self.elements[element]
@@ -217,10 +267,14 @@ class Interface(ABC):
 
     def get_color_code_by_position(self, pos: Tuple[int, int]) -> ColorCode:
         pixel_rgb: RGB = self.get_pixel_color_by_position(pos)
-        for color_code, rgb in self._color_codes.items():
-            if rgb == pixel_rgb:
-                return color_code
-        raise ColorStateException(f"Could not recognize color at ({pos[0]}, {pos[1]}: {pixel_rgb})")
+
+        color_codes = [color_code for color_code, rgb in self._color_codes.items() if pixel_rgb.compare_to(rgb)]
+        if len(color_codes) == 1:
+            return color_codes[0]
+        elif len(color_codes) > 1:
+            raise MultipleColorMatches(f"Pos {pos} match multiple colors {[code.name for code in color_codes]}")
+        else:
+            raise ColorStateException(f"Could not recognize color at ({pos[0]}, {pos[1]}: {pixel_rgb})")
 
     def __str__(self) -> str:
         return self.identifier
@@ -284,3 +338,7 @@ def scr_read(threshold: int = 5):
     os.remove(new_path)
     os.remove(path)
     return text
+
+
+def move_to(param, param1):
+    gui.moveTo(param, param1)
