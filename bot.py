@@ -154,9 +154,8 @@ class GameMaster:
         self._attempts: int = 0
 
     def prepare_game(self):
-        readable_game_number = self.games_played() + 1
-        print(f"{'-' * 10}Play game {readable_game_number}/{self._games_to_play}{'-' * 10}")
-        self._session_path = self._base_path + "/" + f"{readable_game_number}_{self._games_to_play}"
+        print(f"{'-' * 10}Play game {self.games_played() + 1}/{self._games_to_play}{'-' * 10}")
+        self._session_path = self._base_path + "/" + f"{self.games_played() + 1}_{self._games_to_play}"
         os.makedirs(self._session_path)
         self._current_solution_word = self._start_word_manager.start_word
         self._wordle_container: WordleContainer = WordleContainer()
@@ -170,8 +169,8 @@ class GameMaster:
         while not self._wordle_container.is_solved() and self._attempts < 6:
             self._interface.put_solution(self._current_solution_word)
             self.wait(1, "animation to start")
-            current_colors = self._interface.get_colors(self._attempts + 1)
 
+            current_colors = self._interface.get_colors(self._attempts + 1)
             if not all_current_row(lambda code: code != gui.ColorCode.EMPTY):
                 print(f"Word {self._current_solution_word} seems not to be wordle word, removing...")
                 wt.remove_word(self._current_solution_word)
@@ -241,15 +240,23 @@ models = os.listdir("interfaces")
 @click.option('--typing-speed', default=0.5, required=False)
 @click.option("-i", "--interface", type=click.Choice(models, case_sensitive=False))
 @click.option("-o", "--open-interface", is_flag=True, default=False)
+@click.option("-f", "--force-open-interface", is_flag=True, default=False)
 @click.pass_context
-def cli(ctx, verbose, gui_pause, typing_speed, interface, open_interface):
+def cli(ctx, verbose, gui_pause, typing_speed, interface, open_interface, force_open_interface):
     ctx.ensure_object(dict)
 
     if interface:
         with open(f"interfaces/{interface}", mode="rb") as unpickle:
             ctx.obj['interface'] = pickle.load(unpickle)
             if open_interface and ctx.obj['interface'].commands:
-                ctx.obj['interface'].open_()
+                try:
+                    ctx.obj['interface'].get_colors(5, False)
+                    if force_open_interface:
+                        ctx.obj['interface'].open_()
+                    else:
+                        print("Skip opening, as it seems already to be open")
+                except (gui.ColorStateException, gui.MultipleColorMatches):
+                    ctx.obj['interface'].open_()
 
     ctx.obj['verbose'] = verbose
     ctx.obj['gui_pause'] = gui_pause
@@ -317,17 +324,29 @@ def scr_read():
 
 
 @cli.command()
-def mouse():
-    position = gui.mouse_position()
-    colors = gui.get_pixel_color_by_position(position)
+@click.option("-c", "--column", type=int)
+@click.option("-r", "--row", type=int)
+@click.option("-e", "--element", type=str)
+@click.pass_context
+def get_color(ctx, column, row, element):
+    interface_: gui.Interface = ctx.obj['interface']
+    if column or row:
+        position = interface_.color_positions[column][row]
+    elif element:
+        position = interface_.elements[element]
+    else:
+        position = gui.mouse_position()
+    colors = interface_.get_pixel_color_by_position(position)
+    gui.move_to(position[0], position[1])
     print(f"Position: {position}, Color {colors}")
+    [print(k.name + ":" + (" " * (15 - len(k.name))) + str(v)) for k, v in interface_.color_codes.items()]
 
 
 @cli.command()
-@click.argument("path", type=click.Path(exists=True))
 @click.pass_context
-def get_colors(ctx, path):
-    gui.get_colors(path)
+def get_colors(ctx):
+    colors = ctx.obj['interface'].get_colors(5, False)
+    gui.Interface.print_matrix(colors)
 
 
 @cli.command()
