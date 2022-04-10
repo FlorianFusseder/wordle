@@ -570,7 +570,6 @@ Betti
 Betts
 Betty
 beuge
-beugt
 beule
 beult
 beute
@@ -1348,7 +1347,6 @@ eilen
 eilig
 eilst
 Eimer
-Einar
 einem
 einen
 einer
@@ -1365,7 +1363,6 @@ Eiter
 eitre
 ekele
 ekeln
-ekelt
 Eklat
 eklig
 ektop
@@ -1461,7 +1458,6 @@ Essex
 Essig
 Essos
 Etage
-Ethan
 Ether
 Ethik
 Ethin
@@ -2073,7 +2069,6 @@ griff
 grill
 Grimm
 Grind
-grins
 Grips
 Grits
 grobe
@@ -2176,10 +2171,8 @@ Hanfs
 hänge
 Hangs
 hängt
-Hanna
 Hanne
 Hanni
-Hanno
 Hanns
 Hanoi
 Hansa
@@ -2398,7 +2391,6 @@ Horde
 hören
 Hörer
 hörig
-Horns
 Horst
 hörst
 horte
@@ -2550,7 +2542,6 @@ Insel
 Intel
 intim
 intus
-Inuit
 Iodat
 Iodid
 Ionen
@@ -2574,7 +2565,6 @@ Isaac
 Ische
 Ischl
 Islam
-Issos
 Issue
 Issum
 IStGH
@@ -3229,7 +3219,6 @@ lange
 Länge
 längs
 langt
-Lanka
 Lanze
 Lappe
 Laras
@@ -3399,7 +3388,6 @@ Likör
 likst
 likte
 Lilie
-Lilis
 Lilja
 Lille
 Lilli
@@ -3418,10 +3406,7 @@ links
 Linon
 linse
 Linum
-Linus
 Linux
-Lions
-Liors
 Lipid
 Lippe
 Lisel
@@ -3489,7 +3474,6 @@ Lotte
 Lotto
 Lotus
 Louan
-Louis
 Lover
 Löwen
 loyal
@@ -3781,7 +3765,6 @@ mixed
 mixen
 Mixer
 mixte
-Moana
 mobbt
 Möbel
 mobil
@@ -3944,7 +3927,6 @@ Nappa
 Narbe
 Narde
 narre
-narrt
 Narva
 nasal
 Nasen
@@ -3977,7 +3959,6 @@ nehme
 nehmt
 Nehru
 Neids
-neige
 neigt
 Neill
 Nelke
@@ -4185,7 +4166,6 @@ Orffs
 Organ
 Orgel
 Orgie
-Orion
 Orkan
 Orkus
 Ornat
@@ -4201,7 +4181,6 @@ Oslos
 Osman
 Osram
 ossär
-Ossis
 Ostau
 Osten
 Otmar
@@ -4664,7 +4643,6 @@ Rasse
 Rasur
 raten
 Räten
-ratet
 Rätin
 rätst
 Ratte
@@ -4745,7 +4723,6 @@ relax
 remis
 Remix
 Remus
-renal
 renke
 renkt
 renne
@@ -4841,7 +4818,6 @@ roher
 rohes
 Rohöl
 röhre
-Rohrs
 Rolex
 Rolfs
 rolle
@@ -4921,7 +4897,6 @@ rühmt
 rühre
 ruhst
 ruhte
-Ruins
 rülps
 Rumba
 Rumor
@@ -4942,7 +4917,6 @@ Russe
 rüste
 Ruten
 Ruths
-Rutin
 Rutte
 Ruwer
 Säbel
@@ -5207,7 +5181,6 @@ Skier
 Skill
 Skins
 Skoda
-Skunk
 Skype
 skypt
 SLAAC
@@ -5326,7 +5299,6 @@ spüle
 Spüli
 spult
 spült
-Spund
 spüre
 spurt
 spürt
@@ -5511,7 +5483,6 @@ Takel
 takle
 takte
 Takts
-Talar
 Talea
 Taler
 Täler
@@ -5547,7 +5518,6 @@ tapst
 Tarek
 Tarif
 tarne
-tarnt
 Tarps
 Tasks
 Tasse
@@ -5730,7 +5700,6 @@ Toren
 Tores
 Torfe
 Torfs
-Torii
 Törin
 Törns
 Torso
@@ -5748,7 +5717,6 @@ totes
 tötet
 Touch
 tough
-Touri
 Tours
 Tower
 Toxin
@@ -5854,7 +5822,6 @@ tupfe
 tupft
 Turbo
 Türen
-Turin
 türke
 Turku
 Turme
@@ -5975,7 +5942,6 @@ urban
 urbar
 Ureol
 UrhWG
-Urins
 Urnen
 Uroma
 Uropa
