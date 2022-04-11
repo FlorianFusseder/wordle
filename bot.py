@@ -186,7 +186,7 @@ class GameMaster:
         else:
             self._wordle_container: WordleContainer = WordleContainer()
             self._current_solution_word = self._start_word_manager.start_word
-        self._interface.move_to("submit")
+        self._interface.move_to("h", .2)
 
     def play_game(self):
 
@@ -197,8 +197,8 @@ class GameMaster:
             self._interface.put_solution(self._current_solution_word)
             self.wait(1, "animation to start")
 
-            retries = 10 if self._attempts > 5 else 20
-            waiting_duration = .2 if self._attempts > 5 else .5
+            retries = 20 if self._attempts > 5 else 10
+            waiting_duration = .5 if self._attempts > 5 else .2
             for try_ in range(retries):
                 try:
                     current_colors = self._interface.get_colors(self._attempts)
@@ -253,7 +253,7 @@ class GameMaster:
 
         self._start_word_manager.update_statistics(self._wordle_container.is_solved(), self._attempts)
         self._attempts = 0
-        self._interface.click_on("next_word")
+        self._interface.click_on("next_word", .2)
         os.rename(self._session_path, new_path)
 
     def games_played(self) -> int:
@@ -484,6 +484,7 @@ def start(ctx, start_word, count):
     scoring_algorithm: wordle.Scoring = wordle.SimpleScoring()
 
     game_master = GameMaster(scoring_algorithm, start_word_manager, interface, base_path, count)
+    interface.move_to("v", 0)
     while game_master.keep_playing():
         game_master.prepare_game()
         game_master.play_game()

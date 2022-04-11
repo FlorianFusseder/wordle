@@ -135,7 +135,6 @@ alias
 Alibi
 Alica
 Aliya
-Alkin
 Alkyd
 Alkyl
 Allah
@@ -333,7 +332,6 @@ Astro
 Asyle
 AsylG
 Asyls
-Atari
 Athen
 Äther
 Athos
@@ -1320,7 +1318,6 @@ Edukt
 Edwin
 Efeus
 Effet
-Eggen
 Egger
 eGmbH
 Egons
@@ -2174,7 +2171,6 @@ hängt
 Hanne
 Hanni
 Hanns
-Hanoi
 Hansa
 Hanse
 Hapag
@@ -2242,7 +2238,6 @@ Hefen
 hefte
 Hefts
 Hegau
-Hegel
 hegen
 Heger
 hegst
@@ -2888,7 +2883,6 @@ Kevin
 khaki
 Khans
 Khmer
-Kiana
 KiBiz
 kicke
 Kicks
