@@ -848,7 +848,6 @@ Bursa
 Burse
 Busch
 Busen
-Bushs
 Busse
 Büste
 Büsum
@@ -4771,7 +4770,6 @@ Rinds
 ringe
 Ringo
 rings
-ringt
 rinne
 Rinse
 Rioja
@@ -5822,7 +5820,6 @@ Turme
 türme
 Turms
 türmt
-turnt
 Tusch
 Tusse
 tuten

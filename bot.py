@@ -157,6 +157,7 @@ class GameMaster:
         self._won: int = 0
         self._lost: int = 0
         self._attempts: int = 0
+        self._all_attempts: int = 0
 
     def prepare_game(self):
         print(f"{'-' * 10}Play game {self.games_played() + 1}/{self._games_to_play}{'-' * 10}")
@@ -252,8 +253,10 @@ class GameMaster:
             self._wordle_container.set_unsolved(self._session_path)
 
         self._start_word_manager.update_statistics(self._wordle_container.is_solved(), self._attempts)
+        self._all_attempts += self._attempts
         self._attempts = 0
-        self._interface.click_on("next_word", .2)
+        if self._games_to_play != (self._won + self._lost):
+            self._interface.click_on("next_word", .2)
         os.rename(self._session_path, new_path)
 
     def games_played(self) -> int:
@@ -261,6 +264,19 @@ class GameMaster:
 
     def keep_playing(self) -> bool:
         return self.games_played() < self._games_to_play
+
+    def end_session(self):
+        print("Ending Session:")
+        print(f"""Games Played {self.games_played()}
+        Games Won: {self._won}
+        Games Lost: {self._lost}
+        All Attempts: {self._all_attempts}
+        Average Attempts per game: {self._all_attempts / self.games_played()}""")
+        self._interface.click_on("home_button")
+
+    def prepare_session(self):
+        self._interface.move_to("submit", 0)
+        self._interface.move_to("v", .2)
 
     @staticmethod
     def wait(s: float, echo: str = None):
@@ -457,12 +473,12 @@ def new_interface(ctx):
                     pos = gui.mouse_position()
                     interface.color_codes[k] = gui.Interface.get_pixel_color_by_position(pos)
 
-        if update("endscreen"):
+        if update("endscreen picture"):
             input("Hover over the left top corner of your desired endscreen and press enter")
             left, top = gui.mouse_position()
             input("Hover over the right bottom corner of your desired endscreen and press enter")
             bottom, right = gui.mouse_position()
-            interface.endscreen_window = (left, top, right - left, bottom - top)
+            interface.endscreen_window = (left, top, bottom - top, right - left)
 
     except Exception as e:
         print(f"{e}")
@@ -484,11 +500,12 @@ def start(ctx, start_word, count):
     scoring_algorithm: wordle.Scoring = wordle.SimpleScoring()
 
     game_master = GameMaster(scoring_algorithm, start_word_manager, interface, base_path, count)
-    interface.move_to("v", 0)
+    game_master.prepare_session()
     while game_master.keep_playing():
         game_master.prepare_game()
         game_master.play_game()
         game_master.end_game()
+    game_master.end_session()
 
 
 if __name__ == '__main__':

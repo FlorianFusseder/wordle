@@ -200,6 +200,7 @@ class Interface(ABC):
             "n": (-1, -1),
             "m": (-1, -1),
             "next_word": (-1, -1),
+            "home_button": (-1, -1),
         }
         self._next_word_rgb: RGB = None
         self._endscreen_window = (-1, -1, -1, -1)
