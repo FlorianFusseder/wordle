@@ -1,32 +1,79 @@
 [
   {
     "word": "stier",
-    "won": 53,
+    "won": 21,
     "lost": 0,
-    "avg_attempts": 2.785330487653259
+    "avg_attempts": 2.7142857142857144,
+    "all_attempts": 57
   },
   {
     "word": "steak",
-    "won": 44,
-    "lost": 1,
-    "avg_attempts": 3.805405189743169
+    "won": 31,
+    "lost": 0,
+    "avg_attempts": 3.225806451612903,
+    "all_attempts": 100
   },
   {
     "word": "islam",
-    "won": 61,
+    "won": 23,
     "lost": 0,
-    "avg_attempts": 3.4511739767799288
+    "avg_attempts": 3.869565217391304,
+    "all_attempts": 89
   },
   {
     "word": "liane",
-    "won": 55,
+    "won": 25,
     "lost": 0,
-    "avg_attempts": 4.177351455788224
+    "avg_attempts": 3.4,
+    "all_attempts": 85
   },
   {
     "word": "saite",
-    "won": 44,
+    "won": 39,
     "lost": 0,
-    "avg_attempts": 2.832950517506788
+    "avg_attempts": 2.9743589743589745,
+    "all_attempts": 116
+  },
+  {
+    "word": "aster",
+    "won": 13,
+    "lost": 1,
+    "all_attempts": 49,
+    "avg_attempts": 3.5
+  },
+  {
+    "word": "eiter",
+    "won": 8,
+    "lost": 0,
+    "all_attempts": 23,
+    "avg_attempts": 2.875
+  },
+  {
+    "word": "arena",
+    "won": 16,
+    "lost": 0,
+    "all_attempts": 46,
+    "avg_attempts": 2.875
+  },
+  {
+    "word": "senat",
+    "won": 11,
+    "lost": 1,
+    "all_attempts": 41,
+    "avg_attempts": 3.4166666666666665
+  },
+  {
+    "word": "arsen",
+    "won": 12,
+    "lost": 0,
+    "all_attempts": 46,
+    "avg_attempts": 3.8333333333333335
+  },
+  {
+    "word": "eisen",
+    "won": 8,
+    "lost": 0,
+    "all_attempts": 29,
+    "avg_attempts": 3.625
   }
 ]

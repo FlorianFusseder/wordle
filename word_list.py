@@ -28,11 +28,8 @@ class StartWordManager:
             else:
                 word['lost'] += 1
 
-            if word['avg_attempts']:
-                word['avg_attempts'] += attempts
-                word['avg_attempts'] /= 2
-            else:
-                word['avg_attempts'] = attempts
+            word['all_attempts'] += attempts
+            word['avg_attempts'] = word['all_attempts'] / (word['won'] + word['lost'])
 
         with open("start_words.json", mode="w") as file:
             json.dump(json_file, file, indent=2)
@@ -60,7 +57,8 @@ class StartWordManager:
         self.__statistics_updated = True
 
     @staticmethod
-    def add_start_word_statistics(word: str, won: int = 0, lost: int = 0, avg_attempts: int = None):
+    def add_start_word_statistics(word: str, won: int = 0, lost: int = 0, all_attempts: int = 0,
+                                  avg_attempts: int = None):
         with open("start_words.json", mode="r") as file:
             load = json.load(file)
 
@@ -75,6 +73,7 @@ class StartWordManager:
                 "word": word,
                 "won": won,
                 "lost": lost,
+                "all_attempts": all_attempts,
                 "avg_attempts": avg_attempts
             }
         )

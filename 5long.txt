@@ -85,7 +85,6 @@ After
 Agame
 Agape
 Agave
-Agens
 Agent
 Agfas
 Ägide
@@ -93,7 +92,6 @@ Agios
 Agnes
 Agora
 Agrar
-Ahaus
 Ahmed
 ahmen
 Ahmet
@@ -112,14 +110,12 @@ Akkon
 Akkus
 Aktei
 Akten
-Aktes
 Aktie
 aktiv
 Aktor
 akute
 alaaf
 Alarm
-Albas
 Alben
 Albin
 Album
@@ -148,7 +144,6 @@ allwo
 Allyl
 Allys
 allzu
-Almas
 aloha
 Aloys
 Alpen
@@ -159,7 +154,6 @@ altem
 alten
 alter
 älter
-altes
 Altöl
 Alwin
 Alzey
@@ -219,7 +213,6 @@ anlog
 Anmut
 Annam
 Annan
-Annas
 Annes
 Annex
 Annie
@@ -272,9 +265,7 @@ Argon
 Argot
 ärgre
 Argus
-Arial
 Arier
-Arius
 arkan
 Arkus
 Arles
@@ -313,19 +304,15 @@ ASEAN
 äsest
 Asien
 Asket
-Aslan
 Äsops
 Aspen
 Aspik
 Assad
-Assam
 Assel
 Assen
 Asses
-Asset
 ästen
 Aster
-Astes
 ästet
 Astro
 Äsung
@@ -447,7 +434,6 @@ Bärin
 Baris
 Barke
 Baron
-Barry
 barst
 Bärte
 Barts
@@ -569,7 +555,6 @@ Betts
 Betty
 beuge
 beule
-beult
 beute
 Beuth
 Beuys
@@ -686,7 +671,6 @@ Böhme
 Böhms
 Bohne
 Bohrs
-bohrt
 böige
 Bojen
 bölke
@@ -1037,7 +1021,6 @@ darin
 Dario
 Därme
 Darms
-darob
 Darre
 darte
 Darts
@@ -1242,7 +1225,6 @@ dubio
 düble
 ducke
 duckt
-Duden
 dudle
 Duell
 Duett
@@ -1279,7 +1261,6 @@ Dutte
 Dutts
 duzen
 Dylan
-Earls
 Earth
 ebben
 ebbte
@@ -1331,8 +1312,6 @@ Eicke
 Eidam
 Eider
 Eides
-eiere
-eiern
 eiert
 Eifer
 eigen
@@ -1363,7 +1342,6 @@ Eklat
 eklig
 ektop
 Ekzem
-Elans
 Elath
 Elchs
 elend
@@ -1378,7 +1356,6 @@ Ellis
 Elmar
 Eloys
 Elphi
-Elsas
 Elspe
 Elvis
 Emely
@@ -1408,7 +1385,6 @@ Eozän
 Eplax
 EPROM
 Epson
-Erath
 erbat
 erben
 Erbes
@@ -1610,7 +1586,6 @@ fetze
 Feuer
 FeuVO
 Fezen
-Fiats
 Fibel
 Fiber
 ficht
@@ -1830,7 +1805,6 @@ Gabel
 gäbet
 Gabis
 gable
-Gabor
 gabst
 gäbst
 Gabun
@@ -1862,8 +1836,6 @@ Gänse
 ganze
 Gänze
 Garbe
-Garbo
-Garda
 Garde
 garem
 gären
@@ -1872,7 +1844,6 @@ gares
 Garne
 garni
 Garns
-Garry
 garte
 gärte
 Gasen
@@ -2098,7 +2069,6 @@ Gunma
 Gunst
 Guppy
 gurke
-gurkt
 gurte
 Gurus
 Güsse
@@ -2115,7 +2085,6 @@ Gyros
 Gysis
 haare
 Haars
-haart
 haben
 habet
 habil
@@ -2137,11 +2106,9 @@ hagle
 Häher
 Hähne
 Hahns
-Haien
 Haifa
 Haiku
 Hains
-Haiti
 haken
 hakig
 häkle
@@ -2503,7 +2470,6 @@ Imker
 Imkes
 imkre
 Immas
-Immen
 immer
 immun
 Imola
@@ -2543,10 +2509,8 @@ Iowas
 iPads
 iPods
 Iraks
-Irans
 irden
 Irena
-Irene
 Irina
 Irmas
 irrem
@@ -2572,7 +2536,6 @@ Ivica
 Iwans
 Iwrit
 Izmir
-Jabra
 Jacht
 Jacke
 Jacks
@@ -2732,7 +2695,6 @@ Jutta
 Juwel
 juxen
 Juxes
-Kaaba
 Kabel
 Kabis
 kable
@@ -2958,7 +2920,6 @@ Klotz
 Klubs
 Kluft
 kluge
-klump
 Klüse
 Knabe
 knack
@@ -2978,7 +2939,6 @@ Knobi
 Knofi
 Knopf
 knöpf
-Knorr
 knote
 knuff
 knüll
@@ -3112,7 +3072,6 @@ Kuben
 Kubik
 Kubus
 Küche
-Kufen
 Küfer
 Kugel
 kugle
@@ -3179,7 +3138,6 @@ Lader
 ladet
 lädst
 Ladys
-Laels
 laffe
 lagen
 lägen
@@ -3193,7 +3151,6 @@ lahmt
 lähmt
 Laibs
 Laich
-Laien
 Laiin
 Laika
 Laila
@@ -3205,7 +3162,6 @@ Lamas
 Lamee
 Lamms
 Lampe
-Lanas
 lande
 Lands
 lange
@@ -3223,8 +3179,6 @@ Larve
 lasch
 Laser
 läset
-Lassa
-lasse
 Lasso
 lässt
 laste
@@ -3269,8 +3223,6 @@ Leads
 Leaks
 Leara
 Lears
-lease
-least
 leben
 Leber
 lebst
@@ -3317,7 +3269,6 @@ Lemgo
 Lemma
 Lemon
 Lemur
-Lenas
 Lenau
 Lenco
 Lende
@@ -3339,7 +3290,6 @@ lesen
 Leser
 letal
 Letos
-Lette
 Letzt
 Leuna
 Leute
@@ -3378,7 +3328,6 @@ Ligen
 liken
 Likes
 Likör
-likst
 likte
 Lilie
 Lilja
@@ -3583,7 +3532,6 @@ Malls
 malme
 Malmö
 malmt
-Malta
 Malus
 Malva
 Malve
@@ -3684,7 +3632,6 @@ melkt
 Melly
 Melos
 Memel
-Memme
 Mende
 menge
 mengt
@@ -3731,7 +3678,6 @@ milde
 Miliz
 Milka
 Milva
-mimen
 Mimik
 mimst
 mimte
@@ -3762,7 +3708,6 @@ mobbt
 Möbel
 mobil
 modal
-Model
 Modem
 modre
 Modul
@@ -3921,10 +3866,8 @@ Narbe
 Narde
 narre
 Narva
-nasal
 Nasen
 näsle
-nasse
 nässe
 nässt
 nativ
@@ -3937,7 +3880,6 @@ Naxos
 Nayas
 Nazca
 Nazis
-Neals
 Nebel
 neben
 Nebra
@@ -3970,7 +3912,6 @@ Nervs
 nervt
 Nerze
 Nests
-nette
 netto
 Netze
 neuem
@@ -4060,7 +4001,6 @@ nützt
 Nylon
 ÖAMTC
 Oasen
-OAuth
 Obama
 obere
 Obers
@@ -4347,7 +4287,6 @@ Piero
 Piers
 Piezo
 Pikee
-piken
 pikte
 Pille
 Pilot
@@ -4600,7 +4539,6 @@ Rahab
 Rahel
 Rahms
 rahmt
-Rains
 Rakel
 räkle
 Rakow
@@ -4685,7 +4623,6 @@ Regal
 Regel
 regem
 regen
-reger
 reges
 Regex
 Regie
@@ -4785,10 +4722,8 @@ River
 Rizin
 robbe
 robbt
-Roben
 Robin
 Robot
-Robur
 röche
 rocht
 röcht
@@ -4861,7 +4796,6 @@ Rubra
 rucke
 rücke
 Rucks
-ruckt
 rückt
 Rudel
 rüdem
@@ -4891,7 +4825,6 @@ ruhst
 ruhte
 rülps
 Rumba
-Rumor
 Rumpf
 rumse
 rumst
@@ -4907,7 +4840,6 @@ Rürup
 Rushs
 Russe
 rüste
-Ruten
 Ruths
 Rutte
 Ruwer
@@ -4978,13 +4910,11 @@ sänne
 sannt
 Sanya
 Sanyo
-Saori
 SAPUI
 Sarah
 Sarde
 Särge
 Sargs
-Sarin
 Satan
 säten
 sätet
@@ -5008,7 +4938,6 @@ säume
 Saums
 säumt
 Sauna
-saure
 Säure
 saust
 saute
@@ -5124,10 +5053,7 @@ siede
 siege
 Siegs
 siegt
-siehe
 sieht
-Siels
-Siena
 sieze
 siezt
 Sigel
@@ -5136,12 +5062,9 @@ Sigis
 Sigle
 sigma
 Sikhs
-Silas
 Silbe
 Silvy
 Simba
-Simon
-Simse
 Sinai
 Sinan
 Sinas
@@ -5149,18 +5072,14 @@ singe
 Singh
 singt
 sinke
-sinkt
 sinne
 Sinns
-sinnt
-Sinti
 Sinus
 Sioux
 Sippe
 SIPRI
 sirre
 Sirup
-Sisal
 Sissy
 Sitar
 Sites
@@ -5317,7 +5236,6 @@ starb
 stark
 starr
 Start
-Stasi
 statt
 Staub
 Steak
@@ -5351,10 +5269,8 @@ Stift
 STIKO
 Stile
 still
-Stils
 Stino
 Stipp
-stirb
 Stirn
 stöbe
 Stock
@@ -5557,7 +5473,6 @@ teilt
 Teins
 Teint
 Telex
-Telko
 Tells
 Telse
 Tempi
@@ -5570,10 +5485,8 @@ Terms
 Terra
 Terry
 Teseo
-Tesla
 teste
 Tests
-Tetum
 teuer
 Teufe
 teure
@@ -5594,13 +5507,11 @@ Thilo
 Thing
 Thomy
 Thora
-Thorn
 Thors
 Thron
 Thuja
 Thuje
 Thule
-Thurn
 Tiber
 Tibet
 Tibia
@@ -5618,7 +5529,6 @@ Tiger
 Tilda
 Tilde
 tilge
-Tilia
 Tilly
 timen
 Timer
@@ -5962,7 +5872,6 @@ Valin
 Vamps
 Vanja
 Varel
-Varga
 Varia
 Varix
 VARTA

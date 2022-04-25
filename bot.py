@@ -30,13 +30,13 @@ class WordleState:
         contained_word = ""
         for j in range(5):
             if j in not_list:
-                contained_word += wordle.WordleRegex.not_character
+                contained_word += wordle.GlobWordleRegex.not_character
             elif j in ignore_list:
-                contained_word += wordle.WordleRegex.ignore_character
+                contained_word += wordle.GlobWordleRegex.ignore_character
             elif j in contain_list:
                 contained_word += c
             else:
-                contained_word += wordle.WordleRegex.any_character
+                contained_word += wordle.GlobWordleRegex.any_character
 
         self.char_contained_list.append(contained_word)
 
@@ -130,7 +130,7 @@ class WordleContainer:
 
             class_dict = class2dict(self)
             class_dict['timestamp'] = str(datetime.datetime.now())
-            file.write(json.dumps(class_dict))
+            file.write(json.dumps(class_dict, indent=2))
 
     def is_solved(self) -> bool:
         return self.solution is not None
@@ -198,8 +198,8 @@ class GameMaster:
             self._interface.put_solution(self._current_solution_word)
             self.wait(1, "animation to start")
 
-            retries = 20 if self._attempts > 5 else 10
-            waiting_duration = .5 if self._attempts > 5 else .2
+            retries = 20 if self._attempts >= 5 else 10
+            waiting_duration = .5 if self._attempts >= 5 else .2
             for try_ in range(retries):
                 try:
                     current_colors = self._interface.get_colors(self._attempts)
@@ -236,7 +236,7 @@ class GameMaster:
         self._interface.make_endscreen_screenshot(self._session_path)
         new_path = self._session_path + f"_{self._attempts}_"
         if self._wordle_container.is_solved():
-            print(f"Solution was {self._current_solution_word}")
+            print(f"Solution was {self._current_solution_word}, solved in {self._attempts} attempts")
             self._won += 1
             new_path += self._current_solution_word
             with open("whitelist.txt", mode="r+") as file:
@@ -417,6 +417,8 @@ def new_interface(ctx):
     def update(id_: str) -> bool:
         if 'interface' in ctx.obj:
             return input(f"Do you want to update {id_}? (y/n): ") == "y"
+        else:
+            return False
 
     try:
         if not interface.identifier or update("id"):
@@ -453,10 +455,12 @@ def new_interface(ctx):
         to_update = update("an Element")
 
         def define_element(k: str):
-            input(f"Hover {k} and press enter ")
-            interface.elements[k] = gui.mouse_position()
-            if k == "next_word":
-                interface.next_word_rgb = gui.Interface.get_pixel_color_by_position(interface.elements[k])
+            if not input(f"Hover {k} and press enter (type skip if not available): ") == "skip":
+                interface.elements[k] = gui.mouse_position()
+                if k == "next_word":
+                    interface.next_word_rgb = gui.Interface.get_pixel_color_by_position(interface.elements[k])
+            else:
+                interface.elements[k] = None
 
         if not to_update:
             for k, v in interface.elements.items():
@@ -466,14 +470,14 @@ def new_interface(ctx):
             element_name = input("Input element name: ")
             define_element(element_name)
 
-        if update("Color codes"):
+        if [(k, v) for k, v in interface.color_codes.items() if v == gui.RGB()] or update("Color codes"):
             for k, v in interface.color_codes.items():
                 if v == gui.RGB():
                     input(f"Hover {k.name} and press enter")
                     pos = gui.mouse_position()
                     interface.color_codes[k] = gui.Interface.get_pixel_color_by_position(pos)
 
-        if update("endscreen picture"):
+        if interface.endscreen_window == (-1, -1, -1, -1) or update("endscreen picture"):
             input("Hover over the left top corner of your desired endscreen and press enter")
             left, top = gui.mouse_position()
             input("Hover over the right bottom corner of your desired endscreen and press enter")
