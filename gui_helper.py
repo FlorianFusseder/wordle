@@ -1,7 +1,6 @@
 import datetime
 import os
 import subprocess
-import sys
 import tempfile
 import time
 from abc import ABC

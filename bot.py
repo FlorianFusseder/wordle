@@ -2,11 +2,9 @@ import datetime
 import json
 import os
 import pickle
-import re
 import sys
 import time
-import typing
-from typing import List, Callable
+from typing import List, Callable, Tuple, Optional
 
 import click
 
@@ -17,89 +15,49 @@ import wordle
 
 class WordleState:
 
-    def __init__(self) -> None:
+    def __init__(self, attempts: List[Tuple[str, str]] = None) -> None:
         self.regex = None
-        self.word_glob = "." * 5
-        self.char_contained_list = []
-        self.char_not_contained = ""
-
-    def add_solved(self, c, i):
-        self.word_glob = self.word_glob[:i] + c + self.word_glob[i + 1:]
-
-    def add_contained(self, c, contain_list: [int], not_list: [int], ignore_list: [int]):
-        contained_word = ""
-        for j in range(5):
-            if j in not_list:
-                contained_word += wordle.GlobWordleRegex.not_character
-            elif j in ignore_list:
-                contained_word += wordle.GlobWordleRegex.ignore_character
-            elif j in contain_list:
-                contained_word += c
-            else:
-                contained_word += wordle.GlobWordleRegex.any_character
-
-        self.char_contained_list.append(contained_word)
-
-    def add_not_contained(self, c):
-        self.char_not_contained = self.char_not_contained + c
+        self.attempts = attempts
 
     def add_regex(self, regex):
         self.regex = regex
 
 
 class WordleContainer:
+    __translator = {
+        gui.ColorCode.OK: wordle.InfoCoding.CORRECT.value,
+        gui.ColorCode.CONTAINED: wordle.InfoCoding.CONTAINED.value,
+        gui.ColorCode.NOT_CONTAINED: wordle.InfoCoding.NOT_CONTAINED.value,
+        gui.ColorCode.EMPTY: None,
+    }
 
-    def __init__(self, word_list: [str] = None, colors: [[gui.ColorCode]] = None) -> None:
-        self.solution = None
-        self.remaining = None
-        self.states = []
-        if word_list and colors:
-            self.word_list = word_list[:-1]
-            self.state = None
-            self.update(word_list[len(word_list) - 1], colors)
-        else:
-            self.state = WordleState()
-            self.word_list = []
+    def __init__(self, word_list: [str], colors: [gui.ColorCode]) -> None:
+        self.solution: Optional[str] = None
+        self.remaining: Optional[List[str]] = None
+        self.states: List[WordleState] = []
+        self.attempts: List[Tuple[str, str]] = [(word_list[i], self.__to_code_string(colors[i])) for i in
+                                                range(len(word_list))]
+        self.state: Optional[WordleState] = WordleState(self.attempts) if self.attempts else None
+
+    @classmethod
+    def __to_code_string(cls, colors: [gui.ColorCode]) -> str:
+        return "".join([cls.__translator[gui_color] for gui_color in colors])
 
     def update(self, new_word, colors):
+        self.attempts.append((new_word, self.__to_code_string(colors)))
         if self.state:
             self.states.append(self.state)
-        self.state = WordleState()
-        self.word_list.append(new_word.lower())
-
-        for row, word in enumerate(self.word_list):
-            color_row = colors[row]
-            for column, char in enumerate(word):
-                color_code = color_row[column]
-                if color_code == gui.ColorCode.OK:
-                    self.state.add_solved(char, column)
-                elif color_code == gui.ColorCode.CONTAINED:
-                    def get_index_list(color: gui.ColorCode):
-                        return [match.start() for match in re.finditer(char, word) if color_row[match.start()] == color]
-
-                    # make list where the containing character cannot occur
-                    not_list = get_index_list(gui.ColorCode.NOT_CONTAINED)
-                    # make list where the containing character is already occurring
-                    ignore_list = get_index_list(gui.ColorCode.OK)
-                    # make list how often the character occurs
-                    character_occurrences_list = get_index_list(gui.ColorCode.CONTAINED)
-                    self.state.add_contained(char, character_occurrences_list, not_list, ignore_list)
-                elif color_code == gui.ColorCode.NOT_CONTAINED:
-                    self.state.add_not_contained(char)
-                elif color_code == gui.ColorCode.EMPTY:
-                    break
+        self.state = WordleState(self.attempts.copy())
 
     def find(self) -> List[str]:
-        words, regex = wordle.find_words(self.state.word_glob, self.state.char_contained_list,
-                                         self.state.char_not_contained,
-                                         False)
+        words, regex = wordle.find_words(self.attempts)
         self.state.add_regex(regex)
         if not words:
             raise Exception("No Words could be found!")
         return words
 
     def set_solved(self, path: str = None):
-        self.__game_solution(path, self.word_list[len(self.word_list) - 1], None)
+        self.__game_solution(path, self.attempts[-1:][0][0], None)
 
     def set_unsolved(self, path: str = None):
         remaining = self.find()
@@ -185,7 +143,7 @@ class GameMaster:
             self._start_word_manager.start_word = words[0]
             self._current_solution_word = self._wordle_container.find()[0]
         else:
-            self._wordle_container: WordleContainer = WordleContainer()
+            self._wordle_container: WordleContainer = WordleContainer([], [])
             self._current_solution_word = self._start_word_manager.start_word
         self._interface.move_to("h", .2)
 
@@ -220,7 +178,7 @@ class GameMaster:
                 self._current_solution_word = self._wordle_container.find()[0]
                 continue
 
-            self._wordle_container.update(self._current_solution_word, current_colors)
+            self._wordle_container.update(self._current_solution_word, current_colors[self._attempts])
 
             if all_current_row(lambda code: code == gui.ColorCode.OK):
                 self._wordle_container.set_solved(self._session_path)
@@ -337,9 +295,10 @@ def type(ctx, word, count):
 
 @cli.command()
 @click.argument('element')
+@click.pass_context
 def get_pixel_color(ctx, element):
     by_element = ctx.obj['interface'].get_pixel_color_by_element(element)
-    print(f"R[{by_element[0]}]G[{by_element[1]}]B[{by_element[2]}]")
+    print(f"R[{by_element.r}]G[{by_element.g}]B[{by_element.b}]")
 
 
 @cli.command()
@@ -439,7 +398,7 @@ def new_interface(ctx):
             return p_list
 
         if not interface.color_positions or update('Color Positions'):
-            matrix: [[typing.Tuple]] = []
+            matrix: [[Tuple]] = []
             for _ in range(6):
                 matrix.append([()] * 5)
 
