@@ -1,3 +1,6 @@
+import os
+
+import waitress
 from flask import Flask, request, make_response
 
 import wordle
@@ -19,4 +22,6 @@ def solve():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    port = int(os.getenv("PORT", "8081"))
+    print(f"Using Port: {port}")
+    waitress.serve(app, port=port, url_scheme='http')
