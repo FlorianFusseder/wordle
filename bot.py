@@ -196,7 +196,7 @@ class GameMaster:
         self._interface.make_endscreen_screenshot(self._session_path)
         new_path = self._session_path + f"_{self._attempts}_"
         if self._wordle_container.is_solved():
-            print(f"Solution was {self._current_solution_word}, solved in {self._attempts} attempts")
+            print(f"Solution was '{self._current_solution_word}', solved in {self._attempts} attempts")
             self._won += 1
             new_path += self._current_solution_word
             with open("whitelist.txt", mode="r+") as file:

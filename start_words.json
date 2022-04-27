@@ -1,17 +1,17 @@
 [
   {
     "word": "stier",
-    "won": 24,
+    "won": 26,
     "lost": 0,
-    "avg_attempts": 2.7083333333333335,
-    "all_attempts": 65
+    "avg_attempts": 2.730769230769231,
+    "all_attempts": 71
   },
   {
     "word": "steak",
-    "won": 32,
+    "won": 33,
     "lost": 0,
-    "avg_attempts": 3.21875,
-    "all_attempts": 103
+    "avg_attempts": 3.1818181818181817,
+    "all_attempts": 105
   },
   {
     "word": "islam",
@@ -22,45 +22,45 @@
   },
   {
     "word": "liane",
-    "won": 25,
+    "won": 26,
     "lost": 0,
-    "avg_attempts": 3.4,
-    "all_attempts": 85
+    "avg_attempts": 3.3846153846153846,
+    "all_attempts": 88
   },
   {
     "word": "saite",
-    "won": 44,
+    "won": 46,
     "lost": 0,
-    "avg_attempts": 2.9318181818181817,
-    "all_attempts": 129
+    "avg_attempts": 2.9130434782608696,
+    "all_attempts": 134
   },
   {
     "word": "aster",
-    "won": 15,
-    "lost": 1,
-    "all_attempts": 56,
-    "avg_attempts": 3.5
-  },
-  {
-    "word": "eiter",
-    "won": 9,
-    "lost": 0,
-    "all_attempts": 26,
-    "avg_attempts": 2.888888888888889
-  },
-  {
-    "word": "arena",
-    "won": 18,
-    "lost": 0,
-    "all_attempts": 52,
-    "avg_attempts": 2.888888888888889
-  },
-  {
-    "word": "senat",
     "won": 16,
     "lost": 1,
     "all_attempts": 58,
     "avg_attempts": 3.411764705882353
+  },
+  {
+    "word": "eiter",
+    "won": 10,
+    "lost": 0,
+    "all_attempts": 29,
+    "avg_attempts": 2.9
+  },
+  {
+    "word": "arena",
+    "won": 19,
+    "lost": 0,
+    "all_attempts": 56,
+    "avg_attempts": 2.9473684210526314
+  },
+  {
+    "word": "senat",
+    "won": 19,
+    "lost": 1,
+    "all_attempts": 66,
+    "avg_attempts": 3.3
   },
   {
     "word": "arsen",
@@ -71,9 +71,16 @@
   },
   {
     "word": "eisen",
-    "won": 11,
+    "won": 12,
     "lost": 0,
-    "all_attempts": 36,
-    "avg_attempts": 3.272727272727273
+    "all_attempts": 39,
+    "avg_attempts": 3.25
+  },
+  {
+    "word": "asien",
+    "won": 0,
+    "lost": 0,
+    "all_attempts": 0,
+    "avg_attempts": null
   }
 ]

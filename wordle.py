@@ -84,7 +84,7 @@ class Char(ABC):
 class SolvedChar(Char):
 
     def _init_lookahead(self) -> (int, bool):
-        """1 -> count itself as occurrence, see if NOT_CONTAINED is other occurence"""
+        """1 -> count itself as occurrence, see if NOT_CONTAINED is other occurrence"""
         return 1, InfoCoding.NOT_CONTAINED not in self._other_occurrences
 
     def add_self_to_regex(self, builder: 'WordleRegexBuilder') -> None:
