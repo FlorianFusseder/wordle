@@ -256,7 +256,13 @@ class ColorInfoWordleRegex(WordleRegexBuilder):
 
     def __init__(self, attempts) -> None:
         super().__init__()
-        self.__attempts: [Word] = [Word(word, info) for word, info in [attempt for attempt in attempts]]
+        self.__attempts: [Word]
+        if isinstance(attempts, list):
+            self.__attempts: [Word] = [Word(word, info) for word, info in [attempt for attempt in attempts]]
+        elif isinstance(attempts, dict):
+            self.__attempts: [Word] = [Word(key, value) for key, value in attempts.items()]
+        else:
+            raise ValueError("either dict or list")
 
     def __generate_element_list(self):
         return [multiplier.to_regex_string() for multiplier in self.lookaheads.values()] + ["^"] + [
@@ -373,7 +379,7 @@ def regex(regex_):
     print(word_list)
 
 
-def find_words(attempts: [str]):
+def find_words(attempts):
     regex_builder: WordleRegexBuilder = ColorInfoWordleRegex(attempts)
     return __find_words(regex_builder)
 
