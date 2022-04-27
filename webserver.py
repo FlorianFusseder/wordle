@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 
 import wordle
 
 app = Flask(__name__)
 
 
-@app.route("/", methods=['POST'])
+@app.route("/", methods=['POST', 'GET'])
 def solve():
     if request.method == 'POST':
         if request.content_length < 110:
@@ -14,6 +14,8 @@ def solve():
             return {
                 'matches': matches[:10]
             }
+    elif request.method == 'GET':
+        return make_response("UP", 200)
 
 
 if __name__ == '__main__':
