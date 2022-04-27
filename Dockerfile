@@ -8,4 +8,4 @@ COPY ./5long.txt /app
 COPY ./statistics.json /app
 COPY ./whitelist.txt /app
 ENTRYPOINT [ "waitress-serve" ]
-CMD [ "webserver:app", "--port=$PORT" ]
+CMD [ "webserver:app" ]
