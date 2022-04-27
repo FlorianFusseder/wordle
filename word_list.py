@@ -117,7 +117,7 @@ def remove(ctx, word):
 
 def remove_word(word):
     with open("blacklist.txt", mode="a") as blacklist:
-        blacklist.writelines(word + "\n")
+        blacklist.wri(word + "\n")
 
     create_wordlist()
     create_statistics()
