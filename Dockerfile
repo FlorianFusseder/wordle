@@ -7,6 +7,5 @@ COPY ./webserver.py /app
 COPY ./5long.txt /app
 COPY ./statistics.json /app
 COPY ./whitelist.txt /app
-EXPOSE $PORT
-ENTRYPOINT [ "python" ]
-CMD [ "webserver.py" ]
+ENTRYPOINT [ "waitress-serve" ]
+CMD [ "webserver:app", "--port=$PORT" ]
