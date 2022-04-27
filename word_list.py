@@ -1,3 +1,4 @@
+import itertools
 import json
 import random
 
@@ -79,6 +80,24 @@ class StartWordManager:
         )
         with open("start_words.json", mode="w") as file:
             json.dump(load, file, indent=2)
+
+
+class CleanupWordListManager(StartWordManager):
+
+    @property
+    def start_word(self):
+        with open("5long.txt", mode="r") as file:
+            for line in itertools.islice(file, self.__index, self.__index + 1):
+                return line[:-1]
+
+    def update_statistics(self, won: bool, attempts: int):
+        self.__index += 1
+        with open(".index", mode="w") as file:
+            file.write(str(self.__index))
+
+    def __init__(self, start_word: str = None) -> None:
+        with open(".index", mode="r") as file:
+            self.__index = int(file.read())
 
 
 @cli1.command()

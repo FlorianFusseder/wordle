@@ -171,11 +171,13 @@ class GameMaster:
             if not all_current_row(lambda code: code != gui.ColorCode.EMPTY):
                 print(f"Word {self._current_solution_word} seems not to be wordle word, removing...")
                 wt.remove_word(self._current_solution_word)
-                if self._attempts == 0:
-                    raise Exception(f"Your start word {self._current_solution_word} is not in wordlist!")
                 print("Delete word...")
                 [self._interface.click_on("delete", duration=0, echo=False) for _ in range(5)]
-                self._current_solution_word = self._wordle_container.find()[0]
+                if self._attempts == 0:
+                    print(f"Start Word is not legit, careful, this can lead to endless loop!")
+                    self._current_solution_word = self._start_word_manager.start_word
+                else:
+                    self._current_solution_word = self._wordle_container.find()[0]
                 continue
 
             self._wordle_container.update(self._current_solution_word, current_colors[self._attempts])
@@ -455,11 +457,19 @@ def new_interface(ctx):
 @cli.command("play")
 @click.option("-w", "--start_word")
 @click.option("-c", "--count", default=1, type=click.IntRange(1, sys.maxsize))
+@click.option("-wm", "--word_manager")
 @click.pass_context
-def start(ctx, start_word, count):
+def start(ctx, start_word, count, word_manager):
     interface: gui.Interface = ctx.obj["interface"]
     base_path = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
-    start_word_manager = wt.StartWordManager(start_word) if start_word else wt.StartWordManager()
+
+    if start_word:
+        start_word_manager = wt.StartWordManager(start_word)
+    elif word_manager == "cleanup":
+        start_word_manager = wt.CleanupWordListManager()
+    else:
+        start_word_manager = wt.StartWordManager()
+
     scoring_algorithm: wordle.Scoring = wordle.SimpleScoring()
 
     game_master = GameMaster(scoring_algorithm, start_word_manager, interface, base_path, count)

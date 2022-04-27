@@ -140,7 +140,7 @@ class Word:
     def __init__(self, word: str, info: str) -> None:
         self.character_list: List[Char] = [None] * 5
         self._character_dict: Dict[str, List[int]] = defaultdict(list)
-        [self._character_dict[char].append(i) for i, char in enumerate(word)]
+        [self._character_dict[char].append(i) for i, char in enumerate(word.lower())]
 
         index_list: List[int]
         for char, index_list in self._character_dict.items():
