@@ -7,6 +7,6 @@ COPY ./webserver.py /app
 COPY ./5long.txt /app
 COPY ./statistics.json /app
 COPY ./whitelist.txt /app
-EXPOSE 5000
+EXPOSE $PORT
 ENTRYPOINT [ "python" ]
 CMD [ "webserver.py" ]
