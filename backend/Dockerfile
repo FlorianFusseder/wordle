@@ -1,4 +1,4 @@
-FROM python:3.8.13
+FROM python:3.8.13-alpine
 
 RUN mkdir -p /app/wordle_bot
 RUN mkdir /files
