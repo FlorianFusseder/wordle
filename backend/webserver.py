@@ -1,9 +1,8 @@
 import os
 
 import waitress
+from wordle_bot import wordle
 from flask import Flask, request, make_response
-
-import wordle
 
 app = Flask(__name__)
 

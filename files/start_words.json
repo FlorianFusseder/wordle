@@ -43,10 +43,10 @@
   },
   {
     "word": "eiter",
-    "won": 10,
+    "won": 11,
     "lost": 0,
-    "all_attempts": 29,
-    "avg_attempts": 2.9
+    "all_attempts": 32,
+    "avg_attempts": 2.909090909090909
   },
   {
     "word": "arena",
@@ -57,17 +57,17 @@
   },
   {
     "word": "senat",
-    "won": 19,
+    "won": 20,
     "lost": 1,
-    "all_attempts": 66,
-    "avg_attempts": 3.3
+    "all_attempts": 68,
+    "avg_attempts": 3.238095238095238
   },
   {
     "word": "arsen",
-    "won": 14,
+    "won": 15,
     "lost": 0,
-    "all_attempts": 52,
-    "avg_attempts": 3.7142857142857144
+    "all_attempts": 55,
+    "avg_attempts": 3.6666666666666665
   },
   {
     "word": "eisen",
@@ -78,9 +78,9 @@
   },
   {
     "word": "asien",
-    "won": 0,
+    "won": 1,
     "lost": 0,
-    "all_attempts": 0,
-    "avg_attempts": null
+    "all_attempts": 3,
+    "avg_attempts": 3.0
   }
 ]

@@ -1,6 +1,4 @@
-todo:
+todo bot:
 endscreen word mit tesseract rausfinden
 ausgabe für colors farbcodieren
 sorting algorithmus strategie pattern
-endgame ausgabe um durchnittliche versuche/spiele mit jeweilig algoritymus
-use scr-screen and iterate thresholds to check words for inconsistent word states

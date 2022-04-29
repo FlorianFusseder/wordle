@@ -18,7 +18,7 @@ def statistic():
 class StartWordManager:
 
     def update_statistics(self, won: bool, attempts: int):
-        with open("start_words.json", mode="r") as file:
+        with open("../files/start_words.json", mode="r") as file:
             json_file = json.load(file)
         word_list = [w for w in json_file if w['word'] == self.__start_word]
 
@@ -34,7 +34,7 @@ class StartWordManager:
             word['all_attempts'] += attempts
             word['avg_attempts'] = word['all_attempts'] / (word['won'] + word['lost'])
 
-        with open("start_words.json", mode="w") as file:
+        with open("../files/start_words.json", mode="w") as file:
             json.dump(json_file, file, indent=2)
         self.__statistics_updated = True
 
@@ -43,7 +43,7 @@ class StartWordManager:
         if not self.__statistics_updated:
             raise Exception("Update statistics before getting another start_word")
         if self.__generate_word:
-            with open("start_words.json", mode="r") as file:
+            with open("../files/start_words.json", mode="r") as file:
                 json_file = json.load(file)
             length = len(json_file)
             randint = random.randint(0, length - 1)
@@ -62,7 +62,7 @@ class StartWordManager:
     @staticmethod
     def add_start_word_statistics(word: str, won: int = 0, lost: int = 0, all_attempts: int = 0,
                                   avg_attempts: int = None):
-        with open("start_words.json", mode="r") as file:
+        with open("../files/start_words.json", mode="r") as file:
             load = json.load(file)
 
         j_obj = [w for w in load if w['word'] == word]
@@ -80,7 +80,7 @@ class StartWordManager:
                 "avg_attempts": avg_attempts
             }
         )
-        with open("start_words.json", mode="w") as file:
+        with open("../files/start_words.json", mode="w") as file:
             json.dump(load, file, indent=2)
 
 
@@ -88,7 +88,7 @@ class CleanupWordListManager(StartWordManager):
 
     @property
     def start_word(self):
-        with open("5long.txt", mode="r") as file:
+        with open("../files/5long.txt", mode="r") as file:
             for line in itertools.islice(file, self.__index, self.__index + 1):
                 return line[:-1]
 
@@ -118,7 +118,7 @@ def remove(ctx, word):
 
 
 def remove_word(word):
-    with open("blacklist.txt", mode="a") as blacklist:
+    with open("../files/blacklist.txt", mode="a") as blacklist:
         blacklist.writelines(word + "\n")
 
     create_wordlist()
@@ -133,7 +133,7 @@ def create_statistic():
 @statistic.command()
 def print_statistics():
     import json
-    with open("statistics.json", mode="r") as file:
+    with open("../files/statistics.json", mode="r") as file:
         dic = json.load(file)
         d = dict(sorted(dic.items(), key=lambda x: x[1], reverse=True))
         for k, v in d.items():
@@ -142,7 +142,7 @@ def print_statistics():
 
 def create_statistics():
     statistics = {}
-    with open("5long.txt") as file:
+    with open("../files/5long.txt") as file:
         for word in file.readlines():
             for c in set(word[:5]):
                 c = c.lower()
@@ -151,7 +151,7 @@ def create_statistics():
                 else:
                     statistics[c] = 1
     import json
-    with open("statistics.json", mode="w") as file:
+    with open("../files/statistics.json", mode="w") as file:
         file.write(json.dumps(statistics, indent=4, sort_keys=True))
 
 
@@ -166,10 +166,10 @@ def create_wordlist():
         for line in file.readlines():
             if len(line) == 6:
                 words.append(line)
-    with open("blacklist.txt", mode="r") as file:
+    with open("../files/blacklist.txt", mode="r") as file:
         for line in file.readlines():
             words.remove(line)
-    with open("5long.txt", mode='w') as file:
+    with open("../files/5long.txt", mode='w') as file:
         file.writelines(words)
     click.echo("Done recreating wordlists!")
 

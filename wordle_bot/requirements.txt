@@ -3,6 +3,7 @@ MouseInfo==0.1.3
 numpy==1.22.3
 packaging==21.3
 Pillow==9.1.0
+pkg_resources==0.0.0
 PyAutoGUI==0.9.53
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
@@ -13,5 +14,3 @@ PyScreeze==0.1.28
 pytesseract==0.3.9
 python3-xlib==0.15
 pytweening==1.0.4
--e git+ssh://git@github.com/FlorianFusseder/wordle.git@c689e267a76dfc289a50dfe9545587cfd1d8ad85#egg=wordle
--e git+ssh://git@github.com/FlorianFusseder/wordle.git@c689e267a76dfc289a50dfe9545587cfd1d8ad85#egg=wordle_helper

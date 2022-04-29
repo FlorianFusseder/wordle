@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name="wordle_helper",
+    name="wordle_bot",
     version='0.1',
-    py_modules=['wordle_helper'],
+    py_modules=['wordle_bot'],
     install_requires=[
         'Click',
     ],

@@ -200,7 +200,7 @@ class GameMaster:
             print(f"Solution was '{self._current_solution_word}', solved in {self._attempts} attempts")
             self._won += 1
             new_path += self._current_solution_word
-            with open("whitelist.txt", mode="r+") as file:
+            with open("../files/whitelist.txt", mode="r+") as file:
                 word_set = set(file.read().split())
                 l_b = len(word_set)
                 word_set.add(self._current_solution_word)

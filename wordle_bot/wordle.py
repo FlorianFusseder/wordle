@@ -303,7 +303,7 @@ class SimpleScoring(Scoring):
         super().evaluate(word_list)
 
         def sort_word(word):
-            with open("statistics.json") as file:
+            with open("../files/statistics.json") as file:
                 import json
                 statistics = json.load(file)
 
@@ -319,7 +319,7 @@ class SimpleScoring(Scoring):
             for _ in range(len(word) - len(s)):
                 score -= 5
 
-            with open("whitelist.txt") as file:
+            with open("../files/whitelist.txt") as file:
                 all_solution_words = file.read()
 
             if word in all_solution_words:
@@ -359,7 +359,7 @@ def find(attempts):
 
 
 def __find_words(regex_builder: WordleRegexBuilder):
-    with open("5long.txt", "r") as file:
+    with open("../files/5long.txt", "r") as file:
         all_words = file.read()
     regex_ = regex_builder.create()
     matches = execute_regex(all_words, regex_)
@@ -373,7 +373,7 @@ def __find_words(regex_builder: WordleRegexBuilder):
 @wordle.command()
 @click.argument("regex")
 def regex(regex_):
-    with open("5long.txt", "r") as file:
+    with open("../files/5long.txt", "r") as file:
         all_words = file.read()
     word_list = execute_regex(all_words, regex_)
     print(word_list)
