@@ -1,10 +1,10 @@
 [
   {
     "word": "stier",
-    "won": 26,
+    "won": 27,
     "lost": 0,
-    "avg_attempts": 2.730769230769231,
-    "all_attempts": 71
+    "avg_attempts": 2.7037037037037037,
+    "all_attempts": 73
   },
   {
     "word": "steak",
@@ -29,10 +29,10 @@
   },
   {
     "word": "saite",
-    "won": 46,
+    "won": 48,
     "lost": 0,
-    "avg_attempts": 2.9130434782608696,
-    "all_attempts": 134
+    "avg_attempts": 2.8958333333333335,
+    "all_attempts": 139
   },
   {
     "word": "aster",
@@ -78,9 +78,9 @@
   },
   {
     "word": "asien",
-    "won": 1,
+    "won": 2,
     "lost": 0,
-    "all_attempts": 3,
-    "avg_attempts": 3.0
+    "all_attempts": 5,
+    "avg_attempts": 2.5
   }
 ]
