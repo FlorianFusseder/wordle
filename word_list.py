@@ -20,10 +20,12 @@ class StartWordManager:
     def update_statistics(self, won: bool, attempts: int):
         with open("start_words.json", mode="r") as file:
             json_file = json.load(file)
-        word = [w for w in json_file if w['word'] == self.__start_word][0]
-        if not word:
+        word_list = [w for w in json_file if w['word'] == self.__start_word]
+
+        if not word_list:
             self.add_start_word_statistics(self.__start_word, 1 if won else 0, 1 if not won else 0, attempts)
         else:
+            word = word_list[0]
             if won:
                 word['won'] += 1
             else:

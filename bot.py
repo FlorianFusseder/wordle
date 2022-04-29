@@ -131,6 +131,7 @@ class GameMaster:
 
         if colors[0][0] != gui.ColorCode.EMPTY:
             print("Game seems to have started already!")
+            print("[ " + ", ".join([color.name for color in colors[0]]) + " ]")
             self._attempts = len([color[0] for color in colors if color[0] != gui.ColorCode.EMPTY])
             while True:
                 input_ = input(f"Input words (space seperated) for {self._attempts} filled rows:")
