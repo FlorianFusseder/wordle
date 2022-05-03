@@ -1,14 +1,16 @@
 import * as React from 'react'
 import './Square.css'
+import {ChangeEvent, KeyboardEvent} from "react";
 
 interface SquareProps {
     value: string,
     code: string | null,
-    onChange: (event: any) => void
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void
+    onKeyUp: (event: KeyboardEvent<HTMLInputElement>) => void
     current: boolean
 }
 
-const Square = ({value, code, onChange, current}: SquareProps) => {
+const Square = ({value, code, onChange, onKeyUp, current}: SquareProps) => {
 
     function getClassString() {
         let classString: string = current ? "square current" : "square"
@@ -45,6 +47,8 @@ const Square = ({value, code, onChange, current}: SquareProps) => {
             ref={input_ref}
             value={value}
             onChange={onChange}
+            onKeyUp={onKeyUp}
+            pattern="[A-ZÄÖÜ]"
         />
     )
 }

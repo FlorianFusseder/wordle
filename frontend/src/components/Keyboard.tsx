@@ -8,7 +8,11 @@ type KeyBoardProps = {
 const KeyBoard = ({onClick}: KeyBoardProps) => {
 
     function renderKey(value: string, classNameStr?: string) {
-        return <Key value={value} onClick={() => onClick(value)} classNameStr={classNameStr}/>
+        return <Key
+            value={value.toLowerCase()}
+            onClick={() => onClick(value.toUpperCase())}
+            classNameStr={classNameStr}
+        />
     }
 
     return (

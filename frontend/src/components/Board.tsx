@@ -1,16 +1,22 @@
 import Square from "./Square";
-import React from "react";
+import React, {ChangeEvent, KeyboardEvent} from "react";
 
 type BoardProps = {
-    array: Array<[string, string|null]>
-    onChange: (index: number, event: any) => void
+    array: Array<[string, string | null]>
+    onChange: (index: number, event: ChangeEvent<HTMLInputElement>) => void
+    onKeyUp: (index: number, event: KeyboardEvent<HTMLInputElement>) => void
     current: number
 }
 
-const Board = ({array, onChange, current}: BoardProps) => {
+const Board = ({array, onChange, onKeyUp, current}: BoardProps) => {
 
     function renderSquare(index: number) {
-        return <Square value={array[index][0]} code={array[index][1]} onChange={(event) => onChange(index, event)} current={current === index}/>
+        return <Square
+            value={array[index][0]}
+            code={array[index][1]}
+            onChange={(event) => onChange(index, event)}
+            onKeyUp={(event) => onKeyUp(index, event)}
+            current={current === index}/>
     }
 
     function renderRow(index: number) {
