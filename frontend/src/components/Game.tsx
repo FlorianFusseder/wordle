@@ -1,34 +1,64 @@
 import Board from "./Board";
-import React from "react";
+import Keyboard from "./Keyboard"
+import React, {useState} from "react";
+import './Game.css'
 
 type GameProps = {
-    arr: Array<[string, string]>
-    onClick: (index: number) => void
+    arr: Array<[string, string | null]>
     current: number
 }
 
 
 function Game() {
 
-    let props: GameProps = {
-        arr: new Array(5 * 6).fill(["a", "b"]),
-        onClick: i => console.log(i),
+    const [props, setProps] = useState<GameProps>({
+        arr: new Array(5 * 6).fill(["", null]),
         current: 0,
+    })
+
+    function selectCode(index: number, event: any) {
+        let slice = props.arr.slice();
+        slice[index] = [event.target.value, null]
+        setProps({
+            arr: slice,
+            current: props.current + 1
+        })
+    }
+
+    function keyBoardClick(key: string) {
+        if (key === "submit") {
+
+        } else {
+            let slice = props.arr.slice();
+            if (key === "delete") {
+                slice[props.current - 1] = ["", null]
+                setProps({
+                    arr: slice,
+                    current: props.current - 1
+                })
+            } else {
+                slice[props.current] = [key, null]
+                setProps({
+                    arr: slice,
+                    current: props.current + 1
+                })
+            }
+
+        }
     }
 
     return (
         <div className="game-board">
             <div className="word-list">
-                <Board array={props.arr} onClick={props.onClick} current={props.current}/>
+                <Board array={props.arr} onChange={selectCode} current={props.current}/>
             </div>
             <div className="game-keyboard">
-                <p>q</p>
-                <p>z</p>
+                <Keyboard onClick={keyBoardClick}/>
             </div>
-
         </div>
     )
 }
 
 
 export default Game
+export type {GameProps}

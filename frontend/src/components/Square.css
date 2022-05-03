@@ -1,5 +1,4 @@
 .square {
-    background: #cdd1de;
     border: 2px solid #39393a;
     border-radius: 4px;
     float: left;
@@ -10,6 +9,23 @@
     text-align: center;
     height: 70px;
     width: 70px;
+    background: #cdd1de;
+}
+
+.square.contained {
+    background: #ffb800;
+}
+
+.square.not_contained {
+    background: #39393a;
+}
+
+.square.correct {
+    background: #3bc14a;
+}
+
+.square.current {
+
 }
 
 .square:focus {
@@ -18,5 +34,9 @@
 
 .kbd-navigation .square:focus {
     background: #ddd;
+}
+
+textarea {
+    resize: none;
 }
 

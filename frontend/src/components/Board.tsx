@@ -2,15 +2,15 @@ import Square from "./Square";
 import React from "react";
 
 type BoardProps = {
-    array: Array<[string, string]>
-    onClick: (index: number) => void
+    array: Array<[string, string|null]>
+    onChange: (index: number, event: any) => void
     current: number
 }
 
-const Board = ({array, onClick, current}: BoardProps) => {
+const Board = ({array, onChange, current}: BoardProps) => {
 
     function renderSquare(index: number) {
-        return <Square value={array[index][0]} onClick={() => onClick(index)} current={current}/>
+        return <Square value={array[index][0]} code={array[index][1]} onChange={(event) => onChange(index, event)} current={current === index}/>
     }
 
     function renderRow(index: number) {
