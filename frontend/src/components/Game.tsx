@@ -27,26 +27,29 @@ function Game() {
 
     function onChange(index: number, event: ChangeEvent<HTMLInputElement>) {
         let upperKey: string = event.target.value.toUpperCase()
-        if (pattern.test(upperKey)) {
+        if (pattern.test(upperKey) && index < 30) {
             let slice = props.arr.slice();
             slice[index] = [upperKey, null]
             setProps({
                 arr: slice,
-                current: props.current + 1
+                current: index + 1
             })
         } else {
-            console.log("onChange ignored: " + event.target.value)
+            console.log("onChange ignored: " + event.target.value + " " + props.current)
         }
     }
 
     function onKeyUp(index: number, event: KeyboardEvent<HTMLInputElement>) {
         if (event.key === "Backspace") {
-            let slice = props.arr.slice();
-            slice[index - 1] = ["", null]
-            setProps({
-                arr: slice,
-                current: props.current - 1
-            })
+            console.log(props.current)
+            if (props.current > 0) {
+                let slice = props.arr.slice();
+                slice[props.current - 1] = ["", null]
+                setProps({
+                    arr: slice,
+                    current: props.current - 1
+                })
+            }
         } else if (event.key === "Enter") {
             submitForm()
         }
@@ -58,19 +61,23 @@ function Game() {
         } else {
             let slice = props.arr.slice();
             if (key === "DELETE") {
-                slice[props.current - 1] = ["", null]
-                setProps({
-                    arr: slice,
-                    current: props.current - 1
-                })
+                if (props.current > 0) {
+                    console.log(props.current)
+                    slice[props.current - 1] = ["", null]
+                    setProps({
+                        arr: slice,
+                        current: props.current - 1
+                    })
+                }
             } else {
-                slice[props.current] = [key, null]
-                setProps({
-                    arr: slice,
-                    current: props.current + 1
-                })
+                if (props.current < 30) {
+                    slice[props.current] = [key, null]
+                    setProps({
+                        arr: slice,
+                        current: props.current + 1
+                    })
+                }
             }
-
         }
     }
 

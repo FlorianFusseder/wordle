@@ -43,11 +43,20 @@ const Square = ({value, code, onChange, onKeyUp, current, current_ref}: SquarePr
             onChange={onChange}
             onKeyUp={onKeyUp}
             onMouseDown={event => {
-                if (!current) {
-                    event.preventDefault()
-                }
-                if (current_ref.current)
+                event.preventDefault()
+                if (current_ref.current) {
                     current_ref.current.focus()
+                    current_ref.current.select()
+                }
+            }}
+            onBlur={event => {
+                event.preventDefault()
+                setTimeout(() => {
+                    if (current_ref.current) {
+                        current_ref.current.focus()
+                        current_ref.current.select()
+                    }
+                }, 1)
             }}
             pattern="[A-ZÄÖÜ]"
         />
