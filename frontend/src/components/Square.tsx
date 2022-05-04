@@ -3,14 +3,15 @@ import './Square.css'
 import {ChangeEvent, KeyboardEvent} from "react";
 
 interface SquareProps {
-    value: string,
-    code: string | null,
+    value: string
+    code: string | null
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
     onKeyUp: (event: KeyboardEvent<HTMLInputElement>) => void
     current: boolean
+    current_ref: React.RefObject<HTMLInputElement>
 }
 
-const Square = ({value, code, onChange, onKeyUp, current}: SquareProps) => {
+const Square = ({value, code, onChange, onKeyUp, current, current_ref}: SquareProps) => {
 
     function getClassString() {
         let classString: string = current ? "square current" : "square"
@@ -32,22 +33,22 @@ const Square = ({value, code, onChange, onKeyUp, current}: SquareProps) => {
         return classString
     }
 
-    const input_ref = React.useRef<HTMLInputElement>(null);
-    React.useEffect(() => {
-        if (input_ref.current && current) {
-            input_ref.current.focus();
-        }
-    });
-
     return (
         <input
             type="text"
             className={getClassString()}
             maxLength={1}
-            ref={input_ref}
+            ref={current ? current_ref : null}
             value={value}
             onChange={onChange}
             onKeyUp={onKeyUp}
+            onMouseDown={event => {
+                if (!current) {
+                    event.preventDefault()
+                }
+                if (current_ref.current)
+                    current_ref.current.focus()
+            }}
             pattern="[A-ZÄÖÜ]"
         />
     )

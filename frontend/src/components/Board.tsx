@@ -1,7 +1,6 @@
 import Square from "./Square";
 import React, {ChangeEvent, KeyboardEvent} from "react";
 import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box';
 
 type BoardProps = {
     array: Array<[string, string | null]>
@@ -12,6 +11,14 @@ type BoardProps = {
 
 const Board = ({array, onChange, onKeyUp, current}: BoardProps) => {
 
+
+    let ref = React.createRef<HTMLInputElement>();
+    React.useEffect(() => {
+        if (ref.current) {
+            ref.current.focus();
+        }
+    })
+
     function renderSquare(index: number) {
         return (
             <Grid item>
@@ -20,7 +27,8 @@ const Board = ({array, onChange, onKeyUp, current}: BoardProps) => {
                     code={array[index][1]}
                     onChange={(event) => onChange(index, event)}
                     onKeyUp={(event) => onKeyUp(index, event)}
-                    current={current === index}/>
+                    current={current === index}
+                    current_ref={ref}/>
             </Grid>
         )
 
@@ -40,14 +48,14 @@ const Board = ({array, onChange, onKeyUp, current}: BoardProps) => {
     }
 
     return (
-            <Grid container spacing={1} marginBottom={5}>
-                {renderRow(0)}
-                {renderRow(1)}
-                {renderRow(2)}
-                {renderRow(3)}
-                {renderRow(4)}
-                {renderRow(5)}
-            </Grid>
+        <Grid container spacing={1} marginBottom={5}>
+            {renderRow(0)}
+            {renderRow(1)}
+            {renderRow(2)}
+            {renderRow(3)}
+            {renderRow(4)}
+            {renderRow(5)}
+        </Grid>
     )
 }
 
