@@ -1,11 +1,7 @@
 .square {
     border: 2px solid #39393a;
     border-radius: 4px;
-    float: left;
     font-size: 40px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
     text-align: center;
     height: 70px;
     width: 70px;
@@ -34,9 +30,5 @@
 
 .kbd-navigation .square:focus {
     background: #ddd;
-}
-
-textarea {
-    resize: none;
 }
 

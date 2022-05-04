@@ -1,5 +1,8 @@
 import Key from "./Key";
 import React from "react";
+import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
+
 
 type KeyBoardProps = {
     onClick: (value: string) => void
@@ -16,8 +19,8 @@ const KeyBoard = ({onClick}: KeyBoardProps) => {
     }
 
     return (
-        <div className="key-board">
-            <div className="key-board-row">
+        <React.Fragment>
+            <Stack direction="row" spacing={.2} justifyContent="center" marginBottom={.2}>
                 {renderKey("q")}
                 {renderKey("w")}
                 {renderKey("e")}
@@ -29,8 +32,8 @@ const KeyBoard = ({onClick}: KeyBoardProps) => {
                 {renderKey("o")}
                 {renderKey("p")}
                 {renderKey("ü")}
-            </div>
-            <div className="key-board-row">
+            </Stack>
+            <Stack direction="row" spacing={.2} justifyContent="center" marginBottom={.2}>
                 {renderKey("a")}
                 {renderKey("s")}
                 {renderKey("d")}
@@ -42,8 +45,8 @@ const KeyBoard = ({onClick}: KeyBoardProps) => {
                 {renderKey("l")}
                 {renderKey("ö")}
                 {renderKey("ä")}
-            </div>
-            <div className="key-board-row">
+            </Stack>
+            <Stack direction="row" spacing={.2} justifyContent="center" marginBottom={.2}>
                 {renderKey("z")}
                 {renderKey("x")}
                 {renderKey("c")}
@@ -52,11 +55,11 @@ const KeyBoard = ({onClick}: KeyBoardProps) => {
                 {renderKey("n")}
                 {renderKey("m")}
                 {renderKey("delete", "action-button")}
-            </div>
-            <div className="key-board-row">
+            </Stack>
+            <Stack direction="row" justifyContent="center">
                 {renderKey("submit", "action-button")}
-            </div>
-        </div>
+            </Stack>
+        </React.Fragment>
     )
 }
 

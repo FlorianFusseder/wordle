@@ -1,7 +1,6 @@
 import Board from "./Board";
 import Keyboard from "./Keyboard"
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import './Game.css'
 
 type GameProps = {
     arr: Array<[string, string | null]>
@@ -76,18 +75,14 @@ function Game() {
     }
 
     return (
-        <div className="game-board">
-            <div className="word-list">
-                <Board
-                    array={props.arr}
-                    onChange={onChange}
-                    onKeyUp={onKeyUp}
-                    current={props.current}/>
-            </div>
-            <div className="game-keyboard">
-                <Keyboard onClick={keyBoardClick}/>
-            </div>
-        </div>
+        <React.Fragment>
+            <Board
+                array={props.arr}
+                onChange={onChange}
+                onKeyUp={onKeyUp}
+                current={props.current}/>
+            <Keyboard onClick={keyBoardClick}/>
+        </React.Fragment>
     )
 }
 

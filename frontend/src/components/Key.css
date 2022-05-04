@@ -1,21 +1,12 @@
 .keyboard-button {
     border: 2px solid #39393a;
     border-radius: 4px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
     height: 35px;
     width: 35px;
     background: #cdd1de;
 }
 
 .keyboard-button.action-button {
-    border: 2px solid #39393a;
-    border-radius: 4px;
-    margin-right: -1px;
-    margin-top: -1px;
-    padding: 0;
     height: 35px;
     width: 80px;
-    background: #cdd1de;
 }
