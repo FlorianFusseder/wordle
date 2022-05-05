@@ -1,5 +1,5 @@
 import Square from "./Square";
-import React, {ChangeEvent, KeyboardEvent} from "react";
+import React, {ChangeEvent, KeyboardEvent, createRef, useEffect} from "react";
 import Grid from '@mui/material/Grid'
 
 type BoardProps = {
@@ -12,8 +12,8 @@ type BoardProps = {
 const Board = ({array, onChange, onKeyUp, current}: BoardProps) => {
 
 
-    let ref = React.createRef<HTMLInputElement>();
-    React.useEffect(() => {
+    let ref = createRef<HTMLInputElement>();
+    useEffect(() => {
         if (ref.current) {
             ref.current.focus();
         }

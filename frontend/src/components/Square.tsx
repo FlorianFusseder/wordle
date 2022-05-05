@@ -39,16 +39,10 @@ const Square = ({value, code, onChange, onKeyUp, current, current_ref}: SquarePr
             className={getClassString()}
             maxLength={1}
             ref={current ? current_ref : null}
+            disabled={!current}
             value={value}
             onChange={onChange}
             onKeyUp={onKeyUp}
-            onMouseDown={event => {
-                event.preventDefault()
-                if (current_ref.current) {
-                    current_ref.current.focus()
-                    current_ref.current.select()
-                }
-            }}
             onBlur={event => {
                 event.preventDefault()
                 setTimeout(() => {

@@ -8,6 +8,10 @@
     background: #cdd1de;
 }
 
+input:disabled {
+    color: black;
+}
+
 .square.contained {
     background: #ffb800;
 }
