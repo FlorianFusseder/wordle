@@ -2,9 +2,89 @@ import Board from "./Board";
 import Keyboard from "./Keyboard"
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 
+
+enum Code {
+    green = "t",
+    yellow = "c",
+    grey = "f",
+    _undefined = ""
+}
+
+type PlayingField = {
+    character: string,
+    code: Code
+}
+
+class Position {
+    readonly row: number
+    readonly column: number
+    readonly eof: boolean = false
+
+    constructor(row?: number, column?: number, eof?: boolean) {
+        if (eof) {
+            this.eof = true
+            this.row = this.column = Number.MAX_SAFE_INTEGER
+        } else if ((row !== undefined && column !== undefined) && (row <= 5 && row >= 0) && (column >= 0 && column <= 4)) {
+            this.column = column
+            this.row = row
+        } else
+            throw new RangeError(`Position Out of bounds: row: ${row} column ${column}`)
+
+    }
+
+    getNext(): Position {
+        let nextPos: Position
+        if (this.eof)
+            nextPos = this
+        else if (this.column < 4 && this.row <= 5)
+            nextPos = new Position(this.row, this.column + 1)
+        else if (this.column === 4 && this.row < 5)
+            nextPos = new Position(this.row + 1, 0)
+        else if (this.column === 4 && this.row === 5)
+            nextPos = new Position(undefined, undefined, true)
+        else {
+            throw new RangeError(`Position Out of bounds: row: ${this.row} column ${this.column}`)
+        }
+        return nextPos
+    }
+
+    getPrevious(): Position {
+        let previousPos: Position
+        if (this.eof)
+            previousPos = new Position(5, 4)
+        else if (this.column <= 4 && this.column > 0 && this.row < 6)
+            previousPos = new Position(this.row, this.column - 1)
+        else if (this.column === 0 && this.row <= 5 && this.row > 0)
+            previousPos = new Position(this.row - 1, 4)
+        else if (this.column === 0 && this.row === 0)
+            previousPos = new Position(0, 0)
+        else {
+            throw new RangeError(`Position Out of bounds: row: ${this.row} column ${this.column}`)
+        }
+        return previousPos
+    }
+
+    canDelete(): boolean {
+        return this.row > 0 || this.column > 0
+    }
+
+    canWrite(): boolean {
+        return !this.eof
+    }
+
+    submittable(): boolean {
+        if (this.row > 5) throw new RangeError(`row not valid, has to be smaller than 6 but was: ${this.row}`)
+        return (this.column === 0 && this.row > 0) || this.eof
+    }
+
+    is(row: number, column: number): boolean {
+        return row === this.row && column === this.column
+    }
+}
+
 type GameProps = {
-    arr: Array<[string, string | null]>
-    current: number
+    arr: Array<Array<PlayingField>>
+    caret: Position
 }
 
 
@@ -12,44 +92,53 @@ function Game() {
 
     const pattern: RegExp = new RegExp("^[A-ZÖÄÜ]$", "gm")
 
-    const [props, setProps] = useState<GameProps>({
-        arr: new Array(5 * 6).fill(["", null]),
-        current: 0,
+    const [gameState, setGameState] = useState<GameProps>({
+        arr: Array(6).fill(null).map(() => Array(5).fill({character: "", code: Code._undefined})),
+        caret: new Position(0, 0)
     })
 
     function submitForm() {
-        if (props.current === 0 || props.current % 5 !== 0) {
+        if (gameState.caret.submittable()) {
             console.log("Form not submittable like this")
         } else {
             console.log("submit")
         }
     }
 
-    function onChange(index: number, event: ChangeEvent<HTMLInputElement>) {
-        let upperKey: string = event.target.value.toUpperCase()
-        if (pattern.test(upperKey) && index < 30) {
-            let slice = props.arr.slice();
-            slice[index] = [upperKey, null]
-            setProps({
+    function delete_char() {
+        if (gameState.caret.canDelete()) {
+            let slice = gameState.arr.slice();
+            let new_pos: Position = gameState.caret.getPrevious()
+            slice[new_pos.row][new_pos.column] = {character: "", code: Code._undefined}
+            setGameState({
                 arr: slice,
-                current: index + 1
+                caret: new_pos
             })
-        } else {
-            console.log("onChange ignored: " + event.target.value + " " + props.current)
         }
     }
 
-    function onKeyUp(index: number, event: KeyboardEvent<HTMLInputElement>) {
+    function write_char(key: string) {
+        if (gameState.caret.canWrite()) {
+            let slice = gameState.arr.slice();
+            slice[gameState.caret.row][gameState.caret.column] = {character: key, code: Code._undefined}
+            setGameState({
+                arr: slice,
+                caret: gameState.caret.getNext()
+            })
+        }
+
+    }
+
+    function onChange(event: ChangeEvent<HTMLInputElement>) {
+        let upperKey: string = event.target.value.toUpperCase()
+        if (pattern.test(upperKey) && gameState.caret.canWrite()) {
+            write_char(upperKey)
+        }
+    }
+
+    function onKeyUp(event: KeyboardEvent<HTMLInputElement>) {
         if (event.key === "Backspace") {
-            console.log(props.current)
-            if (props.current > 0) {
-                let slice = props.arr.slice();
-                slice[props.current - 1] = ["", null]
-                setProps({
-                    arr: slice,
-                    current: props.current - 1
-                })
-            }
+            delete_char()
         } else if (event.key === "Enter") {
             submitForm()
         }
@@ -59,24 +148,10 @@ function Game() {
         if (key === "SUBMIT") {
             submitForm()
         } else {
-            let slice = props.arr.slice();
             if (key === "DELETE") {
-                if (props.current > 0) {
-                    console.log(props.current)
-                    slice[props.current - 1] = ["", null]
-                    setProps({
-                        arr: slice,
-                        current: props.current - 1
-                    })
-                }
+                delete_char();
             } else {
-                if (props.current < 30) {
-                    slice[props.current] = [key, null]
-                    setProps({
-                        arr: slice,
-                        current: props.current + 1
-                    })
-                }
+                write_char(key);
             }
         }
     }
@@ -84,10 +159,10 @@ function Game() {
     return (
         <React.Fragment>
             <Board
-                array={props.arr}
+                array={gameState.arr}
                 onChange={onChange}
                 onKeyUp={onKeyUp}
-                current={props.current}/>
+                current_pos={gameState.caret}/>
             <Keyboard onClick={keyBoardClick}/>
         </React.Fragment>
     )
@@ -95,4 +170,4 @@ function Game() {
 
 
 export default Game
-export type {GameProps}
+export type {Position, PlayingField, Code}

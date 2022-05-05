@@ -1,15 +1,16 @@
 import Square from "./Square";
+import {Position, PlayingField} from './Game'
 import React, {ChangeEvent, KeyboardEvent, createRef, useEffect} from "react";
 import Grid from '@mui/material/Grid'
 
 type BoardProps = {
-    array: Array<[string, string | null]>
-    onChange: (index: number, event: ChangeEvent<HTMLInputElement>) => void
-    onKeyUp: (index: number, event: KeyboardEvent<HTMLInputElement>) => void
-    current: number
+    array: Array<Array<PlayingField>>
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void
+    onKeyUp: (event: KeyboardEvent<HTMLInputElement>) => void
+    current_pos: Position
 }
 
-const Board = ({array, onChange, onKeyUp, current}: BoardProps) => {
+const Board = ({array, onChange, onKeyUp, current_pos}: BoardProps) => {
 
 
     let ref = createRef<HTMLInputElement>();
@@ -19,42 +20,28 @@ const Board = ({array, onChange, onKeyUp, current}: BoardProps) => {
         }
     })
 
-    function renderSquare(index: number) {
-        return (
-            <Grid item>
-                <Square
-                    value={array[index][0]}
-                    code={array[index][1]}
-                    onChange={(event) => onChange(index, event)}
-                    onKeyUp={(event) => onKeyUp(index, event)}
-                    current={current === index}
-                    current_ref={ref}/>
-            </Grid>
-        )
-
-    }
-
-    function renderRow(index: number) {
-        return (
-            <Grid container item columns={5} spacing={.5} justifyContent="center">
-                {renderSquare(index * 5)}
-                {renderSquare(index * 5 + 1)}
-                {renderSquare(index * 5 + 2)}
-                {renderSquare(index * 5 + 3)}
-                {renderSquare(index * 5 + 4)}
-            </Grid>
-
-        )
-    }
-
     return (
         <Grid container spacing={1} marginBottom={5}>
-            {renderRow(0)}
-            {renderRow(1)}
-            {renderRow(2)}
-            {renderRow(3)}
-            {renderRow(4)}
-            {renderRow(5)}
+            {
+                array.map((arr_row, row) =>
+                    <Grid container item columns={5} spacing={.5} justifyContent="center" key={`row:${row}`}>
+                        {
+                            arr_row.map((fieldInfo, column) =>
+                                <Grid item key={`row:${row}_col:${column}`}>
+                                    <Square
+                                        key_={`row:${row}_col:${column}_square`}
+                                        value={fieldInfo.character}
+                                        code={fieldInfo.code}
+                                        onChange={(event) => onChange(event)}
+                                        onKeyUp={(event) => onKeyUp(event)}
+                                        current={current_pos.is(row, column)}
+                                        current_ref={ref}/>
+                                </Grid>
+                            )
+                        }
+                    </Grid>
+                )
+            }
         </Grid>
     )
 }

@@ -1,17 +1,19 @@
 import * as React from 'react'
 import './Square.css'
 import {ChangeEvent, KeyboardEvent} from "react";
+import {Code} from "./Game"
 
 interface SquareProps {
+    key_: string
     value: string
-    code: string | null
+    code: Code
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
     onKeyUp: (event: KeyboardEvent<HTMLInputElement>) => void
     current: boolean
     current_ref: React.RefObject<HTMLInputElement>
 }
 
-const Square = ({value, code, onChange, onKeyUp, current, current_ref}: SquareProps) => {
+const Square = ({key_, value, code, onChange, onKeyUp, current, current_ref}: SquareProps) => {
 
     function getClassString() {
         let classString: string = current ? "square current" : "square"
@@ -35,6 +37,7 @@ const Square = ({value, code, onChange, onKeyUp, current, current_ref}: SquarePr
 
     return (
         <input
+            key={key_}
             type="text"
             className={getClassString()}
             maxLength={1}
