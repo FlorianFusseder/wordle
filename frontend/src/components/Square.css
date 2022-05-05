@@ -3,8 +3,9 @@
     border-radius: 4px;
     font-size: 40px;
     text-align: center;
-    height: 70px;
-    width: 70px;
+    height: 74px;
+    width: 74px;
+    box-sizing: border-box;
     background: #cdd1de;
 }
 
@@ -24,8 +25,9 @@ input:disabled {
     background: #3bc14a;
 }
 
-.square.current {
-
+input[value=""].square.current {
+    border: 4px solid #39393a;
+    box-sizing: border-box;
 }
 
 .square:focus {

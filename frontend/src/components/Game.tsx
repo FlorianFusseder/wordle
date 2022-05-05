@@ -18,30 +18,23 @@ type PlayingField = {
 class Position {
     readonly row: number
     readonly column: number
-    readonly eof: boolean = false
 
-    constructor(row?: number, column?: number, eof?: boolean) {
-        if (eof) {
-            this.eof = true
-            this.row = this.column = Number.MAX_SAFE_INTEGER
-        } else if ((row !== undefined && column !== undefined) && (row <= 5 && row >= 0) && (column >= 0 && column <= 4)) {
+    constructor(row: number, column: number) {
+        if ((row !== undefined && column !== undefined) && (row <= 5 && row >= 0) && (column >= 0 && column <= 4)) {
             this.column = column
             this.row = row
         } else
             throw new RangeError(`Position Out of bounds: row: ${row} column ${column}`)
-
     }
 
     getNext(): Position {
         let nextPos: Position
-        if (this.eof)
-            nextPos = this
-        else if (this.column < 4 && this.row <= 5)
+        if (this.column < 4 && this.row <= 5)
             nextPos = new Position(this.row, this.column + 1)
         else if (this.column === 4 && this.row < 5)
             nextPos = new Position(this.row + 1, 0)
-        else if (this.column === 4 && this.row === 5)
-            nextPos = new Position(undefined, undefined, true)
+        else if (this.isEndOfInput())
+            nextPos = this
         else {
             throw new RangeError(`Position Out of bounds: row: ${this.row} column ${this.column}`)
         }
@@ -50,9 +43,7 @@ class Position {
 
     getPrevious(): Position {
         let previousPos: Position
-        if (this.eof)
-            previousPos = new Position(5, 4)
-        else if (this.column <= 4 && this.column > 0 && this.row < 6)
+        if (this.column <= 4 && this.column > 0 && this.row < 6)
             previousPos = new Position(this.row, this.column - 1)
         else if (this.column === 0 && this.row <= 5 && this.row > 0)
             previousPos = new Position(this.row - 1, 4)
@@ -69,12 +60,16 @@ class Position {
     }
 
     canWrite(): boolean {
-        return !this.eof
+        return this.row <= 5 && this.column <= 4
+    }
+
+    isEndOfInput(): boolean {
+        return this.row === 5 && this.column === 4
     }
 
     submittable(): boolean {
         if (this.row > 5) throw new RangeError(`row not valid, has to be smaller than 6 but was: ${this.row}`)
-        return (this.column === 0 && this.row > 0) || this.eof
+        return (this.column === 0 && this.row > 0) || this.isEndOfInput()
     }
 
     is(row: number, column: number): boolean {
@@ -108,7 +103,12 @@ function Game() {
     function delete_char() {
         if (gameState.caret.canDelete()) {
             let slice = gameState.arr.slice();
-            let new_pos: Position = gameState.caret.getPrevious()
+            let new_pos: Position
+            if (gameState.caret.isEndOfInput() && slice[5][4].character !== "") {
+                new_pos = gameState.caret
+            } else {
+                new_pos = gameState.caret.getPrevious()
+            }
             slice[new_pos.row][new_pos.column] = {character: "", code: Code._undefined}
             setGameState({
                 arr: slice,
