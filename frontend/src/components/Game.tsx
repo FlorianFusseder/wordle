@@ -1,21 +1,21 @@
 import Board from "./Board";
 import Keyboard from "./Keyboard"
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, MouseEvent, useState} from "react";
 
 
-enum Code {
+export enum Code {
     green = "t",
     yellow = "c",
     grey = "f",
     _undefined = ""
 }
 
-type PlayingField = {
+export type PlayingField = {
     character: string,
     code: Code
 }
 
-class Position {
+export class Position {
     readonly row: number
     readonly column: number
 
@@ -83,7 +83,7 @@ type GameProps = {
 }
 
 
-function Game() {
+export function Game() {
 
     const pattern: RegExp = new RegExp("^[A-ZÖÄÜ]$", "gm")
 
@@ -137,10 +137,37 @@ function Game() {
     }
 
     function onKeyUp(event: KeyboardEvent<HTMLInputElement>) {
+
+        function setColorCode(code: Code) {
+            let slice = gameState.arr.slice();
+            let uncoded = slice
+                .flat()
+                .map((value, index) => ({playingField: value, index: index}))
+                .find(value => value.playingField.character !== "" && value.playingField.code === Code._undefined)
+
+            if (uncoded) {
+                slice[Math.floor(uncoded.index / 5)][uncoded.index % 5] = {
+                    character: uncoded.playingField.character,
+                    code: code
+                };
+
+                setGameState({
+                    arr: slice,
+                    caret: gameState.caret
+                })
+            }
+        }
+
         if (event.key === "Backspace") {
             delete_char()
         } else if (event.key === "Enter") {
             submitForm()
+        } else if (event.key === "1") {
+            setColorCode(Code.green)
+        } else if (event.key === "2") {
+            setColorCode(Code.yellow)
+        } else if (event.key === "3") {
+            setColorCode(Code.grey)
         }
     }
 
@@ -162,12 +189,19 @@ function Game() {
                 array={gameState.arr}
                 onChange={onChange}
                 onKeyUp={onKeyUp}
-                current_pos={gameState.caret}/>
+                current_pos={gameState.caret}
+                change_color_to_code={(event: MouseEvent<HTMLButtonElement>,
+                                       code: Code,
+                                       position: Position) => {
+                    let slice = gameState.arr.slice();
+                    slice[position.row][position.column].code = code
+                    setGameState({
+                        arr: slice,
+                        caret: gameState.caret
+                    })
+                }}
+            />
             <Keyboard onClick={keyBoardClick}/>
         </React.Fragment>
     )
 }
-
-
-export default Game
-export type {Position, PlayingField, Code}

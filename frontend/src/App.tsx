@@ -1,5 +1,5 @@
 import React from 'react'
-import Game from './components/Game'
+import {Game} from './components/Game'
 import './App.css';
 import Box from '@mui/material/Box'
 

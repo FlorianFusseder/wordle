@@ -1,6 +1,6 @@
 import Square from "./Square";
-import {Position, PlayingField} from './Game'
-import React, {ChangeEvent, KeyboardEvent, createRef, useEffect} from "react";
+import {Position, PlayingField, Code} from './Game'
+import React, {ChangeEvent, KeyboardEvent, createRef, useEffect, MouseEvent} from "react";
 import Grid from '@mui/material/Grid'
 
 type BoardProps = {
@@ -8,9 +8,10 @@ type BoardProps = {
     onChange: (event: ChangeEvent<HTMLInputElement>) => void
     onKeyUp: (event: KeyboardEvent<HTMLInputElement>) => void
     current_pos: Position
+    change_color_to_code: (event: MouseEvent<HTMLButtonElement>, code: Code, position: Position) => void
 }
 
-const Board = ({array, onChange, onKeyUp, current_pos}: BoardProps) => {
+const Board = ({array, onChange, onKeyUp, current_pos, change_color_to_code}: BoardProps) => {
 
 
     let ref = createRef<HTMLInputElement>();
@@ -35,7 +36,10 @@ const Board = ({array, onChange, onKeyUp, current_pos}: BoardProps) => {
                                         onChange={(event) => onChange(event)}
                                         onKeyUp={(event) => onKeyUp(event)}
                                         current={current_pos.is(row, column)}
-                                        current_ref={ref}/>
+                                        current_ref={ref}
+                                        change_color_to_code={change_color_to_code}
+                                        self_position={new Position(row, column)}
+                                    />
                                 </Grid>
                             )
                         }
