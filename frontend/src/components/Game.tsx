@@ -105,16 +105,18 @@ export function Game() {
                 console.log(`${nonCompleteElement.index % 5}`)
         } else {
             const uri: string | undefined = process.env.REACT_APP_API_URL
-            console.log(`${uri}`)
-
-            const requestOptions = {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({title: 'Fetch POST Request Example'})
-            };
-            fetch(`${process.env.API_URL}`, requestOptions)
-                .then(response => response.json())
-                .then(data => console.log(data));
+            if (uri) {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({"stier": "ttttt"})
+                };
+                fetch(`${uri}`, requestOptions)
+                    .then(response => response.json())
+                    .then(data => console.log(data));
+            } else {
+                throw new Error(`Could not read required env "REACT_APP_API_URL"`)
+            }
         }
     }
 

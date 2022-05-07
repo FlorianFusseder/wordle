@@ -3,11 +3,14 @@ import os
 import waitress
 from wordle_bot import wordle
 from flask import Flask, request, make_response
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+cors = CORS(app)
 
 
-@app.route("/", methods=['POST', 'GET'])
+@app.route("/api/v1", methods=['POST', 'GET'])
 def solve():
     if request.method == 'POST':
         if request.content_length < 110:
