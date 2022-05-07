@@ -104,15 +104,17 @@ export function Game() {
             if (nonCompleteElement)
                 console.log(`${nonCompleteElement.index % 5}`)
         } else {
+            const uri: string | undefined = process.env.REACT_APP_API_URL
+            console.log(`${uri}`)
 
             const requestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title: 'Fetch POST Request Example' })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({title: 'Fetch POST Request Example'})
             };
             fetch(`${process.env.API_URL}`, requestOptions)
                 .then(response => response.json())
-                .then(data => console.log(data) );
+                .then(data => console.log(data));
         }
     }
 
