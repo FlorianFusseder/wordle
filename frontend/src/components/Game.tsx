@@ -106,14 +106,26 @@ export function Game() {
         } else {
             const uri: string | undefined = process.env.REACT_APP_API_URL
             if (uri) {
+                const postBody: object = Object.fromEntries(
+                    gameState.arr.slice(0, gameState.caret.row).map(value => {
+                        let word: string = value.map(value1 => value1.character).join("")
+                        let code: string = value.map(value1 => value1.code).join("")
+                        return [[word], code]
+                    })
+                )
+
                 const requestOptions = {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({"stier": "ttttt"})
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postBody)
                 };
-                fetch(`${uri}`, requestOptions)
+                fetch(uri, requestOptions)
                     .then(response => response.json())
-                    .then(data => console.log(data));
+                    .then(data => console.log(data))
+                    .catch(reason => console.log(reason))
             } else {
                 throw new Error(`Could not read required env "REACT_APP_API_URL"`)
             }
