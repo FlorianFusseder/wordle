@@ -70,7 +70,6 @@ const Square = ({
                     setTimeout(() => {
                         if (current_ref.current) {
                             current_ref.current.focus()
-                            current_ref.current.select()
                         }
                     }, 1)
                 }}

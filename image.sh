@@ -6,6 +6,7 @@ if [ "$1" = "backend" ]; then
 elif [ "$1" = "frontend" ]; then
   build_name="wordle-frontend-ff"
   folder_name="frontend"
+  npm run build --prefix ./"${folder_name}"
 else
   echo "No known service with name '${1}', exiting..."
   return 0
@@ -32,3 +33,5 @@ curl --netrc -X PATCH https://api.heroku.com/apps/"${build_name}"/formation \
       }' \
   -H "Content-Type: application/json" \
   -H "Accept: application/vnd.heroku+json; version=3.docker-releases"
+
+heroku open --app="${build_name}"

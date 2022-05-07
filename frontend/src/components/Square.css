@@ -13,6 +13,11 @@ input:disabled {
     color: black;
 }
 
+input[value=""].square.current {
+    border: 4px solid black;
+    box-sizing: border-box;
+}
+
 .square.contained {
     background: #ffb800;
 }
@@ -25,40 +30,31 @@ input:disabled {
     background: #3bc14a;
 }
 
-input[value=""].square.current {
-    border: 4px solid black;
-    box-sizing: border-box;
-}
-
-input[value=""].square.current {
-    border: 4px solid black;
-    box-sizing: border-box;
-}
-
 .square:focus {
     outline: none;
-}
-
-.square-container.coded .color-picker-buttons {
-    visibility: hidden;
 }
 
 .square-container.coded:hover .color-picker-buttons {
     visibility: visible;
 }
 
-.square-container.empty .color-picker-buttons {
+/* Handle last square element */
+.square-container.current.uncoded:not(.empty) .color-picker-buttons {
+    visibility: visible;
+}
+
+.square-container.coded .color-picker-buttons {
     visibility: hidden;
 }
 
-.square-container.current .color-picker-buttons {
+.square-container.empty .color-picker-buttons {
     visibility: hidden;
 }
 
 .square-container .color-picker-buttons button {
     border: none;
     width: 24px;
-    height: 15px;
+    height: 20px;
     position: absolute;
     box-sizing: border-box;
 }
