@@ -93,10 +93,26 @@ export function Game() {
     })
 
     function submitForm() {
-        if (gameState.caret.submittable()) {
-            console.log("Form not submittable like this")
+
+        let nonCompleteElement = gameState.arr.slice(0, gameState.caret.row)
+            .flat()
+            .map((value, index) => ({field: value, index: index}))
+            .find((value, index) => (!value.field.code || !value.field.character));
+
+        if (!gameState.caret.submittable() || nonCompleteElement) {
+            console.log("Form not submittable like this...")
+            if (nonCompleteElement)
+                console.log(`${nonCompleteElement.index % 5}`)
         } else {
-            console.log("submit")
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: 'Fetch POST Request Example' })
+            };
+            fetch(`${process.env.API_URL}`, requestOptions)
+                .then(response => response.json())
+                .then(data => console.log(data) );
         }
     }
 
