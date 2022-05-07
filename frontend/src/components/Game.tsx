@@ -1,6 +1,8 @@
 import Board from "./Board";
 import Keyboard from "./Keyboard"
 import React, {ChangeEvent, KeyboardEvent, MouseEvent, useState} from "react";
+import {ResultList} from "./ResultList";
+import Stack from "@mui/material/Stack";
 
 
 export enum Code {
@@ -82,6 +84,10 @@ type GameProps = {
     caret: Position
 }
 
+type resultList = {
+    results: Array<string>
+}
+
 
 export function Game() {
 
@@ -91,6 +97,10 @@ export function Game() {
         arr: Array(6).fill(null).map(() => Array(5).fill({character: "", code: Code._undefined})),
         caret: new Position(0, 0)
     })
+
+    const [resultState, setResultState] = useState<resultList>({
+        results: ["asien", "stier", "steak", "saite", "eiter", "senat", "eisen", "arsen", "liane", "aster"]
+    });
 
     function submitForm() {
 
@@ -217,22 +227,25 @@ export function Game() {
 
     return (
         <React.Fragment>
-            <Board
-                array={gameState.arr}
-                onChange={onChange}
-                onKeyUp={onKeyUp}
-                current_pos={gameState.caret}
-                change_color_to_code={(event: MouseEvent<HTMLButtonElement>,
-                                       code: Code,
-                                       position: Position) => {
-                    let slice = gameState.arr.slice();
-                    slice[position.row][position.column].code = code
-                    setGameState({
-                        arr: slice,
-                        caret: gameState.caret
-                    })
-                }}
-            />
+            <Stack direction="row" marginBottom="30px">
+                <Board
+                    array={gameState.arr}
+                    onChange={onChange}
+                    onKeyUp={onKeyUp}
+                    current_pos={gameState.caret}
+                    change_color_to_code={(event: MouseEvent<HTMLButtonElement>,
+                                           code: Code,
+                                           position: Position) => {
+                        let slice = gameState.arr.slice();
+                        slice[position.row][position.column].code = code
+                        setGameState({
+                            arr: slice,
+                            caret: gameState.caret
+                        })
+                    }}
+                />
+                <ResultList list={resultState.results.slice()}/>
+            </Stack>
             <Keyboard onClick={keyBoardClick}/>
         </React.Fragment>
     )

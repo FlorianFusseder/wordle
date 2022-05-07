@@ -1,6 +1,6 @@
 import Square from "./Square";
-import {Position, PlayingField, Code} from './Game'
-import React, {ChangeEvent, KeyboardEvent, createRef, useEffect, MouseEvent} from "react";
+import {Code, PlayingField, Position} from './Game'
+import React, {ChangeEvent, createRef, KeyboardEvent, MouseEvent, useEffect} from "react";
 import Grid from '@mui/material/Grid'
 
 type BoardProps = {
@@ -22,13 +22,13 @@ const Board = ({array, onChange, onKeyUp, current_pos, change_color_to_code}: Bo
     })
 
     return (
-        <Grid container spacing={1} marginBottom={5}>
+        <Grid container rowSpacing="9px" width="400px">
             {
                 array.map((arr_row, row) =>
-                    <Grid container item columns={5} spacing={.5} justifyContent="center" key={`row:${row}`}>
+                    <Grid container item columns={5} key={`row:${row}`}>
                         {
                             arr_row.map((fieldInfo, column) =>
-                                <Grid item key={`row:${row}_col:${column}`}>
+                                <Grid item key={`row:${row}_col:${column}`} xs={1}>
                                     <Square
                                         key_={`row:${row}_col:${column}_square`}
                                         value={fieldInfo.character}

@@ -54,7 +54,7 @@ input[value=""].square.current {
 .square-container .color-picker-buttons button {
     border: none;
     width: 24px;
-    height: 20px;
+    height: 15px;
     position: absolute;
     box-sizing: border-box;
 }
