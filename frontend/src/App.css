@@ -13,11 +13,8 @@
     color: white;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.sticky-footer {
+    position: fixed;
+    bottom: 0;
+    height: 60px;
 }
