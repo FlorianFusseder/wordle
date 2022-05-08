@@ -94,15 +94,17 @@ export function Game() {
 
     const pattern: RegExp = new RegExp("^[A-ZÖÄÜ]$", "gm")
 
+    const startResultState = {
+        results: ["asien", "stier", "steak", "saite", "eiter", "senat", "eisen", "arsen", "liane", "aster"],
+        header: "Gute Startwörter:"
+    }
+
     const [gameState, setGameState] = useState<GameProps>({
         arr: Array(6).fill(null).map(() => Array(5).fill({character: "", code: Code._undefined})),
         caret: new Position(0, 0)
     })
 
-    const [resultState, setResultState] = useState<resultList>({
-        results: ["asien", "stier", "steak", "saite", "eiter", "senat", "eisen", "arsen", "liane", "aster"],
-        header: "Gute Startwörter:"
-    });
+    const [resultState, setResultState] = useState<resultList>(startResultState);
 
     function submitForm() {
 
@@ -136,7 +138,12 @@ export function Game() {
                 };
                 fetch(uri, requestOptions)
                     .then(response => response.json())
-                    .then(data => console.log(data))
+                    .then(data => {
+                        setResultState({
+                            results: data.matches,
+                            header: "Ergebnisse:"
+                        })
+                    })
                     .catch(reason => console.log(reason))
             } else {
                 throw new Error(`Could not read required env "REACT_APP_API_URL"`)
@@ -158,6 +165,9 @@ export function Game() {
                 arr: slice,
                 caret: new_pos
             })
+            if (new_pos.is(0, 0)) {
+                setResultState(startResultState)
+            }
         }
     }
 
@@ -189,7 +199,7 @@ export function Game() {
                 const char = word.at(j);
                 if (char)
                     slice[i][j] = {
-                        character: char,
+                        character: char.toUpperCase(),
                         code: Code._undefined
                     }
                 else

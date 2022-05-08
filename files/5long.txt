@@ -472,6 +472,7 @@ Fluch
 flugs
 fluid
 Fluor
+Fluse
 Fluss
 focht
 Fokus
