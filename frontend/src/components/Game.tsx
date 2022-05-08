@@ -3,7 +3,7 @@ import Keyboard from "./Keyboard"
 import React, {ChangeEvent, KeyboardEvent, MouseEvent, useState} from "react";
 import {ResultList} from "./ResultList";
 import Stack from "@mui/material/Stack";
-
+import Alert from '@mui/material/Alert';
 
 export enum Code {
     green = "t",
@@ -85,6 +85,7 @@ type GameProps = {
 }
 
 type resultList = {
+    header: string
     results: Array<string>
 }
 
@@ -99,7 +100,8 @@ export function Game() {
     })
 
     const [resultState, setResultState] = useState<resultList>({
-        results: ["asien", "stier", "steak", "saite", "eiter", "senat", "eisen", "arsen", "liane", "aster"]
+        results: ["asien", "stier", "steak", "saite", "eiter", "senat", "eisen", "arsen", "liane", "aster"],
+        header: "Gute Startwörter:"
     });
 
     function submitForm() {
@@ -167,6 +169,42 @@ export function Game() {
                 arr: slice,
                 caret: gameState.caret.getNext()
             })
+        }
+
+    }
+
+    function onListClick(word: string) {
+        let slice = gameState.arr.slice();
+
+        let playingField = slice.flat()
+            .flat()
+            .map((value, index) => ({field_: value, index_: index}))
+            .find(value => value.field_.character === "");
+
+        if (playingField) {
+            let i = Math.floor(playingField.index_ / 5)
+
+            for (let j = 0; j < 5; j++) {
+
+                const char = word.at(j);
+                if (char)
+                    slice[i][j] = {
+                        character: char,
+                        code: Code._undefined
+                    }
+                else
+                    throw new Error("Word is not 5 long")
+
+            }
+
+            setGameState({
+                arr: slice,
+                caret: new Position((i !== 5) ? i + 1 : i, (i !== 5) ? 0 : 4)
+            })
+
+
+        } else {
+            <Alert severity="error">This is an error alert — check it out!</Alert>
         }
 
     }
@@ -244,7 +282,7 @@ export function Game() {
                         })
                     }}
                 />
-                <ResultList list={resultState.results.slice()}/>
+                <ResultList list={resultState.results.slice()} header={resultState.header} onListClick={onListClick}/>
             </Stack>
             <Keyboard onClick={keyBoardClick}/>
         </React.Fragment>

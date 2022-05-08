@@ -8,20 +8,22 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 
 type ResultListProps = {
+    header: string
     list: Array<string>
+    onListClick: (word: string) => void
 }
 
 
-export const ResultList = ({list}: ResultListProps) => {
+export const ResultList = ({list, header, onListClick}: ResultListProps) => {
     return (
         <Box className="result-list">
             <nav aria-label="wordlist">
                 <List dense={true} subheader={<li/>}>
-                    <ListSubheader sx={{bgcolor: "#94999e"}}>Results</ListSubheader>
+                    <ListSubheader sx={{bgcolor: "#94999e"}}>{header}</ListSubheader>
                     {
                         list.map((word, index) => (
                             <ListItem key={index} disablePadding>
-                                <ListItemButton>
+                                <ListItemButton onClick={_ => onListClick(word)}>
                                     <ListItemText primary={index + 1 + ". " + word}/>
                                 </ListItemButton>
                             </ListItem>
