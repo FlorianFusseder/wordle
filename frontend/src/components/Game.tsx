@@ -114,13 +114,28 @@ export function Game() {
             } else {
                 new_pos = gameState.caret.getPrevious()
             }
-            slice[new_pos.row][new_pos.column] = {character: "", code: Code._undefined}
-            setGameState({
-                arr: slice,
-                caret: new_pos
-            })
+
             if (new_pos.is(0, 0)) {
                 setResultState(startResultState)
+                setGameState(startGameState)
+            } else {
+                let columnSlice = slice[new_pos.row].slice()
+                columnSlice[new_pos.column] = {character: "", code: Code._undefined}
+                slice[new_pos.row] = columnSlice
+
+                if (new_pos.row === 0) {
+                    setResultState(startResultState)
+                    setGameState({
+                        arr: slice,
+                        caret: new_pos
+                    })
+                } else {
+                    changeColorToCode(slice)
+                    setGameState(prevState => ({
+                        ...prevState,
+                        caret: new_pos
+                    }))
+                }
             }
         }
     }

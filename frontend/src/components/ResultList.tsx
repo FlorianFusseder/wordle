@@ -24,7 +24,7 @@ export const ResultList = ({list, header, onListClick}: ResultListProps) => {
                         list.map((word, index) => (
                             <ListItem key={index} disablePadding>
                                 <ListItemButton onClick={_ => onListClick(word)}>
-                                    <ListItemText primary={index + 1 + ". " + word}/>
+                                    <ListItemText primary={index + 1 + ". " + word.toUpperCase()}/>
                                 </ListItemButton>
                             </ListItem>
                         ))
