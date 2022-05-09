@@ -69,11 +69,6 @@ export class Position {
         return this.row === 5 && this.column === 4
     }
 
-    submittable(): boolean {
-        if (this.row > 5) throw new RangeError(`row not valid, has to be smaller than 6 but was: ${this.row}`)
-        return (this.column === 0 && this.row > 0) || this.isEndOfInput()
-    }
-
     is(row: number, column: number): boolean {
         return row === this.row && column === this.column
     }
@@ -87,6 +82,7 @@ type GameProps = {
 type resultList = {
     header: string
     results: Array<string>
+    filled_row_number: number
 }
 
 
@@ -96,7 +92,8 @@ export function Game() {
 
     const startResultState = {
         results: ["asien", "stier", "steak", "saite", "eiter", "senat", "eisen", "arsen", "liane", "aster"],
-        header: "Gute Startwörter:"
+        header: "Startwörter:",
+        filled_row_number: -1,
     }
 
     const startGameState = {
@@ -107,51 +104,6 @@ export function Game() {
     const [gameState, setGameState] = useState<GameProps>(startGameState)
 
     const [resultState, setResultState] = useState<resultList>(startResultState);
-
-    function submitForm() {
-
-        let nonCompleteElement = gameState.arr.slice(0, gameState.caret.row)
-            .flat()
-            .map((value, index) => ({field: value, index: index}))
-            .find((value, index) => (!value.field.code || !value.field.character));
-
-        if (!gameState.caret.submittable() || nonCompleteElement) {
-            console.log("Form not submittable like this...")
-            if (nonCompleteElement)
-                console.log(`${nonCompleteElement.index % 5}`)
-        } else {
-            const uri: string | undefined = process.env.REACT_APP_API_URL
-            if (uri) {
-                const postBody: object = Object.fromEntries(
-                    gameState.arr.slice(0, gameState.caret.row).map(value => {
-                        let word: string = value.map(value1 => value1.character).join("")
-                        let code: string = value.map(value1 => value1.code).join("")
-                        return [[word], code]
-                    })
-                )
-
-                const requestOptions = {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(postBody)
-                };
-                fetch(uri, requestOptions)
-                    .then(response => response.json())
-                    .then(data => {
-                        setResultState({
-                            results: data.matches,
-                            header: "Ergebnisse:"
-                        })
-                    })
-                    .catch(reason => console.log(reason))
-            } else {
-                throw new Error(`Could not read required env "REACT_APP_API_URL"`)
-            }
-        }
-    }
 
     function delete_char() {
         if (gameState.caret.canDelete()) {
@@ -228,6 +180,71 @@ export function Game() {
         }
     }
 
+    /**
+     * Sets gamestate for colors, and submits if possible
+     * @param slice new slice
+     * @param row complete row number to determine if a submit should be triggered
+     */
+    function changeColorToCode(slice: Array<Array<PlayingField>>) {
+        function submit(): number | undefined {
+            let rowIndex = slice.slice()
+                .reverse()
+                .findIndex(row => row.every(column => column.code && column.character));
+            rowIndex = (rowIndex !== -1) ? ((gameState.arr.length - 1) - rowIndex) : rowIndex
+
+            let lastRowCompletelyFilledRowIndexHasChanged = rowIndex !== resultState.filled_row_number;
+            let playingFieldDataFilledUntilLastRow = gameState.arr.slice(0, rowIndex)
+                .every(row => row.every(column => column.code !== Code._undefined && column.character));
+            if (playingFieldDataFilledUntilLastRow) {
+                if (lastRowCompletelyFilledRowIndexHasChanged || (!lastRowCompletelyFilledRowIndexHasChanged &&
+                    gameState.arr.some((row, rowIndex) => row.some((column, columnIndex) => (column.code !== slice[rowIndex][columnIndex].code))))
+                )
+                    return rowIndex
+            }
+        }
+
+        const rowIndex = submit()
+        // GameState HAS to be set after submit check
+        if (rowIndex !== undefined) {
+            console.log("Submit that shit")
+            const uri: string | undefined = process.env.REACT_APP_API_URL
+            if (uri) {
+                let objects = slice.slice(0, rowIndex + 1).map(value => {
+                    let word: string = value.map(value1 => value1.character).join("")
+                    let code: string = value.map(value1 => value1.code).join("")
+                    return [[word], code]
+                })
+
+                const postBody: object = Object.fromEntries(objects)
+                console.log(postBody)
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postBody)
+                };
+                fetch(uri, requestOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        setResultState({
+                            results: data.matches,
+                            header: "Ergebnisse:",
+                            filled_row_number: rowIndex,
+                        })
+                    })
+                    .catch(reason => console.log(reason))
+            } else {
+                throw new Error(`Could not read required env "REACT_APP_API_URL"`)
+            }
+        }
+        setGameState(prevState => ({
+            ...prevState,
+            arr: slice,
+        }))
+    }
+
     function onKeyUp(event: KeyboardEvent<HTMLInputElement>) {
 
         function setColorCode(code: Code) {
@@ -238,22 +255,17 @@ export function Game() {
                 .find(value => value.playingField.character !== "" && value.playingField.code === Code._undefined)
 
             if (uncoded) {
-                slice[Math.floor(uncoded.index / 5)][uncoded.index % 5] = {
+                let row = Math.floor(uncoded.index / 5);
+                slice[row][uncoded.index % 5] = {
                     character: uncoded.playingField.character,
                     code: code
                 };
-
-                setGameState(prevState => ({
-                    ...prevState,
-                    arr: slice,
-                }))
+                changeColorToCode(slice)
             }
         }
 
         if (event.key === "Backspace") {
             delete_char()
-        } else if (event.key === "Enter") {
-            submitForm()
         } else if (event.key === "1") {
             setColorCode(Code.green)
         } else if (event.key === "2") {
@@ -266,13 +278,24 @@ export function Game() {
     function keyBoardClick(key: string) {
         if (key === "CLEAR ALL") {
             setGameState(startGameState)
+            setResultState(startResultState)
         } else if (key === "CLEAR ROW") {
             let slice = gameState.arr.slice();
-            slice[gameState.caret.row] = Array(5).fill({character: "", code: Code._undefined})
-            setGameState({
-                caret: new Position(gameState.caret.row, 0),
-                arr: slice
-            })
+            const rowToClear = (gameState.caret.column > 0) ? gameState.caret.row : gameState.caret.row - 1
+            if (rowToClear) {
+                slice[rowToClear] = Array(5).fill({
+                    character: "",
+                    code: Code._undefined
+                })
+                changeColorToCode(slice)
+                setGameState(prevState => ({
+                    ...prevState,
+                    caret: new Position(rowToClear, 0)
+                }))
+            } else {
+                setGameState(startGameState)
+                setResultState(startResultState)
+            }
         } else {
             if (key === "DELETE") {
                 delete_char();
@@ -290,15 +313,15 @@ export function Game() {
                     onChange={onChange}
                     onKeyUp={onKeyUp}
                     current_pos={gameState.caret}
-                    change_color_to_code={(event: MouseEvent<HTMLButtonElement>,
-                                           code: Code,
-                                           position: Position) => {
-                        let slice = gameState.arr.slice();
-                        slice[position.row][position.column].code = code
-                        setGameState(prevState => ({
-                            ...prevState,
-                            arr: slice,
-                        }))
+                    change_color_to_code={(event: MouseEvent<HTMLButtonElement>, code: Code, position: Position) => {
+                        let gameSlice = gameState.arr.slice();
+                        let rowSlice = gameSlice[position.row].slice()
+                        rowSlice[position.column] = {
+                            character: rowSlice[position.column].character,
+                            code: code
+                        }
+                        gameSlice[position.row] = rowSlice
+                        changeColorToCode(gameSlice);
                     }}
                 />
                 <ResultList list={resultState.results.slice()} header={resultState.header} onListClick={onListClick}/>
