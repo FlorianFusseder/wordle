@@ -458,16 +458,13 @@ def new_interface(ctx):
 @cli.command("play")
 @click.option("-w", "--start_word")
 @click.option("-c", "--count", default=1, type=click.IntRange(1, sys.maxsize))
-@click.option("-wm", "--word_manager")
 @click.pass_context
-def start(ctx, start_word, count, word_manager):
+def start(ctx, start_word, count):
     interface: gui.Interface = ctx.obj["interface"]
     base_path = "/home/florian/Pictures/wordles/" + str(datetime.datetime.now()).replace(" ", "_")
 
     if start_word:
         start_word_manager = wt.StartWordManager(start_word)
-    elif word_manager == "cleanup":
-        start_word_manager = wt.CleanupWordListManager()
     else:
         start_word_manager = wt.StartWordManager()
 
