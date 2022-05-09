@@ -99,10 +99,12 @@ export function Game() {
         header: "Gute Startwörter:"
     }
 
-    const [gameState, setGameState] = useState<GameProps>({
+    const startGameState = {
         arr: Array(6).fill(null).map(() => Array(5).fill({character: "", code: Code._undefined})),
         caret: new Position(0, 0)
-    })
+    }
+
+    const [gameState, setGameState] = useState<GameProps>(startGameState)
 
     const [resultState, setResultState] = useState<resultList>(startResultState);
 
@@ -241,10 +243,10 @@ export function Game() {
                     code: code
                 };
 
-                setGameState({
+                setGameState(prevState => ({
+                    ...prevState,
                     arr: slice,
-                    caret: gameState.caret
-                })
+                }))
             }
         }
 
@@ -262,8 +264,15 @@ export function Game() {
     }
 
     function keyBoardClick(key: string) {
-        if (key === "SUBMIT") {
-            submitForm()
+        if (key === "CLEAR ALL") {
+            setGameState(startGameState)
+        } else if (key === "CLEAR ROW") {
+            let slice = gameState.arr.slice();
+            slice[gameState.caret.row] = Array(5).fill({character: "", code: Code._undefined})
+            setGameState({
+                caret: new Position(gameState.caret.row, 0),
+                arr: slice
+            })
         } else {
             if (key === "DELETE") {
                 delete_char();
@@ -286,10 +295,10 @@ export function Game() {
                                            position: Position) => {
                         let slice = gameState.arr.slice();
                         slice[position.row][position.column].code = code
-                        setGameState({
+                        setGameState(prevState => ({
+                            ...prevState,
                             arr: slice,
-                            caret: gameState.caret
-                        })
+                        }))
                     }}
                 />
                 <ResultList list={resultState.results.slice()} header={resultState.header} onListClick={onListClick}/>

@@ -56,7 +56,8 @@ const KeyBoard = ({onClick}: KeyBoardProps) => {
                 {renderKey("delete", "action-button")}
             </Stack>
             <Stack direction="row" justifyContent="center">
-                {renderKey("submit", "action-button")}
+                {renderKey("clear row", "action-button")}
+                {renderKey("clear all", "action-button")}
             </Stack>
         </React.Fragment>
     )
