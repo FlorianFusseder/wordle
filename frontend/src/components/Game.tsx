@@ -280,21 +280,23 @@ export function Game() {
             setGameState(startGameState)
             setResultState(startResultState)
         } else if (key === "CLEAR ROW") {
-            let slice = gameState.arr.slice();
-            const rowToClear = (gameState.caret.column > 0) ? gameState.caret.row : gameState.caret.row - 1
-            if (rowToClear) {
-                slice[rowToClear] = Array(5).fill({
-                    character: "",
-                    code: Code._undefined
-                })
-                changeColorToCode(slice)
-                setGameState(prevState => ({
-                    ...prevState,
-                    caret: new Position(rowToClear, 0)
-                }))
-            } else {
-                setGameState(startGameState)
-                setResultState(startResultState)
+            if (!gameState.caret.is(0, 0)) {
+                let slice = gameState.arr.slice();
+                const rowToClear = (gameState.caret.column > 0) ? gameState.caret.row : gameState.caret.row - 1
+                if (rowToClear) {
+                    slice[rowToClear] = Array(5).fill({
+                        character: "",
+                        code: Code._undefined
+                    })
+                    changeColorToCode(slice)
+                    setGameState(prevState => ({
+                        ...prevState,
+                        caret: new Position(rowToClear, 0)
+                    }))
+                } else {
+                    setGameState(startGameState)
+                    setResultState(startResultState)
+                }
             }
         } else {
             if (key === "DELETE") {
