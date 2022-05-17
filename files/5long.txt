@@ -526,6 +526,7 @@ feilt
 feind
 feist
 Felge
+Femur
 Ferse
 fesch
 Fetus
@@ -1136,6 +1137,7 @@ leihe
 Leine
 leise
 Lemma
+Lemur
 Lende
 Lepra
 Lesbe

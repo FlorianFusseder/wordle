@@ -354,7 +354,18 @@ def check_solution(ctx, param, value):
 @click.argument('attempts', nargs=-1, callback=check_solution)
 def find(attempts):
     regex_builder: ColorInfoWordleRegex = ColorInfoWordleRegex(attempts)
-    words = __find_words(regex_builder)
+    words, regex_ = __find_words(regex_builder)
+
+    if not words:
+        print("No matches - last hope!")
+        with open("../files/blacklist.txt", "r") as file:
+            all_words = file.read()
+        matches = execute_regex(all_words, regex_)
+        click.echo(f"Found {len(matches)} words that match the passed structure...")
+        scoring = SimpleScoring()
+        matches = scoring.evaluate(matches)
+        click.echo(f"{matches}")
+
     return words
 
 

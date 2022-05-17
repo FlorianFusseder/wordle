@@ -649,7 +649,6 @@ Twain
 Siris
 Rerum
 Kerub
-Femur
 Sinto
 Nitro
 Rosis
@@ -3139,7 +3138,6 @@ leite
 Leitz
 Lemgo
 Lemon
-Lemur
 Lenau
 Lenco
 Lenes
